@@ -1,0 +1,355 @@
+{
+  "common": {
+    "currency": "сум",
+    "view_all": "Смотреть",
+    "home": "Главная",
+    "products": "Товары",
+    "menu": "Меню",
+    "close": "Закрыть",
+    "fullscreen": "На весь экран",
+    "zoom_in": "Увеличить",
+    "zoom_out": "Уменьшить",
+    "guest": "Гость",
+    "elements": "элементов"
+  },
+  "brand": {
+    "title": "IoT Market",
+    "tagline": "Smart Devices"
+  },
+  "nav": {
+    "home": "Главная",
+    "products": "Товары",
+    "about": "О нас",
+    "contact": "Контакты",
+    "catalog": "Каталог",
+    "search": "Поиск товаров...",
+    "all_products": "Все товары",
+    "language": "Язык"
+  },
+  "hero": {
+    "title": "Лучший рынок для",
+    "subtitle": "умных устройств",
+    "desc": "IoT, умный дом, Arduino, Raspberry Pi и другое",
+    "shop": "Купить",
+    "catalog": "Каталог"
+  },
+  "slides": {
+    "badge": "IoT Market",
+    "s1_title": "IoT и микроэлектроника",
+    "s1_sub": "Arduino, ESP32, Raspberry Pi — профессиональный уровень",
+    "s1_cta": "Смотреть товары",
+    "s2_title": "Решения Smart Home",
+    "s2_sub": "Умный дом — Zigbee, WiFi, датчики",
+    "s2_cta": "Smart Home",
+    "s3_title": "Хорезм — филиал Ургенч",
+    "s3_sub": "Доставка и консультации",
+    "s3_cta": "Связаться с нами"
+  },
+  "popular": {
+    "title": "Популярные разделы",
+    "label": "Раздел",
+    "view": "Смотреть",
+    "prev": "Назад",
+    "next": "Вперёд",
+    "count_label": "{{count}} товаров",
+    "badge_out": "Нет в наличии",
+    "tab_kits": "Наборы"
+  },
+  "cats": {
+    "title": "Популярные категории",
+    "label": "Категория",
+    "go": "Перейти",
+    "subcategories": "Разделы",
+    "items": "Товары"
+  },
+  "categoryNames": {
+    "arduino": "Arduino",
+    "raspberry": "Raspberry Pi",
+    "smart_home": "Умный дом",
+    "sensors": "Датчики",
+    "esp": "Модули ESP",
+    "motors": "Моторы",
+    "displays": "Дисплеи",
+    "tools": "Инструменты"
+  },
+  "featured": {
+    "arduino": {
+      "name": "Arduino",
+      "desc": "Микроконтроллеры и наборы"
+    },
+    "esp": {
+      "name": "Модули ESP",
+      "desc": "WiFi и Bluetooth модули"
+    },
+    "tools": {
+      "name": "Инструменты",
+      "desc": "Измерение и пайка"
+    },
+    "sensors": {
+      "name": "Датчики",
+      "desc": "Температура, движение, газ"
+    },
+    "motors": {
+      "name": "Моторы",
+      "desc": "Серво, шаговые и DC"
+    },
+    "displays": {
+      "name": "Дисплеи",
+      "desc": "OLED, TFT и E-Ink"
+    },
+    "smart_home": {
+      "name": "Умный дом",
+      "desc": "Устройства умного дома"
+    }
+  },
+  "search": {
+    "no_results": "Ничего не найдено",
+    "show_all": "Все результаты"
+  },
+  "hot": {
+    "title": "Хиты продаж"
+  },
+  "new": {
+    "title": "Новые поступления"
+  },
+  "kits": {
+    "title": "Наборы микроконтроллеров"
+  },
+  "mcu": {
+    "title": "Микроконтроллеры",
+    "label": "Раздел",
+    "banner_title": "Микроконтроллеры",
+    "category_label": "Микроконтроллеры",
+    "view": "Смотреть",
+    "badge_out": "Нет в наличии"
+  },
+  "promo": {
+    "label": "Спецпредложение",
+    "title": "IoT устройства —",
+    "highlight": "лучшие цены",
+    "desc": "Arduino, ESP32, Raspberry Pi — доставка из Ургенча.",
+    "cta": "Все товары"
+  },
+  "stats": {
+    "products": "Товаров",
+    "clients": "Клиентов",
+    "quality": "Качество",
+    "support": "Поддержка"
+  },
+  "about_sec": {
+    "label": "О нас",
+    "title": "Об IoT Market",
+    "desc": "С 2019 года поставляем Arduino, ESP32, Raspberry Pi, датчики и умный дом в Хорезме. Надёжный партнёр для школ, стартапов и мейкеров.",
+    "point1": "120+ IoT товаров",
+    "point2": "Быстрая доставка по Ургенчу",
+    "point3": "Онлайн-консультация 24/7",
+    "more": "Подробнее"
+  },
+  "about": {
+    "intro": "IoT Market — крупнейший магазин IoT и электроники в Хорезмской области. Arduino, ESP, Raspberry Pi, датчики, моторы и умный дом в одном месте.",
+    "mission_title": "Наша миссия",
+    "mission_desc": "Доставляем IoT-технологии по Узбекистану — честные цены, качественные комплектующие и экспертная помощь.",
+    "story": "Мы начинали как небольшая лаборатория для учеников и разработчиков. Сегодня тысячи клиентов строят с нами умный дом, робототехнику, агро-мониторинг и промышленный IoT.",
+    "values_title": "Почему выбирают нас",
+    "value_quality_title": "Гарантия качества",
+    "value_quality_desc": "Проверенные бренды и оригинальные компоненты. Каждый товар с упаковкой и гарантией.",
+    "value_delivery_title": "Быстрая доставка",
+    "value_delivery_desc": "1–3 дня по Хорезму и соседним регионам. Отслеживание заказа онлайн.",
+    "value_support_title": "Поддержка 24/7",
+    "value_support_desc": "Техпомощь в Telegram, по телефону и в чате — от выбора детали до подключения.",
+    "value_innovation_title": "Инновации",
+    "value_innovation_desc": "Новейшие ESP32-S3, Matter, Zigbee и современные протоколы всегда в каталоге.",
+    "location_title": "Где мы находимся",
+    "location_desc": "В магазине в Ургенче можно посмотреть и протестировать товары. Точный адрес на карте.",
+    "stat_products": "Товаров",
+    "stat_brands": "Брендов",
+    "stat_clients": "Клиентов",
+    "stat_years": "Лет опыта"
+  },
+  "chat": {
+    "section_title": "Онлайн-чат 24/7",
+    "section_desc": "Есть вопрос? Напишите сейчас — мы скоро ответим.",
+    "title": "Онлайн-поддержка",
+    "online": "Онлайн — отвечаем",
+    "welcome": "Здравствуйте! Добро пожаловать в чат IoT Market 24/7. Чем помочь?",
+    "placeholder": "Введите сообщение...",
+    "send": "Отправить"
+  },
+  "contact": {
+    "subtitle": "Свяжитесь с нами",
+    "form_title": "Отправить сообщение",
+    "name_ph": "Ваше имя",
+    "email_ph": "Email",
+    "subject_ph": "Тема",
+    "message_ph": "Сообщение...",
+    "send": "Отправить",
+    "sent": "Сообщение отправлено!",
+    "address": "Адрес",
+    "phone": "Телефон",
+    "email": "Email",
+    "hours": "Время работы",
+    "map_title": "Расположение магазина",
+    "map_note": "спутниковая карта",
+    "cta": "Связаться"
+  },
+  "footer": {
+    "info": "Информация",
+    "cats": "Категории",
+    "contacts": "Контакты",
+    "address": "Хорезм. обл., Ургенч, ул. Аль-Хорезми, 45",
+    "phone": "+998 91 234 56 78",
+    "rights": "Все права защищены",
+    "region_desc": "профессиональный IoT-магазин"
+  },
+  "auth": {
+    "login": "Войти",
+    "register": "Регистрация",
+    "logout": "Выйти",
+    "email": "Email",
+    "password": "Пароль",
+    "name": "Имя",
+    "name_ph": "Ваше имя",
+    "email_ph": "email@example.com",
+    "password_ph": "••••••••",
+    "err_required": "Укажите email и пароль",
+    "no_account": "Нет аккаунта?",
+    "have_account": "Есть аккаунт?",
+    "login_title": "Войдите в аккаунт",
+    "register_title": "Создайте аккаунт",
+    "sign_in_desc": "Добро пожаловать на маркетплейс умных устройств!",
+    "sign_up_desc": "Зарегистрируйтесь и начните покупки.",
+    "phone": "Номер телефона",
+    "username": "Имя пользователя",
+    "confirm_password": "Подтвердите пароль",
+    "login_btn": "Войти",
+    "register_btn": "Зарегистрироваться",
+    "google_login": "Войти через Google",
+    "or": "Или",
+    "go_login": "Войти!",
+    "go_register": "Зарегистрироваться",
+    "verify_otp": "Подтвердить код",
+    "otp_code": "Код подтверждения",
+    "verify": "Подтвердить"
+  },
+  "product": {
+    "add_cart": "В корзину",
+    "buy": "Купить",
+    "buy_now": "Купить сейчас",
+    "details": "Описание",
+    "specs": "Характеристики",
+    "related": "Ещё в этой категории",
+    "instock": "В наличии",
+    "outstock": "Нет в наличии",
+    "view": "Смотреть",
+    "not_found": "Товар не найден",
+    "rate_hint": "Оцените товар",
+    "reviews_count": "отзывов",
+    "reviews_tab": "Отзывы",
+    "leave_review": "Оставить отзыв",
+    "your_name": "Ваше имя",
+    "review_ph": "Ваш отзыв...",
+    "submit_review": "Отправить",
+    "no_reviews": "Отзывов пока нет",
+    "spec_category": "Категория",
+    "spec_rating": "Рейтинг",
+    "spec_status": "Статус",
+    "breadcrumb_products": "Товары",
+    "tab_desc": "Описание",
+    "tab_specs": "Характеристики",
+    "tab_reviews": "Отзывы",
+    "qty": "Количество",
+    "reviews": "отзывов",
+    "add_review": "Оставить отзыв",
+    "review_author": "Ваше имя",
+    "review_text": "Ваш отзыв...",
+    "no_desc": "Описание отсутствует.",
+    "review_added": "Отзыв добавлен!"
+  },
+  "products_page": {
+    "categories": "Категории",
+    "all": "Все товары",
+    "found": "Найдено: {{count}}",
+    "empty": "Товары не найдены",
+    "filter": "Фильтр",
+    "search_label": "Поиск",
+    "sort_label": "Сортировка",
+    "sort_default": "По умолчанию",
+    "sort_price_asc": "Дешевле",
+    "sort_price_desc": "Дороже",
+    "sort_rating": "Рейтинг"
+  },
+  "cart": {
+    "title": "Корзина",
+    "empty": "Корзина пуста",
+    "total": "Итого",
+    "checkout": "Оформить",
+    "clear": "Очистить",
+    "remove": "Удалить",
+    "unit_price": "Цена за 1 шт.",
+    "quantity": "Количество",
+    "pcs": "шт.",
+    "line_total": "Сумма",
+    "items_count": "Всего единиц",
+    "products_count": "Видов товаров"
+  },
+  "fav": {
+    "title": "Избранное",
+    "empty": "Избранное пусто"
+  },
+  "profile": {
+    "verified": "Подтверждённый пользователь",
+    "personal_info": "Личные данные",
+    "name": "Имя",
+    "email": "Email",
+    "phone": "Телефон",
+    "not_entered": "Не указан",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "activity": "Активность",
+    "cart": "Корзина",
+    "favorites": "Избранное",
+    "logout": "Выйти из аккаунта",
+    "title": "Профиль",
+    "personal": "Личные данные",
+    "edit": "Редактировать"
+  },
+  "sections": {
+    "add_to_cart": "В корзину",
+    "add_to_fav": "В избранное"
+  },
+  "checkout": {
+    "step_card": "Карта",
+    "step_confirm": "Подтверждение",
+    "step_done": "Готово",
+    "card_title": "Данные карты",
+    "card_desc": "Принимаются Uzcard, Humo, Visa и Mastercard",
+    "confirm_title": "Подтвердите оплату",
+    "confirm_desc": "Проверьте данные и подтвердите",
+    "success_title": "Оплата прошла успешно!",
+    "success_desc": "Транзакция подтверждена банком",
+    "back": "Назад",
+    "secure": "Безопасная оплата • SSL",
+    "order": "Заказ",
+    "product_price": "Цена товара",
+    "commission": "Комиссия (1%)",
+    "total": "Итого",
+    "ssl": "256-битное шифрование SSL",
+    "continue": "Продолжить",
+    "pay": "Подтвердить оплату",
+    "paying": "Обработка платежа...",
+    "go_home": "Вернуться на главную",
+    "card_holder": "ВЛАДЕЛЕЦ КАРТЫ",
+    "card_number": "НОМЕР КАРТЫ",
+    "first_name": "ИМЯ",
+    "last_name": "ФАМИЛИЯ",
+    "expiry": "СРОК",
+    "cvv_hint": "Нажмите на карту для просмотра CVV",
+    "card_label": "Карта",
+    "owner": "Владелец",
+    "deadline": "Срок",
+    "to_pay": "К оплате",
+    "product": "Товар",
+    "paid": "Оплачено",
+    "tx_id": "ID транзакции"
+  }
+}

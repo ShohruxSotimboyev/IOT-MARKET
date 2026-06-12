@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id           String    @id @default(uuid())
+  username     String
+  email        String    @unique
+  phone        String    @default("Kiritilmagan")
+  password     String?
+  isVerified   Boolean   @default(false)
+
+  otpHash      String?
+  otpExpires   DateTime?
+  otpAttempts  Int       @default(0)
+
+  refreshToken String?
+  googleId     String?
+
+  lastLogin    DateTime?
+  loginCount   Int       @default(0)
+
+  role         String    @default("user")
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  orders       Order[]
+  messages     Message[]
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  category    String
+  price       Float
+  oldPrice    Float?
+  badge       String?
+  inStock     Boolean  @default(true)
+  rating      Float    @default(0)
+  reviews     Int      @default(0)
+  image       String
+  description String?
+  status      String   @default("active")
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Order {
+  id              String    @id @default(uuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id])
+  items           Json      @default("[]")
+  subtotal        Float
+  commission      Float
+  discount        Float     @default(0)
+  total           Float
+  currency        String    @default("UZS")
+  payment         Json
+  status          String    @default("pending")
+  shippingAddress Json?
+  note            String?
+  txId            String?   @unique
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([userId, createdAt(sort: Desc)])
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  status    String   @default("unread")
+  reply     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt(sort: Desc)])
+}
+
+model Banner {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  link        String?
+  image       String
+  status      String   @default("active")
+  order       Int      @default(0)
+  startDate   DateTime?
+  endDate     DateTime?
+  clicks      Int      @default(0)
+  views       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status, order])
+}

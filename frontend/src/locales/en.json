@@ -1,0 +1,355 @@
+{
+  "common": {
+    "currency": "UZS",
+    "view_all": "View all",
+    "home": "Home",
+    "products": "Products",
+    "menu": "Menu",
+    "close": "Close",
+    "fullscreen": "Fullscreen",
+    "zoom_in": "Zoom in",
+    "zoom_out": "Zoom out",
+    "guest": "Guest",
+    "elements": "items"
+  },
+  "brand": {
+    "title": "IoT Market",
+    "tagline": "Smart Devices"
+  },
+  "nav": {
+    "home": "Home",
+    "products": "Products",
+    "about": "About",
+    "contact": "Contact",
+    "catalog": "Catalog",
+    "search": "Search products...",
+    "all_products": "All products",
+    "language": "Language"
+  },
+  "hero": {
+    "title": "Best marketplace for",
+    "subtitle": "smart devices",
+    "desc": "IoT, smart home, Arduino, Raspberry Pi and more",
+    "shop": "Shop now",
+    "catalog": "Browse catalog"
+  },
+  "slides": {
+    "badge": "IoT Market",
+    "s1_title": "IoT & microelectronics",
+    "s1_sub": "Arduino, ESP32, Raspberry Pi — professional grade",
+    "s1_cta": "View products",
+    "s2_title": "Smart Home solutions",
+    "s2_sub": "Make your home smarter — Zigbee, WiFi, sensors",
+    "s2_cta": "Smart Home",
+    "s3_title": "Khorezm — Urgench branch",
+    "s3_sub": "Local delivery and expert advice",
+    "s3_cta": "Contact us"
+  },
+  "popular": {
+    "title": "Popular sections",
+    "label": "Section",
+    "view": "View all",
+    "prev": "Previous",
+    "next": "Next",
+    "count_label": "{{count}} products",
+    "badge_out": "Out of stock",
+    "tab_kits": "Kits"
+  },
+  "cats": {
+    "title": "Popular categories",
+    "label": "Category",
+    "go": "Browse",
+    "subcategories": "Sections",
+    "items": "Products"
+  },
+  "categoryNames": {
+    "arduino": "Arduino",
+    "raspberry": "Raspberry Pi",
+    "smart_home": "Smart Home",
+    "sensors": "Sensors",
+    "esp": "ESP Modules",
+    "motors": "Motors",
+    "displays": "Displays",
+    "tools": "Tools"
+  },
+  "featured": {
+    "arduino": {
+      "name": "Arduino",
+      "desc": "Microcontrollers and prototyping kits"
+    },
+    "esp": {
+      "name": "ESP Modules",
+      "desc": "WiFi and Bluetooth modules"
+    },
+    "tools": {
+      "name": "Tools",
+      "desc": "Professional measurement and soldering"
+    },
+    "sensors": {
+      "name": "Sensors",
+      "desc": "Temperature, motion, gas sensors"
+    },
+    "motors": {
+      "name": "Motors",
+      "desc": "Servo, stepper and DC motors"
+    },
+    "displays": {
+      "name": "Displays",
+      "desc": "OLED, TFT and E-Ink screens"
+    },
+    "smart_home": {
+      "name": "Smart Home",
+      "desc": "Smart home devices"
+    }
+  },
+  "search": {
+    "no_results": "No results found",
+    "show_all": "All results for"
+  },
+  "hot": {
+    "title": "Best sellers"
+  },
+  "new": {
+    "title": "New arrivals"
+  },
+  "kits": {
+    "title": "Microcontroller kits"
+  },
+  "mcu": {
+    "title": "Microcontrollers",
+    "label": "Section",
+    "banner_title": "Microcontrollers",
+    "category_label": "Microcontrollers",
+    "view": "View all",
+    "badge_out": "Out of stock"
+  },
+  "promo": {
+    "label": "Special offer",
+    "title": "IoT devices —",
+    "highlight": "best prices",
+    "desc": "Arduino, ESP32, Raspberry Pi — delivery from Urgench.",
+    "cta": "All products"
+  },
+  "stats": {
+    "products": "Products",
+    "clients": "Clients",
+    "quality": "Quality",
+    "support": "Support"
+  },
+  "about_sec": {
+    "label": "About us",
+    "title": "About IoT Market",
+    "desc": "Since 2019 we supply Arduino, ESP32, Raspberry Pi, sensors and smart home gear in Khorezm. A trusted partner for schools, startups and makers.",
+    "point1": "120+ IoT products",
+    "point2": "Fast delivery in Urgench",
+    "point3": "24/7 online advice",
+    "more": "Learn more"
+  },
+  "about": {
+    "intro": "IoT Market is the largest IoT and electronics store in Khorezm. We offer Arduino, ESP, Raspberry Pi, sensors, motors and smart home devices in one place.",
+    "mission_title": "Our mission",
+    "mission_desc": "Deliver IoT technology across Uzbekistan — fair prices, quality parts and expert guidance.",
+    "story": "We started as a small lab for students and developers. Today thousands of customers build smart homes, robotics, agro-monitoring and industrial IoT with us.",
+    "values_title": "Why choose us",
+    "value_quality_title": "Quality guarantee",
+    "value_quality_desc": "Verified brands and genuine components. Every item is packaged with warranty.",
+    "value_delivery_title": "Fast delivery",
+    "value_delivery_desc": "1–3 days in Khorezm and nearby regions. Track your order status online.",
+    "value_support_title": "24/7 support",
+    "value_support_desc": "Technical help via Telegram, phone and live chat — from part selection to wiring.",
+    "value_innovation_title": "Innovation",
+    "value_innovation_desc": "Latest ESP32-S3, Matter, Zigbee and modern protocols always in stock.",
+    "location_title": "Visit us",
+    "location_desc": "See and test products at our Urgench store. Exact location on the map below.",
+    "stat_products": "Products",
+    "stat_brands": "Brands",
+    "stat_clients": "Clients",
+    "stat_years": "Years of experience"
+  },
+  "chat": {
+    "section_title": "24/7 live chat",
+    "section_desc": "Have a question? Write now — our team will reply shortly.",
+    "title": "Online support",
+    "online": "Online — we reply",
+    "welcome": "Hello! Welcome to IoT Market 24/7 chat. How can we help?",
+    "placeholder": "Type your message...",
+    "send": "Send"
+  },
+  "contact": {
+    "subtitle": "Contact us for questions and orders",
+    "form_title": "Send a message",
+    "name_ph": "Your name",
+    "email_ph": "Email",
+    "subject_ph": "Subject",
+    "message_ph": "Your message...",
+    "send": "Send",
+    "sent": "Message sent!",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "hours": "Working hours",
+    "map_title": "Store location",
+    "map_note": "satellite map",
+    "cta": "Contact us"
+  },
+  "footer": {
+    "info": "Information",
+    "cats": "Categories",
+    "contacts": "Contacts",
+    "address": "Khorezm reg., Urgench, Al-Khorazmiy str. 45",
+    "phone": "+998 91 234 56 78",
+    "rights": "All rights reserved",
+    "region_desc": "professional IoT store"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "name_ph": "Your name",
+    "email_ph": "email@example.com",
+    "password_ph": "••••••••",
+    "err_required": "Email and password are required",
+    "no_account": "No account?",
+    "have_account": "Have an account?",
+    "login_title": "Login to your account",
+    "register_title": "Create new account",
+    "sign_in_desc": "Welcome to the Smart Devices Marketplace!",
+    "sign_up_desc": "Sign up and start shopping.",
+    "phone": "Phone Number",
+    "username": "Username",
+    "confirm_password": "Confirm Password",
+    "login_btn": "Sign In",
+    "register_btn": "Register",
+    "google_login": "Sign in with Google",
+    "or": "Or",
+    "go_login": "Sign In!",
+    "go_register": "Register",
+    "verify_otp": "Verify OTP",
+    "otp_code": "Verification Code",
+    "verify": "Verify"
+  },
+  "product": {
+    "add_cart": "Add to cart",
+    "buy": "Buy now",
+    "buy_now": "Buy now",
+    "details": "Description",
+    "specs": "Specifications",
+    "related": "More in this category",
+    "instock": "In stock",
+    "outstock": "Out of stock",
+    "view": "View",
+    "not_found": "Product not found",
+    "rate_hint": "Rate this product",
+    "reviews_count": "reviews",
+    "reviews_tab": "Reviews",
+    "leave_review": "Leave a review",
+    "your_name": "Your name",
+    "review_ph": "Your review...",
+    "submit_review": "Submit",
+    "no_reviews": "No reviews yet. Be the first!",
+    "spec_category": "Category",
+    "spec_rating": "Rating",
+    "spec_status": "Status",
+    "breadcrumb_products": "Products",
+    "tab_desc": "Description",
+    "tab_specs": "Specifications",
+    "tab_reviews": "Reviews",
+    "qty": "Quantity",
+    "reviews": "reviews",
+    "add_review": "Leave a review",
+    "review_author": "Your name",
+    "review_text": "Your review...",
+    "no_desc": "No description available.",
+    "review_added": "Review added!"
+  },
+  "products_page": {
+    "categories": "Categories",
+    "all": "All products",
+    "found": "{{count}} products found",
+    "empty": "No products found",
+    "filter": "Filter",
+    "search_label": "Search",
+    "sort_label": "Sort by",
+    "sort_default": "Default",
+    "sort_price_asc": "Price: low to high",
+    "sort_price_desc": "Price: high to low",
+    "sort_rating": "Rating"
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Cart is empty",
+    "total": "Grand total",
+    "checkout": "Checkout",
+    "clear": "Clear cart",
+    "remove": "Remove",
+    "unit_price": "Unit price",
+    "quantity": "Quantity",
+    "pcs": "pcs",
+    "line_total": "Subtotal",
+    "items_count": "Total items",
+    "products_count": "Product types"
+  },
+  "fav": {
+    "title": "Favorites",
+    "empty": "No favorites yet"
+  },
+  "profile": {
+    "verified": "Verified user",
+    "personal_info": "Personal information",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "not_entered": "Not provided",
+    "save": "Save",
+    "cancel": "Cancel",
+    "activity": "Activity",
+    "cart": "Cart",
+    "favorites": "Favorites",
+    "logout": "Sign out",
+    "title": "Profile",
+    "personal": "Personal information",
+    "edit": "Edit"
+  },
+  "sections": {
+    "add_to_cart": "Add to Cart",
+    "add_to_fav": "Add to Favorites"
+  },
+  "checkout": {
+    "step_card": "Card",
+    "step_confirm": "Confirm",
+    "step_done": "Done",
+    "card_title": "Card Details",
+    "card_desc": "Uzcard, Humo, Visa and Mastercard accepted",
+    "confirm_title": "Confirm Payment",
+    "confirm_desc": "Please review your details and confirm",
+    "success_title": "Payment Successful!",
+    "success_desc": "Transaction confirmed by the bank",
+    "back": "Back",
+    "secure": "Secure Payment • SSL",
+    "order": "Order",
+    "product_price": "Product Price",
+    "commission": "Service Fee (1%)",
+    "total": "Total",
+    "ssl": "256-bit SSL Encryption",
+    "continue": "Continue",
+    "pay": "Confirm Payment",
+    "paying": "Processing Payment...",
+    "go_home": "Return to Home",
+    "card_holder": "CARD HOLDER",
+    "card_number": "CARD NUMBER",
+    "first_name": "FIRST NAME",
+    "last_name": "LAST NAME",
+    "expiry": "EXPIRY",
+    "cvv_hint": "Click card to view CVV",
+    "card_label": "Card",
+    "owner": "Holder",
+    "deadline": "Expiry",
+    "to_pay": "To Pay",
+    "product": "Product",
+    "paid": "Paid",
+    "tx_id": "Transaction ID"
+  }
+}

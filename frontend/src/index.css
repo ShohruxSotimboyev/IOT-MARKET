@@ -1,0 +1,678 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Define core tailwind variables to allow flawless light mode inversion */
+:root {
+  --wd-primary-color: #0a74da;
+  --wd-alternative-color: #00afa3;
+  --btn-accented-bgcolor: #83b735;
+  --btn-accented-bgcolor-hover: #74a32f;
+  --wd-brd-radius: 15px;
+  --wd-text-color: #777777;
+  --wd-title-color: #242424;
+  --color-gray-800: #333;
+  --swiper-theme-color: #00afa3;
+  --swiper-navigation-size: 44px;
+  --swiper-pagination-bullet-size: 6px;
+}
+
+
+
+
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Lato', 'Outfit', Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--wd-text-color);
+  background-color: #030712;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', 'Space Grotesk', sans-serif;
+  color: var(--wd-title-color);
+  line-height: 1.4;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+/* Hero swiper — elementor-style fade slides */
+.hero-swiper .swiper-slide {
+  height: 100%;
+}
+
+.hero-swiper .swiper-slide-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  color: #fff;
+}
+
+.hero-swiper .swiper-pagination-bullet {
+  background: rgba(255, 255, 255, 0.45);
+  opacity: 1;
+  width: var(--swiper-pagination-bullet-size);
+  height: var(--swiper-pagination-bullet-size);
+  transition: all 0.3s ease;
+}
+
+.hero-swiper .swiper-pagination-bullet-active {
+  background: #fff;
+  width: 24px;
+  border-radius: 4px;
+}
+
+.hero-swiper .swiper-pagination {
+  bottom: 28px !important;
+}
+
+.nav-icon-btn {
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.nav-icon-btn:active {
+  transform: scale(0.94);
+}
+
+.product-card {
+  will-change: transform;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: #fff;
+  -webkit-box-shadow: 0 0 0 1000px rgba(12, 16, 24, 0.95) inset;
+  transition: background-color 9999s ease-out 0s;
+}
+
+.category-card {
+  will-change: transform;
+}
+
+@layer utilities {
+  .text-teal { color: #00afa3; }
+  .bg-teal { background-color: #00afa3; }
+  .border-teal { border-color: #00afa3; }
+  .from-teal { --tw-gradient-from: #00afa3; }
+  .to-teal { --tw-gradient-to: #00afa3; }
+  .via-teal { --tw-gradient-via: #00afa3; }
+  .bg-primary { background-color: #0a74da; }
+  .text-primary { color: #0a74da; }
+  .from-primary { --tw-gradient-from: #0a74da; }
+  .to-primary { --tw-gradient-to: #0a74da; }
+  .border-primary { border-color: #0a74da; }
+}
+
+.leaflet-container {
+  font-family: inherit;
+  z-index: 0;
+}
+
+.mcu-pagination .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.25);
+  opacity: 1;
+  margin: 0 !important;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.mcu-pagination .swiper-pagination-bullet-active {
+  background: #00afa3;
+  transform: scale(1.15);
+}
+/* CSS faylingizga qo'shing */
+input[type="search"]::-webkit-search-cancel-button {
+  display: none;
+}
+/* Bu kod brauzerning o'z "x" tugmasini yashiradi */
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  display: none;
+}
+/* ===== DARK THEME CUSTOM CLASSES ===== */
+
+.bg-iot {
+  background-color: #030712;
+}
+
+.grid-pattern {
+  background-color: #030712;
+  background-image:
+    linear-gradient(rgba(10, 116, 218, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10, 116, 218, 0.07) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #0A74DA 0%, #0062c0 100%);
+  transition: opacity 0.2s ease, transform 0.15s ease;
+}
+
+.btn-primary:hover {
+  opacity: 0.92;
+}
+
+
+/* ===================================================
+   LIGHT MODE — siz bergan shadcn/ui tokenlar asosida
+   html.light yoki html[data-theme="light"] da ishlaydi
+   =================================================== */
+
+html.light,
+html[data-theme="light"] {
+  /* ─── Siz bergan tokenlar (oklch → rgb) ─── */
+  --background:             oklch(1 0 0);           /* #ffffff */
+  --foreground:             oklch(0.145 0 0);        /* #1c1c1c */
+  --card:                   oklch(1 0 0);            /* #ffffff */
+  --card-foreground:        oklch(0.145 0 0);
+  --popover:                oklch(1 0 0);
+  --popover-foreground:     oklch(0.145 0 0);
+  --primary:                oklch(0.205 0 0);        /* #282828 */
+  --primary-foreground:     oklch(0.985 0 0);        /* #fbfbfb */
+  --secondary:              oklch(0.97 0 0);         /* #f7f7f7 */
+  --secondary-foreground:   oklch(0.205 0 0);
+  --muted:                  oklch(0.97 0 0);
+  --muted-foreground:       oklch(0.556 0 0);        /* #8a8a8a */
+  --accent:                 oklch(0.97 0 0);
+  --accent-foreground:      oklch(0.205 0 0);
+  --destructive:            oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --border:                 oklch(0.922 0 0);        /* #eaeaea */
+  --input:                  oklch(0.922 0 0);
+  --ring:                   oklch(0.708 0 0);        /* #b5b5b5 */
+  --radius:                 0.625rem;
+  --sidebar:                oklch(0.985 0 0);        /* #fbfbfb */
+  --sidebar-foreground:     oklch(0.145 0 0);
+  --sidebar-primary:        oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent:         oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border:         oklch(0.922 0 0);
+  --sidebar-ring:           oklch(0.708 0 0);
+
+  /* ─── loyiha o'zgaruvchilari (token asosida) ─── */
+  --lt-bg:            #eef4fb;
+  --lt-surface:       #ffffff;
+  --lt-surface2:      #f4f8fd;
+  --lt-surface3:      #eaf2fa;
+  --lt-border:        #eaeaea;
+  --lt-border-strong: #d4d4d4;
+  --lt-text:          #1c1c1c;
+  --lt-text-2:        #3d3d3d;
+  --lt-text-3:        #8a8a8a;
+  --lt-primary:       #18181b;
+  --lt-shadow:        0 1px 3px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
+  --lt-shadow-md:     0 4px 16px rgba(0,0,0,0.1);
+  --lt-shadow-lg:     0 8px 40px rgba(0,0,0,0.12);
+}
+
+/* ─── Body ─── */
+html.light body,
+html[data-theme="light"] body {
+  background-color: var(--lt-bg) !important;
+  color: var(--lt-text) !important;
+}
+
+/* ─── Grid fon ─── */
+html.light .grid-pattern,
+html[data-theme="light"] .grid-pattern {
+  background-color: var(--lt-bg) !important;
+  background-image:
+    linear-gradient(rgba(59,130,246,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59,130,246,0.06) 1px, transparent 1px) !important;
+}
+
+/* ─── Cardlar ─── */
+html.light .product-card > div,
+html.light .glass-card,
+html.light .glass,
+html[data-theme="light"] .product-card > div,
+html[data-theme="light"] .glass-card,
+html[data-theme="light"] .glass {
+  background: var(--lt-surface) !important;
+  border-color: var(--lt-border) !important;
+  box-shadow: var(--lt-shadow) !important;
+}
+html.light .product-card > div:hover,
+html[data-theme="light"] .product-card > div:hover {
+  border-color: rgba(37,99,235,0.2) !important;
+  box-shadow: 0 4px 20px rgba(37,99,235,0.1) !important;
+}
+
+/* ─── Navbar ─── */
+html.light nav,
+html[data-theme="light"] nav {
+  background-color: rgba(255,255,255,0.97) !important;
+  border-color: var(--lt-border) !important;
+  box-shadow: 0 1px 0 var(--lt-border) !important;
+}
+html.light .bg-\[\#0a0e17\]\/85,
+html.light .bg-\[\#0a0e17\]\/55,
+html[data-theme="light"] .bg-\[\#0a0e17\]\/85,
+html[data-theme="light"] .bg-\[\#0a0e17\]\/55 {
+  background-color: rgba(255,255,255,0.97) !important;
+}
+
+/* ─── Top info bar ─── */
+html.light header > div:first-child,
+html[data-theme="light"] header > div:first-child {
+  background: var(--lt-surface2) !important;
+  border-bottom: 1px solid var(--lt-border) !important;
+}
+html.light header > div:first-child *,
+html[data-theme="light"] header > div:first-child * {
+  color: var(--lt-text-3) !important;
+}
+
+/* ─── Matnlar ─── */
+html.light .text-white,
+html[data-theme="light"] .text-white             { color: var(--lt-text)   !important; }
+html.light .text-white\/90,
+html[data-theme="light"] .text-white\/90         { color: var(--lt-text)   !important; }
+html.light .text-white\/80,
+html.light .text-white\/70,
+html.light .text-white\/65,
+html[data-theme="light"] .text-white\/80,
+html[data-theme="light"] .text-white\/70,
+html[data-theme="light"] .text-white\/65         { color: var(--lt-text-2) !important; }
+html.light .text-white\/60,
+html.light .text-white\/55,
+html.light .text-white\/50,
+html.light .text-white\/45,
+html[data-theme="light"] .text-white\/60,
+html[data-theme="light"] .text-white\/55,
+html[data-theme="light"] .text-white\/50,
+html[data-theme="light"] .text-white\/45         { color: var(--lt-text-3) !important; }
+html.light .text-white\/40,
+html[data-theme="light"] .text-white\/40         { color: #a0a0a0 !important; }
+html.light .text-white\/35,
+html[data-theme="light"] .text-white\/35         { color: #b0b0b0 !important; }
+html.light .text-white\/30,
+html[data-theme="light"] .text-white\/30         { color: #c0c0c0 !important; }
+html.light .text-teal,
+html[data-theme="light"] .text-teal              { color: #2563eb !important; }
+html.light .text-cyan-400,
+html[data-theme="light"] .text-cyan-400          { color: #0284c7 !important; }
+html.light .text-cyan-300,
+html[data-theme="light"] .text-cyan-300          { color: #0369a1 !important; }
+html.light .text-primary,
+html[data-theme="light"] .text-primary           { color: #2563eb !important; }
+
+/* ─── Fonlar ─── */
+html.light .bg-white\/\[0\.06\],
+html[data-theme="light"] .bg-white\/\[0\.06\]   { background-color: var(--lt-surface)  !important; }
+html.light .bg-white\/\[0\.07\],
+html[data-theme="light"] .bg-white\/\[0\.07\]   { background-color: var(--lt-surface2) !important; }
+html.light .bg-white\/\[0\.04\],
+html[data-theme="light"] .bg-white\/\[0\.04\]   { background-color: var(--lt-surface2) !important; }
+html.light .bg-white\/\[0\.03\],
+html[data-theme="light"] .bg-white\/\[0\.03\]   { background-color: var(--lt-surface3) !important; }
+html.light .bg-white\/5,
+html[data-theme="light"] .bg-white\/5           { background-color: var(--lt-surface3) !important; }
+html.light .bg-white\/10,
+html[data-theme="light"] .bg-white\/10          { background-color: #f0f0f0 !important; }
+html.light .bg-white\/\[0\.12\],
+html[data-theme="light"] .bg-white\/\[0\.12\]   { background-color: #ebebeb !important; }
+html.light .bg-white\/\[0\.08\],
+html[data-theme="light"] .bg-white\/\[0\.08\]   { background-color: #f4f4f4 !important; }
+html.light .bg-black\/20,
+html[data-theme="light"] .bg-black\/20          { background-color: rgba(255,255,255,0.92) !important; }
+html.light .bg-black\/40,
+html[data-theme="light"] .bg-black\/40          { background-color: rgba(255,255,255,0.96) !important; }
+html.light .bg-black\/50,
+html[data-theme="light"] .bg-black\/50          { background-color: rgba(255,255,255,0.97) !important; }
+html.light .bg-black\/60,
+html[data-theme="light"] .bg-black\/60          { background-color: rgba(255,255,255,0.98) !important; }
+
+/* ─── Chegaralar ─── */
+html.light .border-white\/5,
+html.light .border-white\/8,
+html.light .border-white\/10,
+html.light .border-white\/12,
+html.light .border-white\/15,
+html[data-theme="light"] .border-white\/5,
+html[data-theme="light"] .border-white\/8,
+html[data-theme="light"] .border-white\/10,
+html[data-theme="light"] .border-white\/12,
+html[data-theme="light"] .border-white\/15     { border-color: var(--lt-border)        !important; }
+html.light .border-white\/20,
+html[data-theme="light"] .border-white\/20     { border-color: var(--lt-border-strong) !important; }
+html.light .border-white\/22,
+html[data-theme="light"] .border-white\/22     { border-color: #c8c8c8 !important; }
+
+/* ─── Sahifa fonlari ─── */
+html.light .bg-\[\#030712\],
+html.light .bg-iot,
+html[data-theme="light"] .bg-\[\#030712\],
+html[data-theme="light"] .bg-iot              { background-color: var(--lt-bg) !important; }
+
+/* ─── Hover ─── */
+html.light .hover\:bg-white\/10:hover,
+html[data-theme="light"] .hover\:bg-white\/10:hover { background-color: #f0f0f0 !important; }
+html.light .hover\:bg-white\/5:hover,
+html[data-theme="light"] .hover\:bg-white\/5:hover  { background-color: var(--lt-surface3) !important; }
+
+/* ─── Catalog dropdown ─── */
+html.light .bg-black\/40.backdrop-blur-3xl,
+html[data-theme="light"] .bg-black\/40.backdrop-blur-3xl {
+  background: var(--lt-surface) !important;
+  border: 1px solid var(--lt-border) !important;
+  box-shadow: var(--lt-shadow-lg) !important;
+}
+html.light .bg-black\/30.custom-scrollbar,
+html.light .bg-black\/20.custom-scrollbar,
+html.light .bg-black\/40.custom-scrollbar,
+html[data-theme="light"] .bg-black\/30.custom-scrollbar,
+html[data-theme="light"] .bg-black\/20.custom-scrollbar,
+html[data-theme="light"] .bg-black\/40.custom-scrollbar { background: var(--lt-surface2) !important; }
+html.light .bg-black\/55.custom-scrollbar,
+html.light .bg-black\/60.custom-scrollbar,
+html[data-theme="light"] .bg-black\/55.custom-scrollbar,
+html[data-theme="light"] .bg-black\/60.custom-scrollbar { background: var(--lt-surface3) !important; }
+
+/* ─── Tugmalar ─── */
+html.light .bg-primary\/15,
+html[data-theme="light"] .bg-primary\/15      { background-color: #f0f0f0 !important; }
+html.light .border-primary\/25,
+html[data-theme="light"] .border-primary\/25  { border-color: var(--lt-border-strong) !important; }
+html.light .hover\:bg-primary\/25:hover,
+html[data-theme="light"] .hover\:bg-primary\/25:hover { background-color: #e8e8e8 !important; }
+
+/* CTA tugmalar — qora (shadcn primary uslubida) */
+html.light .bg-gradient-to-r.from-primary.to-teal,
+html.light .bg-gradient-to-r.from-primary,
+html[data-theme="light"] .bg-gradient-to-r.from-primary.to-teal,
+html[data-theme="light"] .bg-gradient-to-r.from-primary {
+  background: var(--lt-primary) !important;
+  background-image: none !important;
+}
+
+/* ─── Input ─── */
+html.light input,
+html.light textarea,
+html.light select,
+html[data-theme="light"] input,
+html[data-theme="light"] textarea,
+html[data-theme="light"] select {
+  background-color: var(--lt-surface) !important;
+  border-color: var(--lt-border) !important;
+  color: var(--lt-text) !important;
+}
+html.light input::placeholder,
+html.light textarea::placeholder,
+html[data-theme="light"] input::placeholder,
+html[data-theme="light"] textarea::placeholder {
+  color: var(--lt-text-3) !important;
+}
+html.light input:focus,
+html.light textarea:focus,
+html[data-theme="light"] input:focus,
+html[data-theme="light"] textarea:focus {
+  border-color: #b5b5b5 !important;
+  outline-color: #b5b5b5 !important;
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.06) !important;
+}
+
+/* ─── Badge / chip ─── */
+html.light .bg-emerald-500\/20,
+html[data-theme="light"] .bg-emerald-500\/20  { background-color: #dcfce7 !important; }
+html.light .text-emerald-400,
+html[data-theme="light"] .text-emerald-400    { color: #16a34a !important; }
+html.light .bg-red-500\/20,
+html[data-theme="light"] .bg-red-500\/20      { background-color: #fee2e2 !important; }
+html.light .bg-amber-500\/20,
+html[data-theme="light"] .bg-amber-500\/20    { background-color: #fef3c7 !important; }
+html.light .text-amber-400,
+html[data-theme="light"] .text-amber-400      { color: #d97706 !important; }
+html.light .bg-violet-500\/20,
+html[data-theme="light"] .bg-violet-500\/20   { background-color: #ede9fe !important; }
+html.light .bg-cyan-500\/10,
+html[data-theme="light"] .bg-cyan-500\/10     { background-color: #f0fafb !important; }
+
+/* ─── Section gradient promos ─── */
+html.light .from-primary\/25,
+html[data-theme="light"] .from-primary\/25    { --tw-gradient-from: rgba(0,0,0,0.04) !important; }
+html.light .to-teal\/20,
+html[data-theme="light"] .to-teal\/20         { --tw-gradient-to: rgba(0,0,0,0.02) !important; }
+
+/* ─── Footer — qorong'i (dark) ─── */
+html.light footer,
+html[data-theme="light"] footer               { background: #09090b !important; }
+html.light footer .text-white,
+html[data-theme="light"] footer .text-white   { color: #fafafa !important; }
+html.light footer .text-white\/60,
+html[data-theme="light"] footer .text-white\/60 { color: rgba(250,250,250,0.6) !important; }
+html.light footer .text-white\/40,
+html[data-theme="light"] footer .text-white\/40 { color: rgba(250,250,250,0.4) !important; }
+html.light footer .border-white\/10,
+html[data-theme="light"] footer .border-white\/10 { border-color: rgba(255,255,255,0.08) !important; }
+html.light footer .bg-white\/\[0\.06\],
+html[data-theme="light"] footer .bg-white\/\[0\.06\] { background: rgba(255,255,255,0.06) !important; }
+
+/* ─── Modal overlay — qorong'i qolsin ─── */
+html.light .fixed.inset-0.bg-black\/60,
+html.light .fixed.inset-0.bg-black\/80,
+html[data-theme="light"] .fixed.inset-0.bg-black\/60,
+html[data-theme="light"] .fixed.inset-0.bg-black\/80 { background-color: rgba(0,0,0,0.6) !important; }
+
+/* ─── Scrollbar ─── */
+html.light ::-webkit-scrollbar-thumb,
+html[data-theme="light"] ::-webkit-scrollbar-thumb       { background: #d4d4d4; }
+html.light ::-webkit-scrollbar-thumb:hover,
+html[data-theme="light"] ::-webkit-scrollbar-thumb:hover { background: #a3a3a3; }
+
+/* ─── Stat raqamlari ─── */
+.stat-number {
+  background: linear-gradient(135deg, var(--color-primary, #0a74da), var(--color-teal, #00afa3));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+html.light .stat-number,
+html[data-theme="light"] .stat-number {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: #2563eb !important;
+  background-clip: unset !important;
+  color: #2563eb !important;
+}
+
+/* ─── Navbar katalog tugmasi light modeda ─── */
+html.light .catalog-btn,
+html[data-theme="light"] .catalog-btn {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+  background-image: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.35) !important;
+}
+html.light .catalog-btn:hover,
+html[data-theme="light"] .catalog-btn:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af) !important;
+  box-shadow: 0 4px 16px rgba(37,99,235,0.45) !important;
+}
+
+/* ─── Boshqa gradient tugmalar light modeda ─── */
+html.light .bg-gradient-to-r.from-primary.to-teal,
+html[data-theme="light"] .bg-gradient-to-r.from-primary.to-teal {
+  background: linear-gradient(135deg, #2563eb, #0891b2) !important;
+  background-image: linear-gradient(135deg, #2563eb, #0891b2) !important;
+  color: #fff !important;
+}
+
+/* ─── Section chiziq (w-1 gradient) — yashil qolsin ─── */
+html.light .bg-gradient-to-b.from-primary.to-teal,
+html[data-theme="light"] .bg-gradient-to-b.from-primary.to-teal {
+  background: linear-gradient(to bottom, #18181b, #3f3f46) !important;
+}
+
+/* ─── Catalog dropdown light mode matnlari ─── */
+html.light .dark-only-cyan,
+html[data-theme="light"] .dark-only-cyan                   { color: #2563eb !important; }
+
+html.light .cat-text-active,
+html[data-theme="light"] .cat-text-active                  { color: #1e1e2e !important; }
+
+html.light .cat-text-inactive,
+html[data-theme="light"] .cat-text-inactive                { color: #52526e !important; }
+html.light .cat-text-inactive:hover,
+html[data-theme="light"] .cat-text-inactive:hover          { color: #1e1e2e !important; background-color: rgba(0,0,0,0.04) !important; }
+
+/* L2 / L3 label sarlavhalari */
+html.light [class*="text-white\/35"],
+html[data-theme="light"] [class*="text-white\/35"]         { color: #9999bb !important; }
+
+/* L2 items */
+html.light [class*="text-white\/55"],
+html[data-theme="light"] [class*="text-white\/55"]         { color: #52526e !important; }
+
+/* ChevronRight ikonkasi */
+html.light [class*="text-white\/60"],
+html[data-theme="light"] [class*="text-white\/60"]         { color: #7070a0 !important; }
+
+/* L2 active item */
+html.light .bg-white\/10,
+html[data-theme="light"] .bg-white\/10                     { background-color: rgba(37,99,235,0.08) !important; color: #1e1e2e !important; }
+
+/* L2 hover */
+html.light [class*="hover:text-white\/85"]:hover,
+html[data-theme="light"] [class*="hover:text-white\/85"]:hover { color: #1e1e2e !important; }
+
+/* L3 items hover */
+html.light [class*="hover:bg-white\/8"]:hover,
+html[data-theme="light"] [class*="hover:bg-white\/8"]:hover { background-color: rgba(0,0,0,0.04) !important; }
+
+/* Catalog panel section backgrounds */
+html.light .bg-black\/30,
+html[data-theme="light"] .bg-black\/30                     { background-color: #f8faff !important; }
+html.light .bg-black\/40:not(.backdrop-blur-3xl),
+html[data-theme="light"] .bg-black\/40:not(.backdrop-blur-3xl) { background-color: #f2f6fc !important; }
+html.light .bg-black\/55,
+html[data-theme="light"] .bg-black\/55                     { background-color: #eef3fa !important; }
+
+/* ─── Kategoriya cardlari ichidagi matn HAMISHA oq (rasm ustida) ─── */
+html.light .cat-card .text-white,
+html.light .cat-card [class*="text-white"],
+html[data-theme="light"] .cat-card .text-white,
+html[data-theme="light"] .cat-card [class*="text-white"] {
+  color: #ffffff !important;
+}
+
+/* ─── Grid kataklar — olib tashlash ─── */
+html.light .grid-pattern,
+html[data-theme="light"] .grid-pattern {
+  background-image: none !important;
+}
+
+/* ─── Wishlist / cart badge — hamisha ko'rinsin ─── */
+html.light .nav-icon-btn span.bg-red-500,
+html[data-theme="light"] .nav-icon-btn span.bg-red-500 {
+  background-color: #ef4444 !important;
+  color: #ffffff !important;
+  z-index: 10;
+}
+
+/* ─── Navbar ikonka ranglar light modeda ─── */
+html.light .nav-icon-btn,
+html[data-theme="light"] .nav-icon-btn {
+  color: #52526e !important;
+}
+html.light .nav-icon-btn:hover,
+html[data-theme="light"] .nav-icon-btn:hover {
+  color: #1e1e2e !important;
+  background-color: rgba(0,0,0,0.06) !important;
+}
+
+/* ─── Hero slider ichidagi matnlar HAMISHA oq (rasm/video ustida) ─── */
+html.light .hero-slider .text-white,
+html.light .hero-slider [class*="text-white"],
+html[data-theme="light"] .hero-slider .text-white,
+html[data-theme="light"] .hero-slider [class*="text-white"] {
+  color: #ffffff !important;
+}
+
+/* ─── Hero slider badge (1/2, IOT Market) — qora fon saqlash ─── */
+html.light .hero-slider .bg-black\/30,
+html[data-theme="light"] .hero-slider .bg-black\/30 {
+  background-color: rgba(0,0,0,0.35) !important;
+}
+html.light .hero-slider .border-white\/25,
+html[data-theme="light"] .hero-slider .border-white\/25 {
+  border-color: rgba(255,255,255,0.3) !important;
+}
+
+/* ─── "Ko'rish" tugmasi — qora matn (oq fon) ─── */
+html.light .hero-slider a.bg-white,
+html[data-theme="light"] .hero-slider a.bg-white {
+  color: #1a1a1a !important;
+}

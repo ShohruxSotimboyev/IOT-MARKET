@@ -1,0 +1,355 @@
+{
+  "common": {
+    "currency": "so'm",
+    "view_all": "Ko'rish",
+    "home": "Bosh sahifa",
+    "products": "Mahsulotlar",
+    "menu": "Menyu",
+    "close": "Yopish",
+    "fullscreen": "To'liq ekran",
+    "zoom_in": "Kattalashtirish",
+    "zoom_out": "Kichiklashtirish",
+    "guest": "Mehmon",
+    "elements": "element"
+  },
+  "brand": {
+    "title": "IoT Market",
+    "tagline": "Smart Devices"
+  },
+  "nav": {
+    "home": "Bosh sahifa",
+    "products": "Mahsulotlar",
+    "about": "Biz haqimizda",
+    "contact": "Aloqa",
+    "catalog": "Katalog",
+    "search": "Mahsulot qidirish...",
+    "all_products": "Barcha mahsulotlar",
+    "language": "Til"
+  },
+  "hero": {
+    "title": "Aqlli qurilmalar uchun",
+    "subtitle": "eng yaxshi bozor",
+    "desc": "IoT, smart home, Arduino, Raspberry Pi va boshqa elektron qurilmalar",
+    "shop": "Xarid qilish",
+    "catalog": "Katalogni ko'rish"
+  },
+  "slides": {
+    "badge": "IoT Market",
+    "s1_title": "IoT va mikroelektronika",
+    "s1_sub": "Arduino, ESP32, Raspberry Pi — professional darajada",
+    "s1_cta": "Mahsulotlarni ko'rish",
+    "s2_title": "Smart Home yechimlari",
+    "s2_sub": "Uyingizni aqlli qiling — Zigbee, WiFi, sensorlar",
+    "s2_cta": "Smart Home",
+    "s3_title": "Xorazm — Urganch filiali",
+    "s3_sub": "Mahalliy yetkazib berish va professional maslahat",
+    "s3_cta": "Biz bilan bog'lanish"
+  },
+  "popular": {
+    "title": "Mashhur bo'limlar",
+    "label": "Bo'lim",
+    "view": "Ko'rish",
+    "prev": "Oldingi",
+    "next": "Keyingi",
+    "count_label": "{{count}} ta mahsulot",
+    "badge_out": "Omborda yo'q",
+    "tab_kits": "To'plamlar"
+  },
+  "cats": {
+    "title": "Mashhur kategoriyalar",
+    "label": "Kategoriya",
+    "go": "O'tish",
+    "subcategories": "Bo'limlar",
+    "items": "Mahsulotlar"
+  },
+  "categoryNames": {
+    "arduino": "Arduino",
+    "raspberry": "Raspberry Pi",
+    "smart_home": "Smart Home",
+    "sensors": "Sensorlar",
+    "esp": "ESP Modullar",
+    "motors": "Motorlar",
+    "displays": "Displeylar",
+    "tools": "Asboblar"
+  },
+  "featured": {
+    "arduino": {
+      "name": "Arduino",
+      "desc": "Mikrokontroller va prototiplash to'plamlari"
+    },
+    "esp": {
+      "name": "ESP Modullar",
+      "desc": "WiFi va Bluetooth modullar"
+    },
+    "tools": {
+      "name": "Asboblar",
+      "desc": "Professional o'lchov va lehimlash"
+    },
+    "sensors": {
+      "name": "Sensorlar",
+      "desc": "Harorat, harakat, gaz sensorlari"
+    },
+    "motors": {
+      "name": "Motorlar",
+      "desc": "Servo, stepper va DC motorlar"
+    },
+    "displays": {
+      "name": "Displeylar",
+      "desc": "OLED, TFT va E-Ink ekranlar"
+    },
+    "smart_home": {
+      "name": "Smart Home",
+      "desc": "Aqlli uy qurilmalari"
+    }
+  },
+  "search": {
+    "no_results": "Hech narsa topilmadi",
+    "show_all": "Barcha natijalar"
+  },
+  "hot": {
+    "title": "Eng ko'p sotilganlar"
+  },
+  "new": {
+    "title": "Yangi mahsulotlar"
+  },
+  "kits": {
+    "title": "Mikrokontroller to'plamlari"
+  },
+  "mcu": {
+    "title": "Mikrokontrollerlar",
+    "label": "Bo'lim",
+    "banner_title": "Mikrokontrollerlar",
+    "category_label": "Mikrokontrollerlar",
+    "view": "Ko'rish",
+    "badge_out": "Omborda yo'q"
+  },
+  "promo": {
+    "label": "Maxsus taklif",
+    "title": "IoT qurilmalar —",
+    "highlight": "eng yaxshi narxlar",
+    "desc": "Arduino, ESP32, Raspberry Pi — Urganch filialida yetkazib berish.",
+    "cta": "Barcha mahsulotlar"
+  },
+  "stats": {
+    "products": "Mahsulot",
+    "clients": "Mijozlar",
+    "quality": "Sifat",
+    "support": "Qo'llab-quvvatlash"
+  },
+  "about_sec": {
+    "label": "Biz haqimizda",
+    "title": "IoT Market haqida",
+    "desc": "2019-yildan beri Xorazm viloyatida Arduino, ESP32, Raspberry Pi, sensorlar va smart home yechimlarini yetkazib beramiz. O'quv markazlari, startaplar va usta-hunarmandlar uchun ishonchli hamkor.",
+    "point1": "120+ turdagi IoT mahsulot",
+    "point2": "Urganchda tez yetkazib berish",
+    "point3": "24/7 onlayn maslahat",
+    "more": "Batafsil"
+  },
+  "about": {
+    "intro": "IoT Market — Xorazm viloyatidagi eng yirik IoT va mikroelektronika do'koni. Biz Arduino, ESP, Raspberry Pi, sensorlar, motorlar va aqlli uy qurilmalarini bir joyda taklif qilamiz.",
+    "mission_title": "Bizning missiyamiz",
+    "mission_desc": "IoT texnologiyalarini O'zbekistonning har bir hududiga yetkazish — qulay narx, sifatli mahsulot va professional maslahat bilan.",
+    "story": "Do'konimiz dastlab o'quvchilar va dasturchilar uchun kichik laboratoriya sifatida ochilgan. Bugun minglab mijozlar loyihalarini biz bilan qurishadi: smart uy, robototexnika, agro-monitoring va sanoat IoT.",
+    "values_title": "Nima uchun bizni tanlashadi",
+    "value_quality_title": "Sifat kafolati",
+    "value_quality_desc": "Faqat tekshirilgan brendlar va original komponentlar. Har bir mahsulot qadoqda va kafolat bilan.",
+    "value_delivery_title": "Tez yetkazish",
+    "value_delivery_desc": "Xorazm va atrofdagi hududlarga 1–3 kun ichida. Buyurtma holatini kuzatish mumkin.",
+    "value_support_title": "24/7 qo'llab-quvvatlash",
+    "value_support_desc": "Telegram, telefon va onlayn chat orqali texnik yordam — loyiha tanlashdan tortib ulashgacha.",
+    "value_innovation_title": "Innovatsiya",
+    "value_innovation_desc": "Yangi ESP32-S3, Matter, Zigbee va boshqa zamonaviy protokollar doim katalogda.",
+    "location_title": "Biz qayerdamiz",
+    "location_desc": "Urganch shahridagi do'konimizda mahsulotlarni ko'rib, sinab olishingiz mumkin. Xaritada aniq manzil ko'rsatilgan.",
+    "stat_products": "Mahsulotlar",
+    "stat_brands": "Brendlar",
+    "stat_clients": "Mijozlar",
+    "stat_years": "Yil tajriba"
+  },
+  "chat": {
+    "section_title": "24/7 onlayn chat",
+    "section_desc": "Savolingiz bormi? Hoziroq yozing — operatorlarimiz tez orada javob beradi.",
+    "title": "Onlayn yordam",
+    "online": "Onlayn — javob beramiz",
+    "welcome": "Assalomu alaykum! IoT Market 24/7 chatiga xush kelibsiz. Qanday yordam bera olamiz?",
+    "placeholder": "Xabaringizni yozing...",
+    "send": "Yuborish"
+  },
+  "contact": {
+    "subtitle": "Savollar va buyurtmalar uchun biz bilan bog'laning",
+    "form_title": "Xabar yuborish",
+    "name_ph": "Ismingiz",
+    "email_ph": "Email",
+    "subject_ph": "Mavzu",
+    "message_ph": "Xabaringiz...",
+    "send": "Yuborish",
+    "sent": "Xabar yuborildi!",
+    "address": "Manzil",
+    "phone": "Telefon",
+    "email": "Email",
+    "hours": "Ish vaqti",
+    "map_title": "Do'kon joylashuvi",
+    "map_note": "sputnik xarita",
+    "cta": "Biz bilan bog'lanish"
+  },
+  "footer": {
+    "info": "Ma'lumot",
+    "cats": "Kategoriyalar",
+    "contacts": "Kontaktlar",
+    "address": "Xorazm vil., Urganch sh., Al-Xorazmiy ko'chasi, 45",
+    "phone": "+998 91 234 56 78",
+    "rights": "Barcha huquqlar himoyalangan",
+    "region_desc": "professional IoT do'koni"
+  },
+  "auth": {
+    "login": "Kirish",
+    "register": "Ro'yxatdan o'tish",
+    "logout": "Chiqish",
+    "email": "Email",
+    "password": "Parol",
+    "name": "Ism",
+    "name_ph": "Ismingiz",
+    "email_ph": "email@example.com",
+    "password_ph": "••••••••",
+    "err_required": "Email va parol kiritish shart",
+    "no_account": "Akkaunt yo'qmi?",
+    "have_account": "Akkaunt bormi?",
+    "login_title": "Hisobingizga kiring",
+    "register_title": "Yangi hisob yarating",
+    "sign_in_desc": "Aqlli qurilmalar marketiga xush kelibsiz!",
+    "sign_up_desc": "Ro'yxatdan o'ting va xaridni boshlang.",
+    "phone": "Telefon raqam",
+    "username": "Foydalanuvchi nomi",
+    "confirm_password": "Parolni tasdiqlash",
+    "login_btn": "Tizimga kirish",
+    "register_btn": "Ro'yxatdan o'tish",
+    "google_login": "Google orqali kirish",
+    "or": "Yoki",
+    "go_login": "Kirish!",
+    "go_register": "Ro'yxatdan o'tish",
+    "verify_otp": "Kodni tasdiqlash",
+    "otp_code": "Tasdiqlash kodi",
+    "verify": "Tasdiqlash"
+  },
+  "product": {
+    "add_cart": "Savatga qo'shish",
+    "buy": "Hozir sotib olish",
+    "buy_now": "Hozir sotib olish",
+    "details": "Mahsulot haqida",
+    "specs": "Spetsifikatsiya",
+    "related": "Shu kategoriyadagi mahsulotlar",
+    "instock": "Mavjud",
+    "outstock": "Tugagan",
+    "view": "Ko'rish",
+    "not_found": "Mahsulot topilmadi",
+    "rate_hint": "Baholang (yulduzchalar)",
+    "reviews_count": "sharh",
+    "reviews_tab": "Sharhlar",
+    "leave_review": "Fikr qoldiring",
+    "your_name": "Ismingiz",
+    "review_ph": "Sharhingiz...",
+    "submit_review": "Yuborish",
+    "no_reviews": "Hali sharh yo'q. Birinchi bo'ling!",
+    "spec_category": "Kategoriya",
+    "spec_rating": "Reyting",
+    "spec_status": "Holati",
+    "breadcrumb_products": "Mahsulotlar",
+    "tab_desc": "Tavsif",
+    "tab_specs": "Spetsifikatsiya",
+    "tab_reviews": "Sharhlar",
+    "qty": "Miqdor",
+    "reviews": "sharh",
+    "add_review": "Sharh qoldirish",
+    "review_author": "Ismingiz",
+    "review_text": "Sharhingiz...",
+    "no_desc": "Tavsif mavjud emas.",
+    "review_added": "Sharh qo'shildi!"
+  },
+  "products_page": {
+    "categories": "Kategoriyalar",
+    "all": "Barcha mahsulotlar",
+    "found": "{{count}} ta mahsulot topildi",
+    "empty": "Mahsulot topilmadi",
+    "filter": "Filter",
+    "search_label": "Qidiruv",
+    "sort_label": "Saralash",
+    "sort_default": "Standart",
+    "sort_price_asc": "Arzon → Qimmat",
+    "sort_price_desc": "Qimmat → Arzon",
+    "sort_rating": "Reyting"
+  },
+  "cart": {
+    "title": "Savat",
+    "empty": "Savat bo'sh",
+    "total": "Jami summa",
+    "checkout": "Buyurtma berish",
+    "clear": "Savatni tozalash",
+    "remove": "O'chirish",
+    "unit_price": "1 dona narxi",
+    "quantity": "Miqdor",
+    "pcs": "dona",
+    "line_total": "Jami",
+    "items_count": "Jami buyumlar",
+    "products_count": "Turli mahsulotlar"
+  },
+  "fav": {
+    "title": "Sevimlilar",
+    "empty": "Sevimlilar bo'sh"
+  },
+  "profile": {
+    "verified": "Tasdiqlangan foydalanuvchi",
+    "personal_info": "Shaxsiy ma'lumotlar",
+    "name": "Ism",
+    "email": "Email",
+    "phone": "Telefon",
+    "not_entered": "Kiritilmagan",
+    "save": "Saqlash",
+    "cancel": "Bekor",
+    "activity": "Faollik",
+    "cart": "Savat",
+    "favorites": "Sevimlilar",
+    "logout": "Tizimdan chiqish",
+    "title": "Profil",
+    "personal": "Shaxsiy ma'lumotlar",
+    "edit": "Tahrirlash"
+  },
+  "sections": {
+    "add_to_cart": "Savatga qo'shish",
+    "add_to_fav": "Sevimlilarga"
+  },
+  "checkout": {
+    "step_card": "Karta",
+    "step_confirm": "Tasdiqlash",
+    "step_done": "Bajarildi",
+    "card_title": "Karta ma'lumotlari",
+    "card_desc": "Uzcard, Humo, Visa va Mastercard qabul qilinadi",
+    "confirm_title": "To'lovni tasdiqlang",
+    "confirm_desc": "Ma'lumotlaringizni tekshirib, tasdiqlang",
+    "success_title": "To'lov muvaffaqiyatli!",
+    "success_desc": "Tranzaksiya bank tomonidan tasdiqlandi",
+    "back": "Orqaga",
+    "secure": "Xavfsiz to'lov • SSL",
+    "order": "Buyurtma",
+    "product_price": "Mahsulot narxi",
+    "commission": "Xizmat haqqi (1%)",
+    "total": "Jami",
+    "ssl": "256-bit SSL shifrlash",
+    "continue": "Davom etish",
+    "pay": "To'lovni tasdiqlash",
+    "paying": "To'lov amalga oshirilmoqda...",
+    "go_home": "Bosh sahifaga qaytish",
+    "card_holder": "KARTA EGASI",
+    "card_number": "KARTA RAQAMI",
+    "first_name": "ISM",
+    "last_name": "FAMILIYA",
+    "expiry": "MUDDAT",
+    "cvv_hint": "CVV ko'rish uchun kartani bosing",
+    "card_label": "Karta",
+    "owner": "Egasi",
+    "deadline": "Muddat",
+    "to_pay": "To'lanadi",
+    "product": "Mahsulot",
+    "paid": "To'langan",
+    "tx_id": "Tranzaksiya ID"
+  }
+}
