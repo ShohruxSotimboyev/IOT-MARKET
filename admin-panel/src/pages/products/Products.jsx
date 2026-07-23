@@ -543,9 +543,11 @@ export default function Products() {
                     </td>
                     <td>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                        <span style={{ fontWeight: 600, fontSize: 13, color: 'var(--text-muted)' }}>0 dona</span>
-                        <span className="badge badge-default" style={{ fontSize: 10, padding: '2px 6px' }}>
-                          {t('products.outOfStock', "Yo'q")}
+                        <span style={{ fontWeight: 600, fontSize: 13, color: p.stockCount > 0 ? 'var(--text-primary)' : 'var(--text-muted)' }}>
+                          {p.stockCount || 0} dona
+                        </span>
+                        <span className={`badge ${p.inStock ? 'badge-success' : 'badge-default'}`} style={{ fontSize: 10, padding: '2px 6px' }}>
+                          {p.inStock ? 'Omborda bor' : t('products.outOfStock', "Yo'q")}
                         </span>
                       </div>
                     </td>

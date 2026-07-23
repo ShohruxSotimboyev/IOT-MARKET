@@ -78,7 +78,10 @@ exports.addInventoryLog = async (req, res, next) => {
 
       await tx.product.update({
         where: { id: productId },
-        data: { stockCount: newStock }
+        data: { 
+          stockCount: newStock,
+          inStock: newStock > 0
+        }
       });
 
       return log;
