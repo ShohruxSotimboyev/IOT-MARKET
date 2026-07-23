@@ -6,6 +6,7 @@ import { ChevronRight, Zap } from 'lucide-react'
 import { CATEGORIES } from '../../data'
 import CategoryIcon from '../common/CategoryIcon'
 import { categoryLabel } from '../../i18n/helpers'
+import { useRef, useCallback } from 'react'
 
 // Har bir kategoriya uchun rang
 const CAT_COLORS = {
@@ -28,6 +29,19 @@ export default function CatalogDropdown({
   const activeCat = CATEGORIES.find((c) => c.id === activeL1)
   const activeSub = activeCat?.sub.find((s) => s.id === activeL2)
   const colors = CAT_COLORS[activeL1] || { from: '#00afa3', to: '#0a74da', shadow: 'rgba(0,175,163,0.4)' }
+  const listRef = useRef(null)
+  const hoveredOffsetRef = useRef(0)
+
+  const handleCatHover = useCallback((cat, e) => {
+    setActiveL1(cat.id)
+    setActiveL2(null)
+    // Calculate offset of hovered item relative to the list container
+    if (listRef.current && e.currentTarget) {
+      const listTop = listRef.current.getBoundingClientRect().top
+      const itemTop = e.currentTarget.getBoundingClientRect().top
+      hoveredOffsetRef.current = Math.max(0, itemTop - listTop)
+    }
+  }, [setActiveL1, setActiveL2])
 
   const top = anchorRect ? anchorRect.bottom + 12 : 112
   const left = anchorRect ? anchorRect.left : 16
@@ -58,7 +72,7 @@ export default function CatalogDropdown({
             onMouseLeave={onPanelLeave}
           >
             {/* L1 Categories */}
-            <div className="py-3 w-[min(280px,85vw)] border-r border-white/5 overflow-y-auto bg-black/30 custom-scrollbar">
+            <div ref={listRef} className="py-3 w-[min(280px,85vw)] border-r border-white/5 overflow-y-auto bg-black/30 custom-scrollbar">
               <div className="px-5 pb-3 flex items-center gap-2">
                 <Zap size={11} className="text-cyan-400" />
                 <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-cyan-400/80 dark-only-cyan">
@@ -71,7 +85,7 @@ export default function CatalogDropdown({
                 return (
                   <motion.div
                     key={cat.id}
-                    onMouseEnter={() => { setActiveL1(cat.id); setActiveL2(null) }}
+                    onMouseEnter={(e) => handleCatHover(cat, e)}
                     whileHover={{ x: 3 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     className={`group relative flex items-center justify-between mx-2 mb-0.5 px-3 py-2.5 rounded-2xl cursor-pointer transition-all duration-200 ${
@@ -136,6 +150,7 @@ export default function CatalogDropdown({
                   exit={{ opacity: 0, x: 12, transition: { duration: 0.12 } }}
                   transition={{ duration: 0.22, ease: 'easeOut' }}
                   className="py-3 w-[min(240px,80vw)] border-r border-white/5 overflow-y-auto bg-black/40 custom-scrollbar"
+                  style={{ paddingTop: Math.max(12, hoveredOffsetRef.current) }}
                 >
                   <p className="px-5 pb-3 text-[11px] font-bold uppercase tracking-[0.2em] text-white/35">
                     {t('cats.subcategories')}
