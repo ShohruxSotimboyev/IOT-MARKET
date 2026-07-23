@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, Archive, X, ArrowUpRight, ArrowDownRight } from 'lucide-react'
+import { Plus, Archive, X, ArrowUpRight, ArrowDownRight, Search } from 'lucide-react'
 import { inventoryAPI } from '../../api/inventory'
 import { productsAPI } from '../../api/products'
 import toast from 'react-hot-toast'
@@ -124,16 +124,25 @@ export default function Inventory() {
   
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+  const [globalSearch, setGlobalSearch] = useState('')
 
   useEffect(() => { 
+    const debounceTimeout = setTimeout(() => {
+      setPage(1)
+      loadLogs()
+    }, 500)
+    return () => clearTimeout(debounceTimeout)
+  }, [globalSearch])
+
+  useEffect(() => {
     loadLogs()
-    loadProducts()
+    if (products.length === 0) loadProducts()
   }, [page])
 
   const loadLogs = async () => {
     setLoading(true)
     try {
-      const data = await inventoryAPI.getAll(page, 20)
+      const data = await inventoryAPI.getAll(page, 20, globalSearch)
       setLogs(data.data)
       setTotalPages(data.totalPages)
     } catch {
@@ -161,14 +170,27 @@ export default function Inventory() {
 
   return (
     <div>
-      <div className="page-header">
+      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h1 className="page-title">{t('inventory.title')}</h1>
           <p className="page-subtitle">{t('inventory.history')}</p>
         </div>
-        <button className="btn btn-primary" onClick={() => setModalOpen(true)}>
-          <Plus size={16} /> {t('inventory.addAction')}
-        </button>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <div className="ui-input-wrap" style={{ margin: 0, position: 'relative', width: '250px' }}>
+            <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+            <input 
+              type="text" 
+              className="ui-input" 
+              placeholder="Qidirish..." 
+              value={globalSearch}
+              onChange={e => setGlobalSearch(e.target.value)}
+              style={{ paddingLeft: '36px', height: '40px' }}
+            />
+          </div>
+          <button className="btn btn-primary" onClick={() => setModalOpen(true)} style={{ height: '40px' }}>
+            <Plus size={16} /> {t('inventory.addAction')}
+          </button>
+        </div>
       </div>
 
       <div className="ui-card">

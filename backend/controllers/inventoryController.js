@@ -4,11 +4,18 @@ const prisma = new PrismaClient();
 // Get all inventory logs (with pagination and product details)
 exports.getInventoryLogs = async (req, res, next) => {
   try {
-    const { page = 1, limit = 50 } = req.query;
+    const { page = 1, limit = 50, search = '' } = req.query;
     const skip = (Math.max(parseInt(page), 1) - 1) * Math.min(parseInt(limit), 500);
+
+    const where = search ? {
+      product: {
+        name: { contains: search, mode: 'insensitive' }
+      }
+    } : {};
 
     const [logs, total] = await Promise.all([
       prisma.inventoryLog.findMany({
+        where,
         skip,
         take: Math.min(parseInt(limit), 500),
         orderBy: { createdAt: 'desc' },
@@ -18,7 +25,7 @@ exports.getInventoryLogs = async (req, res, next) => {
           }
         }
       }),
-      prisma.inventoryLog.count()
+      prisma.inventoryLog.count({ where })
     ]);
 
     res.json({

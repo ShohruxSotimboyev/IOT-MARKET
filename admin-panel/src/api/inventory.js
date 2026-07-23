@@ -9,8 +9,8 @@ const getHeaders = () => {
 };
 
 export const inventoryAPI = {
-  getAll: async (page = 1, limit = 50) => {
-    const res = await fetch(`${API_URL}/api/inventory?page=${page}&limit=${limit}`, {
+  getAll: async (page = 1, limit = 50, search = '') => {
+    const res = await fetch(`${API_URL}/api/inventory?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`, {
       headers: getHeaders()
     });
     if (!res.ok) throw new Error('Ombor tarixini yuklashda xatolik');
