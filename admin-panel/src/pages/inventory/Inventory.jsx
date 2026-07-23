@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Archive, X, ArrowUpRight, ArrowDownRight } from 'lucide-react'
 import { inventoryAPI } from '../../api/inventory'
@@ -11,6 +11,22 @@ function InventoryModal({ products, onClose, onSave }) {
 
   const [form, setForm] = useState({ productId: '', type: 'in', quantity: '', reason: '' })
   const [submitting, setSubmitting] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const dropdownRef = useRef(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const selectedProduct = products.find(p => p.id === form.productId)
+  const filteredProducts = products.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
 
   const handleSubmit = async () => {
     if (!form.productId) return toast.error(t('inventory.selectProduct'))
@@ -36,12 +52,67 @@ function InventoryModal({ products, onClose, onSave }) {
         </div>
         <div className="modal-body">
           <div className="form-grid">
-            <div className="ui-input-wrap">
+            <div className="ui-input-wrap" ref={dropdownRef} style={{ position: 'relative' }}>
               <label className="ui-label">{t('inventory.productLabel')}</label>
-              <select className="ui-select" value={form.productId} onChange={e => setForm({ ...form, productId: e.target.value })}>
-                <option value="">-- {t('common.select')} --</option>
-                {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-              </select>
+              
+              <div 
+                className="ui-input" 
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', background: 'var(--bg-card)' }}
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
+                <span style={{ color: selectedProduct ? 'var(--text-primary)' : 'var(--text-muted)' }}>
+                  {selectedProduct ? selectedProduct.name : `-- ${t('common.select')} --`}
+                </span>
+                <span style={{ fontSize: '10px' }}>▼</span>
+              </div>
+
+              {dropdownOpen && (
+                <div style={{
+                  position: 'absolute', top: '100%', left: 0, right: 0, 
+                  background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', 
+                  borderRadius: '8px', marginTop: '4px', zIndex: 50, 
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)', overflow: 'hidden'
+                }}>
+                  <div style={{ padding: '8px', borderBottom: '1px solid var(--border-subtle)' }}>
+                    <input 
+                      type="text" 
+                      className="ui-input" 
+                      style={{ height: '32px', fontSize: '13px' }}
+                      placeholder="Qidirish..." 
+                      value={searchTerm} 
+                      onChange={e => setSearchTerm(e.target.value)} 
+                      autoFocus
+                    />
+                  </div>
+                  <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                    {filteredProducts.length > 0 ? (
+                      filteredProducts.map(p => (
+                        <div 
+                          key={p.id}
+                          style={{
+                            padding: '8px 12px', cursor: 'pointer', fontSize: '13px',
+                            background: form.productId === p.id ? 'var(--bg-body)' : 'transparent',
+                            color: form.productId === p.id ? 'var(--clr-primary)' : 'var(--text-primary)'
+                          }}
+                          onClick={() => {
+                            setForm({ ...form, productId: p.id })
+                            setDropdownOpen(false)
+                            setSearchTerm('')
+                          }}
+                          onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-body)'}
+                          onMouseLeave={e => e.currentTarget.style.background = form.productId === p.id ? 'var(--bg-body)' : 'transparent'}
+                        >
+                          {p.name}
+                        </div>
+                      ))
+                    ) : (
+                      <div style={{ padding: '12px', fontSize: '13px', color: 'var(--text-muted)', textAlign: 'center' }}>
+                        Topilmadi
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
             
             <div className="form-grid form-grid-2">
