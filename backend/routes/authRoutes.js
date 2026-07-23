@@ -70,6 +70,34 @@ router.get('/admin-verify', adminProtect, (req, res) => {
   res.json({ success: true, user: req.user })
 })
 
+// ── Superadmin: add new manager ───────────────────────────────────────────────
+router.post('/add-manager', require('../middleware/authMiddleware').superadminProtect, async (req, res) => {
+  try {
+    const { username, email, phone, password } = req.body;
+    if (!username || !email || !phone || !password) {
+      return res.status(400).json({ success: false, message: "Barcha maydonlarni to'ldiring." });
+    }
+    const existing = await prisma.user.findUnique({ where: { email: email.toLowerCase().trim() } });
+    if (existing) {
+      return res.status(409).json({ success: false, message: "Bu email band." });
+    }
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const user = await prisma.user.create({
+      data: {
+        username,
+        email: email.toLowerCase().trim(),
+        phone,
+        password: hashedPassword,
+        role: 'admin',
+        isVerified: true
+      }
+    });
+    res.json({ success: true, data: user });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+})
+
 // ── Admin: get all users ──────────────────────────────────────────────────────
 router.get('/users', adminProtect, async (req, res) => {
   try {
