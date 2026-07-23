@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, Plus, Edit, Trash2, Eye, Package, X, Upload, Image } from 'lucide-react'
+import { Search, Plus, Edit, Trash2, Eye, Package, X, Upload, Image, Percent } from 'lucide-react'
 import { productsAPI } from '../../api/products'
 import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
@@ -225,6 +225,129 @@ function ProductModal({ product, categories = [], suppliers = [], onClose, onSav
   )
 }
 
+function DiscountModal({ product, onClose, onSave }) {
+  const { t } = useTranslation()
+  const [discountPercent, setDiscountPercent] = useState('')
+  const [newPrice, setNewPrice] = useState('')
+
+  const handlePercentChange = (e) => {
+    const p = Number(e.target.value)
+    setDiscountPercent(e.target.value)
+    if (p > 0 && p <= 100) {
+      const oldP = product.oldPrice || product.price
+      setNewPrice(Math.round(oldP * (1 - p / 100)))
+    } else {
+      setNewPrice('')
+    }
+  }
+
+  const handlePriceChange = (e) => {
+    const val = Number(e.target.value)
+    setNewPrice(e.target.value)
+    if (val > 0) {
+      const oldP = product.oldPrice || product.price
+      if (val < oldP) {
+        setDiscountPercent(Math.round(((oldP - val) / oldP) * 100))
+      } else {
+        setDiscountPercent(0)
+      }
+    }
+  }
+
+  const handleSubmit = async () => {
+    if (!newPrice) return toast.error('Yangi narxni kiriting')
+    try {
+      const oldP = product.oldPrice || product.price
+      const payload = {
+        oldPrice: oldP,
+        price: Number(newPrice),
+        badge: 'SALE'
+      }
+      let saved;
+      try {
+        saved = await productsAPI.update(product.id, payload)
+      } catch (err) {
+        saved = { ...product, ...payload } // fallback for mock
+      }
+      toast.success('Chegirma qo\'shildi')
+      onSave(saved)
+    } catch {
+      toast.error('Xatolik yuz berdi')
+    }
+  }
+
+  const handleRemoveDiscount = async () => {
+    if (!product.oldPrice) return onClose()
+    try {
+      const payload = {
+        oldPrice: null,
+        price: product.oldPrice,
+        badge: product.badge === 'SALE' ? '' : product.badge
+      }
+      let saved;
+      try {
+        saved = await productsAPI.update(product.id, payload)
+      } catch (err) {
+        saved = { ...product, ...payload } // fallback for mock
+      }
+      toast.success('Chegirma olib tashlandi')
+      onSave(saved)
+    } catch {
+      toast.error('Xatolik yuz berdi')
+    }
+  }
+
+  return (
+    <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
+      <motion.div className="modal-box" style={{ maxWidth: 400 }} initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} onClick={e => e.stopPropagation()}>
+        <div className="modal-header">
+          <span className="modal-title">Chegirma (Скидка)</span>
+          <button className="modal-close" onClick={onClose}><X size={16} /></button>
+        </div>
+        <div className="modal-body">
+          <p style={{ fontWeight: 600, marginBottom: 15 }}>{product.name}</p>
+          
+          <div style={{ display: 'flex', gap: 15, marginBottom: 20 }}>
+            <div style={{ flex: 1 }}>
+              <p style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 4 }}>Joriy narx</p>
+              <p style={{ fontWeight: 600, color: 'var(--text-secondary)', textDecoration: product.oldPrice ? 'line-through' : 'none' }}>
+                {(product.oldPrice || product.price).toLocaleString()} so'm
+              </p>
+            </div>
+            {product.oldPrice && (
+              <div style={{ flex: 1 }}>
+                <p style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 4 }}>Joriy chegirma</p>
+                <p style={{ fontWeight: 600, color: 'var(--clr-danger)' }}>
+                  {product.price.toLocaleString()} so'm ({Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%)
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div className="ui-input-wrap">
+            <label className="ui-label">Chegirma foizi (%)</label>
+            <input type="number" className="ui-input" value={discountPercent} onChange={handlePercentChange} placeholder="Masalan: 10" />
+          </div>
+          
+          <div className="ui-input-wrap">
+            <label className="ui-label">Yangi narx (so'm)</label>
+            <input type="number" className="ui-input" value={newPrice} onChange={handlePriceChange} />
+          </div>
+        </div>
+        <div className="modal-footer" style={{ justifyContent: 'space-between' }}>
+          <button className="btn btn-ghost" style={{ color: 'var(--clr-danger)', padding: '0 8px' }} onClick={handleRemoveDiscount}>
+            O'chirish
+          </button>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button className="btn btn-secondary" onClick={onClose}>{t('common.cancel')}</button>
+            <button className="btn btn-primary" onClick={handleSubmit}>{t('common.save')}</button>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
 export default function Products() {
   const { t } = useTranslation()
   const [products, setProducts] = useState([])
@@ -235,6 +358,7 @@ export default function Products() {
   const [catFilter, setCatFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('all')
   const [modal, setModal] = useState(null) // null | 'add' | product
+  const [discountModal, setDiscountModal] = useState(null) // null | product
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [page, setPage] = useState(1)
   const PER = 15
@@ -280,12 +404,13 @@ export default function Products() {
   }
 
   const handleSave = (saved) => {
-    if (modal?.id) {
+    if (modal?.id || discountModal?.id) {
       setProducts(p => p.map(x => x.id === saved.id ? { ...x, ...saved } : x))
     } else {
       setProducts(p => [saved, ...p])
     }
     setModal(null)
+    setDiscountModal(null)
   }
 
   const filtered = products.filter(p => {
@@ -426,6 +551,9 @@ export default function Products() {
                     </td>
                     <td>
                       <div style={{ display: 'flex', gap: 6 }}>
+                        <button className="btn btn-ghost btn-icon btn-sm" onClick={() => setDiscountModal(p)} title="Chegirma qo'shish">
+                          <Percent size={14} />
+                        </button>
                         <button className="btn btn-ghost btn-icon btn-sm" onClick={() => setModal(p)} title={t('common.edit')}>
                           <Edit size={14} />
                         </button>
@@ -484,6 +612,17 @@ export default function Products() {
             categories={categories}
             suppliers={suppliers}
             onClose={() => setModal(null)}
+            onSave={handleSave}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Discount modal */}
+      <AnimatePresence>
+        {discountModal && (
+          <DiscountModal
+            product={discountModal}
+            onClose={() => setDiscountModal(null)}
             onSave={handleSave}
           />
         )}
