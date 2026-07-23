@@ -33,9 +33,9 @@ export default function AdminLayout() {
     { path: '/categories', icon: Package, key: 'categories' },
     { path: '/suppliers', icon: Truck, key: 'suppliers' },
     { path: '/products', icon: Package, key: 'products' },
-    { path: '/orders', icon: ShoppingCart, key: 'orders', badge: 3 },
+    { path: '/orders', icon: ShoppingCart, key: 'orders' },
     { path: '/customers', icon: Users, key: 'customers' },
-    { path: '/messages', icon: MessageSquare, key: 'messages', badge: 5 },
+    { path: '/messages', icon: MessageSquare, key: 'messages' },
     { path: '/banners', icon: ImageIcon, key: 'banners' },
     { path: '/settings', icon: Settings, key: 'settings' },
   ]
