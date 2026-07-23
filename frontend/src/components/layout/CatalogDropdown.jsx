@@ -119,52 +119,38 @@ export default function CatalogDropdown({
                       </span>
                     </div>
 
-                    <div className="catalog-sub-list">
+                    <div className="catalog-grid">
                       {activeCat.sub.map((s, i) => (
-                        <motion.button
+                        <motion.div
                           key={s.id}
-                          initial={{ opacity: 0, y: 4 }}
+                          initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: i * 0.03 + 0.05, duration: 0.15 }}
-                          type="button"
-                          onClick={() => { onClose(); navigate(`/products?cat=${encodeURIComponent(activeCat.name)}`) }}
-                          onMouseEnter={() => setActiveL2(s.id)}
-                          className={`catalog-sub-item ${activeL2 === s.id ? 'active' : ''}`}
+                          transition={{ delay: i * 0.04 + 0.05, duration: 0.2 }}
+                          className="catalog-grid-group"
                         >
-                          <span>{s.name}</span>
-                          <ChevronRight size={12} className="catalog-sub-chevron" />
-                        </motion.button>
+                          <h4 
+                            className="catalog-group-title" 
+                            onClick={() => { onClose(); navigate(`/products?cat=${encodeURIComponent(activeCat.name)}`) }}
+                          >
+                            {s.name}
+                          </h4>
+                          {s.items?.length > 0 && (
+                            <div className="catalog-group-items">
+                              {s.items.map((item) => (
+                                <button
+                                  key={item}
+                                  type="button"
+                                  onClick={() => { onClose(); navigate(`/products?cat=${encodeURIComponent(activeCat.name)}`) }}
+                                  className="catalog-group-item"
+                                >
+                                  {item}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </motion.div>
                       ))}
                     </div>
-
-                    {/* L3 items */}
-                    <AnimatePresence mode="wait">
-                      {activeL2 && activeSub?.items?.length > 0 && (
-                        <motion.div
-                          key={`l3-${activeL2}`}
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.15 }}
-                          className="catalog-l3-wrap"
-                        >
-                          <div className="catalog-l3-divider" />
-                          {activeSub.items.map((item, i) => (
-                            <motion.button
-                              key={item}
-                              initial={{ opacity: 0, x: -4 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: i * 0.025 + 0.04 }}
-                              type="button"
-                              onClick={() => { onClose(); navigate(`/products?cat=${encodeURIComponent(activeCat.name)}`) }}
-                              className="catalog-l3-item"
-                            >
-                              {item}
-                            </motion.button>
-                          ))}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
                   </motion.div>
                 )}
               </AnimatePresence>
