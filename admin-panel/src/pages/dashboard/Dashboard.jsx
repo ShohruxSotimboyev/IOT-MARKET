@@ -62,7 +62,7 @@ export default function Dashboard() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [orders, setOrders] = useState([])
-  const [stats, setStats] = useState({ products: 0, orders: 0, customers: 0, revenue: 0 })
+  const [stats, setStats] = useState({ products: 0, orders: 0, customers: 0, revenue: 0, chartData: [] })
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -71,28 +71,25 @@ export default function Dashboard() {
 
   const loadData = async () => {
     try {
-      const [ordersData, productsData, customersData] = await Promise.allSettled([
+      const [statsData, ordersData] = await Promise.allSettled([
+        ordersAPI.getAdminStats(),
         ordersAPI.getAll({ limit: 5 }),
-        productsAPI.getAll({ limit: 1 }),
-        customersAPI.getAll({ limit: 1 }),
       ])
+
+      if (statsData.status === 'fulfilled' && statsData.value) {
+        const d = statsData.value
+        setStats({
+          orders: d.totalOrders || 0,
+          revenue: d.totalRevenue || 0,
+          customers: d.totalCustomers || 0,
+          products: d.totalProducts || 0,
+          chartData: d.chartData || []
+        })
+      }
 
       if (ordersData.status === 'fulfilled' && ordersData.value) {
         const od = ordersData.value
         setOrders(od.orders?.slice(0, 5) || od.slice?.(0, 5) || [])
-        const allOrders = od.orders || od || []
-        const revenue = allOrders.reduce((s, o) => s + (o.total || 0), 0)
-        setStats(prev => ({
-          ...prev,
-          orders: od.total || allOrders.length,
-          revenue: Math.round(revenue),
-        }))
-      }
-      if (productsData.status === 'fulfilled' && productsData.value) {
-        setStats(prev => ({ ...prev, products: productsData.value.total || 0 }))
-      }
-      if (customersData.status === 'fulfilled' && customersData.value) {
-        setStats(prev => ({ ...prev, customers: customersData.value.total || 0 }))
       }
     } catch {
     } finally {
@@ -101,20 +98,13 @@ export default function Dashboard() {
   }
 
   const statCards = [
-    { label: t('dashboard.totalProducts'), value: stats.products || '1,234', change: '+12.5%', trend: 'up', icon: Package, color: 'blue', delay: 0 },
-    { label: t('dashboard.totalOrders'), value: stats.orders || '856', change: '+8.2%', trend: 'up', icon: ShoppingCart, color: 'green', delay: 0.05 },
-    { label: t('dashboard.totalCustomers'), value: stats.customers || '0', change: '+15.3%', trend: 'up', icon: Users, color: 'purple', delay: 0.1 },
-    { label: t('dashboard.totalRevenue'), value: stats.revenue ? `${stats.revenue.toLocaleString()} so'm` : '45,678,000 so\'m', change: '+23.1%', trend: 'up', icon: DollarSign, color: 'orange', delay: 0.15 },
+    { label: t('dashboard.totalProducts'), value: stats.products, change: '', trend: 'up', icon: Package, color: 'blue', delay: 0 },
+    { label: t('dashboard.totalOrders'), value: stats.orders, change: '', trend: 'up', icon: ShoppingCart, color: 'green', delay: 0.05 },
+    { label: t('dashboard.totalCustomers'), value: stats.customers, change: '', trend: 'up', icon: Users, color: 'purple', delay: 0.1 },
+    { label: t('dashboard.totalRevenue'), value: `${stats.revenue.toLocaleString()} so'm`, change: '', trend: 'up', icon: DollarSign, color: 'orange', delay: 0.15 },
   ]
 
-  const mockOrders = [
-    { id: 'ORD-001', user: { username: 'Alisher M.' }, total: 1234000, status: 'completed', createdAt: new Date().toISOString() },
-    { id: 'ORD-002', user: { username: 'Dilnoza K.' }, total: 567000, status: 'pending', createdAt: new Date().toISOString() },
-    { id: 'ORD-003', user: { username: 'Jasur B.' }, total: 890000, status: 'processing', createdAt: new Date().toISOString() },
-    { id: 'ORD-004', user: { username: 'Malika T.' }, total: 2345000, status: 'completed', createdAt: new Date().toISOString() },
-    { id: 'ORD-005', user: { username: 'Sardor N.' }, total: 456000, status: 'cancelled', createdAt: new Date().toISOString() },
-  ]
-  const displayOrders = orders.length ? orders : mockOrders
+  const displayOrders = orders
 
   return (
     <div>
@@ -149,7 +139,7 @@ export default function Dashboard() {
           </div>
           <div style={{ padding: '20px 20px 10px' }}>
             <ResponsiveContainer width="100%" height={220}>
-              <AreaChart data={salesData}>
+              <AreaChart data={stats.chartData?.length ? stats.chartData : salesData}>
                 <defs>
                   <linearGradient id="grad1" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
@@ -176,7 +166,7 @@ export default function Dashboard() {
           </div>
           <div style={{ padding: '20px 20px 10px' }}>
             <ResponsiveContainer width="100%" height={220}>
-              <BarChart data={salesData} barSize={14}>
+              <BarChart data={stats.chartData?.length ? stats.chartData : salesData} barSize={14}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
                 <XAxis dataKey="name" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />

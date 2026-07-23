@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const prisma = require('../config/db').prisma;
 const bcrypt = require('bcryptjs');
-const { sendOtpEmail } = require('../utils/sendEmail');
+const emailQueue = require('../utils/emailQueue');
 const logger = require('../utils/logger');
 
 // ─── Token yaratish ──────────────────────────────────────────────────────────
@@ -104,7 +104,7 @@ exports.register = async (req, res) => {
       }
     });
 
-    await sendOtpEmail({ email, otp, type: 'verify' });
+    emailQueue.add({ email, otp, type: 'verify' });
     logger.info('New user registered', { email: email.replace(/(.{2}).+(@.+)/, '$1***$2') });
 
     res.status(201).json({
@@ -152,7 +152,7 @@ exports.login = async (req, res) => {
     });
 
     if (!user.isVerified) {
-      await sendOtpEmail({ email: user.email, otp, type: 'verify' });
+      emailQueue.add({ email: user.email, otp, type: 'verify' });
       return res.status(403).json({
         message: "Hisobingiz tasdiqlanmagan. Emailingizga yangi kod yuborildi.",
         requireVerification: true,
@@ -160,7 +160,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    await sendOtpEmail({ email: user.email, otp, type: 'login' });
+    emailQueue.add({ email: user.email, otp, type: 'login' });
 
     logger.info('Login OTP sent', { email: user.email.replace(/(.{2}).+(@.+)/, '$1***$2') });
 
@@ -238,10 +238,21 @@ exports.verifyOTP = async (req, res) => {
 
     logger.info('User verified and logged in', { userId: user.id });
 
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 15 * 60 * 1000 // 15 mins
+    });
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+
     res.status(200).json({
       message: "Muvaffaqiyatli kirish!",
-      accessToken,
-      refreshToken,
       user: {
         id: user.id,
         name: user.username,
@@ -287,7 +298,7 @@ exports.resendOTP = async (req, res) => {
       data: { otpHash, otpExpires, otpAttempts: 0 }
     });
 
-    await sendOtpEmail({ email: user.email, otp, type });
+    emailQueue.add({ email: user.email, otp, type });
 
     logger.info('OTP resent', { email: email.replace(/(.{2}).+(@.+)/, '$1***$2') });
 
@@ -302,7 +313,7 @@ exports.resendOTP = async (req, res) => {
 
 // ─── 5. TOKEN YANGILASH ─────────────────────────────────────────────────────
 exports.refreshToken = async (req, res) => {
-  const { refreshToken } = req.body;
+  const refreshToken = req.cookies?.refreshToken || req.body.refreshToken;
   if (!refreshToken) return res.status(401).json({ message: "Refresh token yo'q." });
 
   try {
@@ -322,7 +333,20 @@ exports.refreshToken = async (req, res) => {
       data: { refreshToken: newRefresh }
     });
 
-    res.json({ accessToken, refreshToken: newRefresh });
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 15 * 60 * 1000
+    });
+    res.cookie('refreshToken', newRefresh, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+
+    res.json({ message: 'Token yangilandi' });
   } catch (err) {
     res.status(401).json({ message: "Token yaroqsiz." });
   }
@@ -337,6 +361,8 @@ exports.logoutUser = async (req, res) => {
         data: { refreshToken: null }
       });
     }
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
     res.status(200).json({ message: "Muvaffaqiyatli chiqildi." });
   } catch (err) {
     res.status(500).json({ message: "Chiqishda xatolik." });

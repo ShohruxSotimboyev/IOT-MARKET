@@ -26,7 +26,6 @@ function KitCard({ kit, index }) {
 
   const handleAdd = (e) => {
     e.preventDefault(); e.stopPropagation()
-    if (!isAuthenticated()) { toast.error(t('auth.login_title')); navigate('/login'); return }
     addCart({ ...kit, inStock: true }, 1)
     setCartAdded(true)
     toast.success(t('sections.add_to_cart'))

@@ -1,9 +1,8 @@
 import client from './client'
 
 export const productsAPI = {
-  // Admin - hamma statusdagi mahsulotlarni ko'rish
   getAll: (params) => client.get('/products', {
-    params: { ...params, status: undefined, limit: 200 }  // status filter yo'q - admin barchasini ko'radi
+    params: { ...params, status: undefined, limit: 5000 }  // status filter yo'q - admin barchasini ko'radi
   }).then(r => {
     const d = r.data
     return { products: d.data || d.products || (Array.isArray(d) ? d : []), total: d.total || 0 }

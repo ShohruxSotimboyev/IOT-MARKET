@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, Lock, LogIn, Cpu } from 'lucide-react';
+import { Mail, Phone, Lock, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api from '../../api/axios';
@@ -8,14 +8,11 @@ import { toast } from 'react-hot-toast';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import LanguageSwitcher from '../../components/common/LanguageSwitcher';
+import './Auth.css';
 
 const containerVariants = {
   hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { staggerChildren: 0.08, duration: 0.5 } }
-};
-const itemVariants = {
-  hidden: { opacity: 0, y: 16 },
-  show: { opacity: 1, y: 0 }
+  show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 };
 
 const Login = () => {
@@ -29,7 +26,6 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // ✅ TUZATILGAN: email yoki phone — bittasi bo'lsa yetarli
     const identifier = email.trim() || phone.trim();
     if (!identifier) {
       return toast.error("Email yoki telefon raqamini kiriting!");
@@ -51,9 +47,10 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#050505] relative overflow-hidden font-sans p-4">
-      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/8 blur-[130px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-cyan-500/6 blur-[120px] rounded-full pointer-events-none" />
+    <div className="auth-page min-h-screen flex items-center justify-center bg-[#0a0e17] relative overflow-hidden font-sans p-4">
+      {/* Background blobs (Admin Panel style) */}
+      <div className="absolute top-[-100px] left-[-100px] w-[400px] h-[400px] bg-[#6366f1]/15 blur-[100px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-[-80px] right-[-80px] w-[300px] h-[300px] bg-[#06b6d4]/10 blur-[100px] rounded-full pointer-events-none" />
 
       <div className="absolute top-5 right-5 z-20">
         <LanguageSwitcher />
@@ -63,92 +60,90 @@ const Login = () => {
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="relative z-10 w-full max-w-[430px]"
+        className="relative z-10 w-full max-w-[420px]"
       >
-        <div className="p-8 md:p-10 bg-white/[0.03] backdrop-blur-3xl rounded-[32px] border border-white/10 shadow-2xl shadow-black/50">
+        <div className="p-8 md:p-10 bg-[#131826]/80 backdrop-blur-xl rounded-2xl border border-[rgba(255,255,255,0.05)] shadow-2xl">
+          
+          {/* Logo (Matching Admin Panel) */}
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-11 h-11 rounded-xl bg-[linear-gradient(135deg,#6366f1,#06b6d4)] flex items-center justify-center shadow-[0_4px_20px_rgba(99,102,241,0.4)]">
+              <Zap size={22} className="text-[#ffffff] fill-white" />
+            </div>
+            <div>
+              <div className="font-extrabold text-lg text-[#ffffff]">IoT Market</div>
+              <div className="text-[11px] text-[#94a3b8] uppercase tracking-widest">Aqlli Qurilmalar</div>
+            </div>
+          </div>
 
-          <motion.div variants={itemVariants} className="text-center mb-8">
-            <motion.div
-              whileHover={{ rotate: 8, scale: 1.08 }}
-              transition={{ type: 'spring', stiffness: 300 }}
-              className="w-16 h-16 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg shadow-cyan-500/25 border border-white/10"
-            >
-              <Cpu className="text-white" size={30} />
-            </motion.div>
-            <h2 className="text-4xl font-black text-white italic tracking-tighter uppercase">
-              IOT <span className="text-cyan-400 font-light text-3xl">Market</span>
-            </h2>
-            <p className="text-slate-400 mt-2 text-sm font-medium">{t('auth.sign_in_desc')}</p>
-          </motion.div>
+          <h1 className="text-2xl font-extrabold text-[#ffffff] mb-2">
+            {t('auth.login_title')}
+          </h1>
+          <p className="text-[13px] text-[#94a3b8] mb-8">
+            {t('auth.sign_in_desc')}
+          </p>
 
-          <motion.div variants={itemVariants} className="mb-6">
-            <h3 className="text-white font-bold text-xl">{t('auth.login_title')}</h3>
-          </motion.div>
-
-          {/* ✅ TUZATILGAN: required={false} — biri bo'lsa yetarli */}
-          <form onSubmit={handleLogin} autoComplete="off" className="space-y-1">
-            <motion.div variants={itemVariants}>
+          <form onSubmit={handleLogin} autoComplete="off" className="space-y-4">
+            <div className="space-y-1">
+              <label className="text-[13px] font-medium text-[#cbd5e1] ml-1">{t('auth.email')} yoki {t('auth.phone')}</label>
               <Input
                 icon={Mail}
-                type="email"
-                placeholder={t('auth.email')}
-                onChange={(e) => setEmail(e.target.value)}
-                // required olib tashlandi — phone bilan ham kirsa bo'ladi
-              />
-            </motion.div>
-
-            <motion.div variants={itemVariants}>
-              <Input
-                icon={Phone}
                 type="text"
-                placeholder={t('auth.phone')}
-                onChange={(e) => setPhone(e.target.value)}
+                placeholder="email@example.com / +998901234567"
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val.includes('@') || /[a-zA-Z]/.test(val)) {
+                    setEmail(val); setPhone('');
+                  } else {
+                    setPhone(val); setEmail('');
+                  }
+                }}
               />
-            </motion.div>
+            </div>
 
-            <motion.div variants={itemVariants}>
+            <div className="space-y-1">
+              <label className="text-[13px] font-medium text-[#cbd5e1] ml-1">{t('auth.password')}</label>
               <Input
                 icon={Lock}
                 type="password"
-                placeholder={t('auth.password')}
+                placeholder="••••••••"
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-            </motion.div>
+            </div>
 
-            <motion.div variants={itemVariants} className="pt-2">
-              <Button loading={loading} type="submit" variant="primary">
-                {t('auth.login_btn')} <LogIn size={18} />
+            <div className="pt-2">
+              <Button loading={loading} type="submit" variant="primary" className="auth-primary-btn w-full h-11 text-[15px]">
+                {t('auth.login_btn')}
               </Button>
-            </motion.div>
+            </div>
           </form>
 
-          <motion.div variants={itemVariants} className="my-6 flex items-center gap-3">
-            <div className="flex-1 h-px bg-white/8" />
-            <span className="text-slate-600 text-xs uppercase tracking-widest">{t('auth.or')}</span>
-            <div className="flex-1 h-px bg-white/8" />
-          </motion.div>
+          <div className="my-6 flex items-center gap-4">
+            <div className="flex-1 h-px bg-[rgba(255,255,255,0.05)]" />
+            <span className="text-[#64748b] text-[11px] uppercase tracking-widest">{t('auth.or')}</span>
+            <div className="flex-1 h-px bg-[rgba(255,255,255,0.05)]" />
+          </div>
 
-          <motion.div variants={itemVariants}>
-            <Button
+          <div>
+            <button
               type="button"
-              variant="secondary"
               onClick={() => window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/auth/google`}
+              className="auth-google-btn w-full flex items-center justify-center gap-3 h-11 bg-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.05)] rounded-xl text-[#ffffff] text-[14px] font-medium transition-all"
             >
               <img src="https://www.svgrepo.com/show/355037/google.svg" className="w-5 h-5" alt="google" />
               {t('auth.google_login')}
-            </Button>
-          </motion.div>
+            </button>
+          </div>
 
-          <motion.div variants={itemVariants} className="mt-7 text-center">
-            <span className="text-slate-500 text-sm">{t('auth.no_account')} </span>
+          <div className="mt-8 text-center text-[13px]">
+            <span className="text-[#94a3b8]">{t('auth.no_account')} </span>
             <button
               onClick={() => navigate('/register')}
-              className="text-cyan-400 font-bold text-sm hover:underline transition-all"
+              className="text-[#818cf8] font-medium hover:text-[#a5b4fc] transition-colors"
             >
               {t('auth.go_register')}
             </button>
-          </motion.div>
+          </div>
         </div>
       </motion.div>
     </div>

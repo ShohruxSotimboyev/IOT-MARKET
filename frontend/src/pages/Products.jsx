@@ -5,6 +5,7 @@ import { useSearchParams } from 'react-router-dom'
 import { SlidersHorizontal, X, Loader2 } from 'lucide-react'
 import { PRODUCTS, CATEGORIES } from '../data'
 import ProductCard from '../components/ProductCard'
+import ProductSkeleton from '../components/common/ProductSkeleton'
 import CategoryIcon from '../components/common/CategoryIcon'
 import ProductFilters from '../components/products/ProductFilters'
 import { searchProducts } from '../utils/search'
@@ -84,22 +85,12 @@ export default function Products() {
   }, [fetchFromAPI, page])
 
   // API tayyor bo'lsa API ma'lumotlarini, aks holda local ma'lumotlarni ishlatamiz
-  const sourceProducts = apiReady ? apiProducts : PRODUCTS
+  const sourceProducts = apiProducts
 
   let filtered = sourceProducts
-  let usingLocalFallback = !apiReady
+  let usingLocalFallback = false
 
-  if (usingLocalFallback) {
-    // Faqat API ishlamasa — eski local filtrlash mantiqi
-    filtered = cat === 'all' ? sourceProducts : sourceProducts.filter((p) => p.cat === cat)
-    if (search.trim()) {
-      filtered = searchProducts(search, 100).filter((p) => {
-        if (cat === 'all') return true
-        if (cat === 'micro') return MCU_CATEGORIES.includes(p.cat)
-        return p.cat === cat
-      })
-    }
-  } else if (cat === 'micro') {
+  if (cat === 'micro') {
     // 'micro' kategoriyasi backendda yo'q — joriy sahifa ichida filtrlaymiz
     filtered = sourceProducts.filter((p) => MCU_CATEGORIES.includes(p.cat))
   }
@@ -108,8 +99,8 @@ export default function Products() {
   if (sort === 'price_desc') filtered = [...filtered].sort((a, b) => b.price - a.price)
   if (sort === 'rating') filtered = [...filtered].sort((a, b) => b.rating - a.rating)
 
-  const displayTotal = usingLocalFallback ? filtered.length : totalCount
-  const showPagination = !usingLocalFallback && totalPages > 1
+  const displayTotal = totalCount
+  const showPagination = totalPages > 1
 
   const SidebarContent = ({ onSelect }) => (
     <div className="space-y-1">
@@ -221,8 +212,8 @@ export default function Products() {
           <p className="text-white/50 text-sm mb-5">{t('products_page.found', { count: displayTotal })}</p>
 
           {loading ? (
-            <div className="flex items-center justify-center py-24 text-white/40">
-              <Loader2 className="animate-spin" size={28} />
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5">
+              {Array(6).fill(0).map((_, i) => <ProductSkeleton key={i} />)}
             </div>
           ) : (
             <>

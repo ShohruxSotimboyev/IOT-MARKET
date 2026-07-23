@@ -43,7 +43,10 @@
   },
   "nav": {
     "dashboard": "Панель управления",
-    "products": "Продукты",
+    "inventory": "Склад",
+    "categories": "Категории",
+    "suppliers": "Поставщики",
+    "products": "Товары",
     "customers": "Клиенты",
     "orders": "Заказы",
     "messages": "Сообщения",

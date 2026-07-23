@@ -5,6 +5,9 @@ import { Toaster } from 'react-hot-toast'
 import AdminLayout from './components/layout/AdminLayout'
 import Login from './pages/auth/Login'
 import Dashboard from './pages/dashboard/Dashboard'
+import Inventory from './pages/inventory/Inventory'
+import Categories from './pages/categories/Categories'
+import Suppliers from './pages/suppliers/Suppliers'
 import Products from './pages/products/Products'
 import Orders from './pages/orders/Orders'
 import Customers from './pages/customers/Customers'
@@ -43,6 +46,9 @@ function App() {
             <Route path="/" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="dashboard" element={<Dashboard />} />
+              <Route path="inventory" element={<Inventory />} />
+              <Route path="categories" element={<Categories />} />
+              <Route path="suppliers" element={<Suppliers />} />
               <Route path="products" element={<Products />} />
               <Route path="orders" element={<Orders />} />
               <Route path="customers" element={<Customers />} />

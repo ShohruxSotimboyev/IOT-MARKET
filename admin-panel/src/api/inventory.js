@@ -1,0 +1,32 @@
+const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace(/\/api$/, '');
+
+const getHeaders = () => {
+  const token = localStorage.getItem('admin-token');
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
+
+export const inventoryAPI = {
+  getAll: async (page = 1, limit = 50) => {
+    const res = await fetch(`${API_URL}/api/inventory?page=${page}&limit=${limit}`, {
+      headers: getHeaders()
+    });
+    if (!res.ok) throw new Error('Ombor tarixini yuklashda xatolik');
+    return res.json();
+  },
+  
+  addLog: async (data) => {
+    const res = await fetch(`${API_URL}/api/inventory`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'Xatolik yuz berdi');
+    }
+    return res.json();
+  }
+};

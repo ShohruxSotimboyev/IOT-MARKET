@@ -43,6 +43,9 @@
   },
   "nav": {
     "dashboard": "Boshqaruv paneli",
+    "inventory": "Ombor",
+    "categories": "Kategoriyalar",
+    "suppliers": "Ta'minotchilar",
     "products": "Mahsulotlar",
     "customers": "Mijozlar",
     "orders": "Buyurtmalar",

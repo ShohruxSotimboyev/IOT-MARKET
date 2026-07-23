@@ -191,11 +191,6 @@ const BASE_PRODUCTS = [
   },
 ]
 
-export const PRODUCTS = [...BASE_PRODUCTS, ...generateCatalog(13)]
+export const PRODUCTS = []
 
-export const KITS = [
-  { id: 101, name: 'Arduino Starter Kit', price: 250000, img: 'https://images.unsplash.com/photo-1608564697071-ddf911d81370?w=400&h=300&fit=crop', items: 32, badge: 'BEST' },
-  { id: 102, name: 'ESP32 IoT Kit', price: 320000, img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop', items: 28, badge: 'NEW' },
-  { id: 103, name: 'Smart Home Kit', price: 450000, img: 'https://images.unsplash.com/photo-1558002038-1055907df827?w=400&h=300&fit=crop', items: 15, badge: 'HOT' },
-  { id: 104, name: 'Robotics Kit', price: 380000, img: 'https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=400&h=300&fit=crop', items: 45, badge: null },
-]
+export const KITS = []

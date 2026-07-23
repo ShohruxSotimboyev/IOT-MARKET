@@ -5,6 +5,7 @@ const toFrontend = (p) => ({
   ...p,
   cat: p.category,   // frontend 'cat' kutadi
   img: p.image,      // frontend 'img' ham kutadi
+  supplierName: p.supplier ? p.supplier.name : null
 })
 
 // ─── Barcha mahsulotlarni olish (pagination bilan) ────────────────────────
@@ -37,6 +38,7 @@ exports.getAllProducts = async (req, res) => {
         skip,
         take: safeLimit,
         orderBy: { createdAt: 'desc' },
+        include: { supplier: true }
       }),
       prisma.product.count({ where }),
     ])
@@ -58,7 +60,10 @@ exports.getAllProducts = async (req, res) => {
 // Bitta mahsulot
 exports.getProductById = async (req, res) => {
   try {
-    const product = await prisma.product.findUnique({ where: { id: req.params.id } })
+    const product = await prisma.product.findUnique({ 
+      where: { id: req.params.id },
+      include: { supplier: true }
+    })
     if (!product) return res.status(404).json({ success: false, message: 'Mahsulot topilmadi' })
     res.json({ success: true, data: toFrontend(product) })
   } catch (error) {
@@ -69,7 +74,7 @@ exports.getProductById = async (req, res) => {
 // Mahsulot yaratish
 exports.createProduct = async (req, res) => {
   try {
-    const { name, category, price, oldPrice, badge, inStock, rating, reviews, image, description, status } = req.body
+    const { name, category, price, oldPrice, badge, inStock, rating, reviews, image, description, status, supplierId, costPrice } = req.body
     if (!name || !category || !price) {
       return res.status(400).json({ success: false, message: 'Nomi, kategoriyasi va narxi kiritilishi shart' })
     }
@@ -85,7 +90,10 @@ exports.createProduct = async (req, res) => {
         image: image || 'https://picsum.photos/seed/default/400/400',
         description: description || '',
         status: status || 'active',
+        supplierId: supplierId || null,
+        costPrice: costPrice ? parseFloat(costPrice) : null,
       },
+      include: { supplier: true }
     })
     res.status(201).json({ success: true, data: toFrontend(product) })
   } catch (error) {
@@ -96,7 +104,7 @@ exports.createProduct = async (req, res) => {
 // Mahsulot yangilash
 exports.updateProduct = async (req, res) => {
   try {
-    const { name, category, price, oldPrice, badge, inStock, rating, reviews, image, description, status } = req.body
+    const { name, category, price, oldPrice, badge, inStock, rating, reviews, image, description, status, supplierId, costPrice } = req.body
     const product = await prisma.product.update({
       where: { id: req.params.id },
       data: {
@@ -111,7 +119,10 @@ exports.updateProduct = async (req, res) => {
         ...(image && { image }),
         ...(description !== undefined && { description }),
         ...(status && { status }),
+        ...(supplierId !== undefined && { supplierId: supplierId || null }),
+        ...(costPrice !== undefined && { costPrice: costPrice ? parseFloat(costPrice) : null }),
       },
+      include: { supplier: true }
     })
     res.json({ success: true, data: toFrontend(product) })
   } catch (error) {

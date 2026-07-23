@@ -6,5 +6,6 @@ export const ordersAPI = {
     return { orders: d.orders || d.data || [], total: d.total || 0 }
   }),
   getById: (id) => client.get(`/orders/${id}`).then(r => r.data.data || r.data),
+  getAdminStats: () => client.get('/orders/admin/stats').then(r => r.data.data),
   updateStatus: (id, status) => client.patch(`/orders/${id}/status`, { status }).then(r => r.data),
 }

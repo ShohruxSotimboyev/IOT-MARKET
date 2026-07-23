@@ -14,6 +14,7 @@ router.get('/admin/all', adminProtect, async (req, res) => {
       prisma.order.findMany({
         include: {
           user: { select: { id: true, username: true, email: true } },
+          items: true
         },
         skip,
         take: parseInt(limit),
@@ -21,8 +22,53 @@ router.get('/admin/all', adminProtect, async (req, res) => {
       }),
       prisma.order.count(),
     ])
-    res.json({ success: true, orders, data: orders, total })
+    const mappedOrders = orders.map(o => ({
+      ...o,
+      payment: o.payment ? JSON.parse(o.payment) : {},
+      shippingAddress: o.shippingAddress ? JSON.parse(o.shippingAddress) : null,
+    }))
+    res.json({ success: true, orders: mappedOrders, data: mappedOrders, total })
   } catch (err) {
+    res.status(500).json({ success: false, message: err.message })
+  }
+})
+
+router.get('/admin/stats', adminProtect, async (req, res) => {
+  try {
+    const totalOrders = await prisma.order.count()
+    const totalRevenue = await prisma.order.aggregate({ _sum: { total: true } }).then(r => r._sum.total || 0)
+    const totalCustomers = await prisma.user.count({ where: { role: 'user' } })
+    const totalProducts = await prisma.product.count()
+    
+    const sevenDaysAgo = new Date()
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+    
+    const recentOrders = await prisma.order.findMany({
+      where: { createdAt: { gte: sevenDaysAgo } },
+      select: { createdAt: true, total: true }
+    })
+    
+    const chartData = []
+    for(let i=6; i>=0; i--) {
+      const d = new Date()
+      d.setDate(d.getDate() - i)
+      const dayStr = d.toISOString().split('T')[0]
+      const sum = recentOrders.filter(o => o.createdAt.toISOString().split('T')[0] === dayStr)
+                              .reduce((acc, o) => acc + o.total, 0)
+      chartData.push({ name: dayStr, value: sum })
+    }
+
+    res.json({
+      success: true,
+      data: {
+        totalOrders,
+        totalRevenue,
+        totalCustomers,
+        totalProducts,
+        chartData
+      }
+    })
+  } catch(err) {
     res.status(500).json({ success: false, message: err.message })
   }
 })

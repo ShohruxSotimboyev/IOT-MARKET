@@ -3,9 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -35,6 +34,37 @@ model User {
   messages     Message[]
 }
 
+model Supplier {
+  id        String   @id @default(uuid())
+  name      String
+  contact   String?
+  phone     String?
+  address   String?
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  products  Product[]
+}
+
+model InventoryLog {
+  id        String   @id @default(uuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  type      String   // "in" (receipt) or "out" (sale/adjustment)
+  quantity  Int
+  reason    String?
+  createdAt DateTime @default(now())
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Product {
   id          String   @id @default(uuid())
   name        String
@@ -43,35 +73,54 @@ model Product {
   oldPrice    Float?
   badge       String?
   inStock     Boolean  @default(true)
+  stockCount  Int      @default(100)
   rating      Float    @default(0)
   reviews     Int      @default(0)
   image       String
   description String?
   status      String   @default("active")
 
+  supplierId  String?
+  supplier    Supplier? @relation(fields: [supplierId], references: [id])
+  costPrice   Float?
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  
+  inventoryLogs InventoryLog[]
 }
 
 model Order {
   id              String    @id @default(uuid())
   userId          String
   user            User      @relation(fields: [userId], references: [id])
-  items           Json      @default("[]")
+  items           OrderItem[]
   subtotal        Float
   commission      Float
   discount        Float     @default(0)
   total           Float
   currency        String    @default("UZS")
-  payment         Json
+  payment         String
   status          String    @default("pending")
-  shippingAddress Json?
+  shippingAddress String?
   note            String?
   txId            String?   @unique
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
   @@index([userId, createdAt(sort: Desc)])
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  name      String
+  price     Float
+  quantity  Int
+  image     String?
+  category  String?
 }
 
 model Message {

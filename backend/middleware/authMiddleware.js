@@ -3,11 +3,16 @@ const { prisma } = require('../config/db');
 const logger = require('../utils/logger');
 
 const protect = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  let token = req.cookies?.accessToken;
+  if (!token) {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.split(' ')[1];
+    }
+  }
+  if (!token) {
     return res.status(401).json({ message: "Avtorizatsiya talab etiladi." });
   }
-  const token = authHeader.split(' ')[1];
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     if (decoded.type === 'refresh') {
@@ -29,11 +34,16 @@ const protect = async (req, res, next) => {
 
 // Admin panel uchun - faqat adminlar kirishi mumkin
 const adminProtect = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  let token = req.cookies?.accessToken;
+  if (!token) {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.split(' ')[1];
+    }
+  }
+  if (!token) {
     return res.status(401).json({ message: "Admin avtorizatsiyasi talab etiladi." });
   }
-  const token = authHeader.split(' ')[1];
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     if (decoded.type === 'refresh') {
@@ -55,13 +65,51 @@ const adminProtect = async (req, res, next) => {
   }
 };
 
+// Superadmin panel uchun - faqat superadminlar kirishi mumkin
+const superadminProtect = async (req, res, next) => {
+  let token = req.cookies?.accessToken;
+  if (!token) {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.split(' ')[1];
+    }
+  }
+  if (!token) {
+    return res.status(401).json({ message: "Superadmin avtorizatsiyasi talab etiladi." });
+  }
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (decoded.type === 'refresh') {
+      return res.status(401).json({ message: "Noto'g'ri token turi." });
+    }
+    const user = await prisma.user.findUnique({ where: { id: decoded.id } });
+    if (!user) return res.status(401).json({ message: "Foydalanuvchi topilmadi." });
+    if (user.role !== 'superadmin') {
+      return res.status(403).json({ message: "Faqat superadminlar uchun ruxsat berilgan." });
+    }
+    req.user = user;
+    next();
+  } catch (err) {
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: "Token muddati tugagan.", tokenExpired: true });
+    }
+    logger.warn('Invalid superadmin token', { ip: req.ip });
+    return res.status(401).json({ message: "Superadmin token yaroqsiz." });
+  }
+};
+
 // Frontend uchun - adminlar kirishi mumkin emas
 const userProtect = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  let token = req.cookies?.accessToken;
+  if (!token) {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.split(' ')[1];
+    }
+  }
+  if (!token) {
     return res.status(401).json({ message: "Avtorizatsiya talab etiladi." });
   }
-  const token = authHeader.split(' ')[1];
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     if (decoded.type === 'refresh') {
@@ -85,4 +133,4 @@ const userProtect = async (req, res, next) => {
   }
 };
 
-module.exports = { protect, adminProtect, userProtect };
+module.exports = { protect, adminProtect, superadminProtect, userProtect };

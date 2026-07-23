@@ -118,13 +118,8 @@ export default function ProductDetail() {
 
   const handleAddCart = () => {
     const item = { ...product, img: imgSrc, cat: catName, qty }
-    const ok = addCart(item, qty)
-    if (!ok) {
-      toast.error(t('cart.login_required') || 'Iltimos, avval tizimga kiring!')
-      navigate('/login')
-    } else {
-      toast.success(t('cart.added') || 'Savatga qo\'shildi!')
-    }
+    addCart(item, qty)
+    toast.success(t('cart.added') || 'Savatga qo\'shildi!')
   }
 
   const handleBuyNow = () => {

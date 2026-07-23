@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard, Package, ShoppingCart, Users,
   Settings, LogOut, Menu, Sun, Moon, Bell,
-  Search, MessageSquare, Image as ImageIcon, Zap
+  Search, MessageSquare, Image as ImageIcon, Zap, Truck, Archive
 } from 'lucide-react'
 import { useState } from 'react'
 import { useTheme } from '../../context/ThemeContext'
@@ -29,6 +29,9 @@ export default function AdminLayout() {
 
   const NAV_ITEMS = [
     { path: '/dashboard', icon: LayoutDashboard, key: 'dashboard' },
+    { path: '/inventory', icon: Archive, key: 'inventory' },
+    { path: '/categories', icon: Package, key: 'categories' },
+    { path: '/suppliers', icon: Truck, key: 'suppliers' },
     { path: '/products', icon: Package, key: 'products' },
     { path: '/orders', icon: ShoppingCart, key: 'orders', badge: 3 },
     { path: '/customers', icon: Users, key: 'customers' },
@@ -52,18 +55,21 @@ export default function AdminLayout() {
 
           <nav className="al-nav">
             <div className="al-nav-section">
-              {NAV_ITEMS.map(({ path, icon: Icon, key, badge }) => (
-                <NavLink
-                  key={path}
-                  to={path}
-                  className={({ isActive }) => `al-nav-item${isActive ? ' active' : ''}`}
-                  onClick={() => setMobileOpen(false)}
-                >
-                  <Icon size={18} className="al-nav-icon" />
-                  <span className="al-nav-text">{t(`nav.${key}`)}</span>
-                  {badge && !collapsed && <span className="al-nav-badge">{badge}</span>}
-                </NavLink>
-              ))}
+              {NAV_ITEMS.map(({ path, icon: Icon, key, badge }) => {
+                if (key === 'settings' && user?.role !== 'superadmin') return null;
+                return (
+                  <NavLink
+                    key={path}
+                    to={path}
+                    className={({ isActive }) => `al-nav-item${isActive ? ' active' : ''}`}
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <Icon size={18} className="al-nav-icon" />
+                    <span className="al-nav-text">{t(`nav.${key}`)}</span>
+                    {badge && !collapsed && <span className="al-nav-badge">{badge}</span>}
+                  </NavLink>
+                );
+              })}
             </div>
           </nav>
 

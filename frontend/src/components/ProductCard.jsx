@@ -32,11 +32,6 @@ export default function ProductCard({ product, index = 0 }) {
   const handleAddCart = (e) => {
     e.preventDefault()
     e.stopPropagation()
-    if (!isAuthenticated()) {
-      toast.error(t('auth.login_title'))
-      navigate('/login')
-      return
-    }
     const added = addCart(product, 1)
     if (added) {
       setCartAdded(true)

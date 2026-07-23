@@ -5,12 +5,13 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
 })
 
-// Request interceptor - tokenni qo'shish
+// Request interceptor
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('admin-token')

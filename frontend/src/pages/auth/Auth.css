@@ -1,0 +1,46 @@
+/* Force Dark Mode aesthetic for Auth pages, bypassing global light mode !important rules */
+
+html.light .auth-page h1,
+html[data-theme="light"] .auth-page h1 {
+  color: #ffffff !important;
+}
+
+html.light .auth-page input,
+html[data-theme="light"] .auth-page input {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+}
+
+html.light .auth-page input::placeholder,
+html[data-theme="light"] .auth-page input::placeholder {
+  color: #94a3b8 !important;
+}
+
+html.light .auth-page input:focus,
+html[data-theme="light"] .auth-page input:focus {
+  border-color: rgba(6, 182, 212, 0.5) !important;
+  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.4) !important;
+  outline: none !important;
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+html.light .auth-page button.auth-primary-btn,
+html[data-theme="light"] .auth-page button.auth-primary-btn {
+  background: linear-gradient(135deg, #6366f1, #06b6d4) !important;
+  background-image: linear-gradient(135deg, #6366f1, #06b6d4) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+html.light .auth-page button.auth-google-btn,
+html[data-theme="light"] .auth-page button.auth-google-btn {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+  color: #ffffff !important;
+}
+
+html.light .auth-page button.auth-google-btn:hover,
+html[data-theme="light"] .auth-page button.auth-google-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}

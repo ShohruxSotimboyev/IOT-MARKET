@@ -38,18 +38,7 @@ function Section({ title, children, linkTo, linkLabel, t }) {
   )
 }
 
-// Skeleton loader
-function ProductSkeleton() {
-  return (
-    <div className="rounded-xl border border-white/10 bg-white/5 overflow-hidden animate-pulse">
-      <div className="h-48 bg-white/10" />
-      <div className="p-3 space-y-2">
-        <div className="h-3 bg-white/10 rounded w-3/4" />
-        <div className="h-4 bg-white/10 rounded w-1/2" />
-      </div>
-    </div>
-  )
-}
+import ProductSkeleton from '../components/common/ProductSkeleton'
 
 export default function Home() {
   const { t } = useTranslation()
@@ -60,15 +49,10 @@ export default function Home() {
     api.get('/products?limit=16&status=active')
       .then(res => {
         const data = res.data?.data || res.data?.products || []
-        if (Array.isArray(data) && data.length > 0) {
-          setProducts(data)
-        } else {
-          // fallback static data
-          setProducts(PRODUCTS)
-        }
+        setProducts(data)
       })
       .catch(() => {
-        setProducts(PRODUCTS)
+        setProducts([])
       })
       .finally(() => setLoadingProducts(false))
   }, [])

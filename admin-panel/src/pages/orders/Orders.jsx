@@ -5,6 +5,8 @@ import { ordersAPI } from '../../api/orders'
 import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
 
+import * as XLSX from 'xlsx'
+
 const STATUS = {
   pending: { label: 'Kutilmoqda', cls: 'badge-warning' },
   processing: { label: 'Jarayonda', cls: 'badge-info' },
@@ -64,6 +66,23 @@ export default function Orders() {
   const pages = Math.ceil(total / PER)
   const slice = filtered.slice((page - 1) * PER, page * PER)
 
+  const exportExcel = () => {
+    const dataToExport = filtered.map(o => ({
+      'Buyurtma ID': o.id,
+      'Mijoz Ismi': o.user?.username || 'Noma\'lum',
+      'Mijoz Email': o.user?.email || '',
+      'Summa': o.total || 0,
+      'Holat': STATUS[o.status]?.label || o.status,
+      'Sana': new Date(o.createdAt).toLocaleString('uz-UZ'),
+      'Manzil': `${o.shippingAddress?.city || ''}, ${o.shippingAddress?.address || ''}`
+    }))
+    
+    const ws = XLSX.utils.json_to_sheet(dataToExport)
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, "Buyurtmalar")
+    XLSX.writeFile(wb, `Buyurtmalar_${new Date().toISOString().slice(0,10)}.xlsx`)
+  }
+
   return (
     <div>
       <div className="page-header">
@@ -71,6 +90,9 @@ export default function Orders() {
           <h1 className="page-title">{t('orders.title')}</h1>
           <p className="page-subtitle">{total} ta buyurtma</p>
         </div>
+        <button className="btn btn-primary btn-sm" onClick={exportExcel}>
+          Eksport (Excel)
+        </button>
       </div>
 
       <div className="filter-row">

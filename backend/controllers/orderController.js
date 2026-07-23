@@ -43,20 +43,50 @@ exports.createOrder = async (req, res) => {
       method:     'card',
     };
 
-    const order = await prisma.order.create({
-      data: {
-        userId: req.user.id,
-        items: formattedItems,
-        subtotal: calcSubtotal,
-        commission: calcCommission,
-        discount: discount || 0,
-        total: calcTotal,
-        payment: formattedPayment,
-        shippingAddress: shippingAddress || {},
-        note: note ? String(note).slice(0, 500) : '',
-        txId,
-        status: 'paid',
+    const order = await prisma.$transaction(async (tx) => {
+      // 1. Списание остатков
+      for (const item of formattedItems) {
+        if (item.productId !== 'local') {
+          const product = await tx.product.findUnique({ where: { id: item.productId } });
+          if (product) {
+            const newStock = Math.max(0, product.stockCount - item.quantity);
+            await tx.product.update({
+              where: { id: item.productId },
+              data: {
+                stockCount: newStock,
+                inStock: newStock > 0
+              }
+            });
+          }
+        }
       }
+
+      // 2. Создание заказа и OrderItem
+      return tx.order.create({
+        data: {
+          userId: req.user.id,
+          subtotal: calcSubtotal,
+          commission: calcCommission,
+          discount: discount || 0,
+          total: calcTotal,
+          payment: JSON.stringify(formattedPayment),
+          shippingAddress: JSON.stringify(shippingAddress || {}),
+          note: note ? String(note).slice(0, 500) : '',
+          txId,
+          status: 'pending', // Webhook will set to paid
+          items: {
+            create: formattedItems.map(i => ({
+              productId: i.productId,
+              name: i.name,
+              price: i.price,
+              quantity: i.quantity,
+              image: i.image,
+              category: i.category
+            }))
+          }
+        },
+        include: { items: true }
+      });
     });
 
     const itemsCount = formattedItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -97,6 +127,7 @@ exports.getMyOrders = async (req, res) => {
     const [orders, total] = await Promise.all([
       prisma.order.findMany({
         where,
+        include: { items: true },
         orderBy: { createdAt: 'desc' },
         skip: (page - 1) * limit,
         take: limit,
@@ -105,7 +136,11 @@ exports.getMyOrders = async (req, res) => {
     ]);
 
     res.json({
-      orders,
+      orders: orders.map(o => ({
+        ...o,
+        payment: o.payment ? JSON.parse(o.payment) : {},
+        shippingAddress: o.shippingAddress ? JSON.parse(o.shippingAddress) : null,
+      })),
       pagination: {
         page,
         limit,
@@ -126,14 +161,19 @@ exports.getOrderById = async (req, res) => {
       where: {
         id: req.params.id,
         userId: req.user.id,
-      }
+      },
+      include: { items: true }
     });
 
     if (!order) {
       return res.status(404).json({ message: "Buyurtma topilmadi." });
     }
 
-    res.json(order);
+    res.json({
+      ...order,
+      payment: order.payment ? JSON.parse(order.payment) : {},
+      shippingAddress: order.shippingAddress ? JSON.parse(order.shippingAddress) : null,
+    });
   } catch (err) {
     res.status(500).json({ message: "Xatolik yuz berdi." });
   }
@@ -156,8 +196,7 @@ exports.getOrderStats = async (req, res) => {
 
     let totalItems = 0;
     orders.forEach(order => {
-      const items = Array.isArray(order.items) ? order.items : [];
-      totalItems += items.reduce((sum, item) => sum + (item.quantity || 1), 0);
+      totalItems += order.items.reduce((sum, item) => sum + (item.quantity || 1), 0);
     });
 
     res.json({

@@ -5,14 +5,17 @@ import { productsAPI } from '../../api/products'
 import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
 
-const CATS = ['Arduino', 'ESP Modullar', 'Raspberry Pi', 'Sensorlar', 'Smart Home', 'Motorlar', 'Displeylar', 'Asboblar', 'To\'plamlar']
+import { categoriesAPI } from '../../api/categories'
+import { suppliersAPI } from '../../api/suppliers'
+import * as XLSX from 'xlsx'
+
 const BADGES = ['', 'HOT', 'NEW', 'SALE', 'BEST']
 const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace(/\/api$/, '')
 
 const MOCK = Array.from({ length: 12 }, (_, i) => ({
   id: String(i + 1),
   name: ['Arduino Uno R3', 'ESP32 DevKit', 'Raspberry Pi 4B', 'DHT22 Sensor', 'SSD1306 OLED', 'L298N Motor Driver', 'HC-SR04 Ultrasonic', 'IR Sensor Module', 'Relay Module 4ch', 'Breadboard 830', 'Jump Wires Set', 'Arduino Nano'][i],
-  category: CATS[i % CATS.length],
+  category: 'Arduino',
   price: [89000, 145000, 890000, 32000, 67000, 45000, 28000, 22000, 55000, 18000, 15000, 45000][i],
   oldPrice: i % 3 === 0 ? [120000, 180000, null, 45000][i % 4] : null,
   badge: BADGES[i % BADGES.length],
@@ -24,7 +27,7 @@ const MOCK = Array.from({ length: 12 }, (_, i) => ({
   status: i % 4 === 0 ? 'inactive' : 'active',
 }))
 
-function ProductModal({ product, onClose, onSave }) {
+function ProductModal({ product, categories = [], suppliers = [], onClose, onSave }) {
   const { t } = useTranslation()
   const [form, setForm] = useState(() => {
     let initialImages = []
@@ -32,8 +35,8 @@ function ProductModal({ product, onClose, onSave }) {
     else if (product?.image) initialImages = product.image.split(',')
     
     return product ? { ...product, images: initialImages } : {
-      name: '', category: CATS[0], price: '', oldPrice: '',
-      badge: '', inStock: true, description: '', images: [], image: '', status: 'active',
+      name: '', category: categories[0]?.name || '', price: '', oldPrice: '', costPrice: '',
+      supplierId: '', badge: '', inStock: true, description: '', images: [], image: '', status: 'active',
     }
   })
   const [imgPreviews, setImgPreviews] = useState(form.images || [])
@@ -97,7 +100,7 @@ function ProductModal({ product, onClose, onSave }) {
   const handleSubmit = async () => {
     if (!form.name || !form.price) return toast.error('Nomi va narxi kiritilishi shart')
     try {
-      const payload = { ...form, price: Number(form.price), oldPrice: form.oldPrice ? Number(form.oldPrice) : null, image: (form.images || []).join(',') }
+      const payload = { ...form, price: Number(form.price), costPrice: form.costPrice ? Number(form.costPrice) : null, oldPrice: form.oldPrice ? Number(form.oldPrice) : null, image: (form.images || []).join(',') }
       let saved
       if (product?.id) {
         saved = await productsAPI.update(product.id, payload).catch(() => ({ ...payload, id: product.id }))
@@ -163,16 +166,27 @@ function ProductModal({ product, onClose, onSave }) {
               <div className="ui-input-wrap">
                 <label className="ui-label">{t('products.productCategory')}</label>
                 <select className="ui-select" value={form.category} onChange={e => set('category', e.target.value)}>
-                  {CATS.map(c => <option key={c} value={c}>{c}</option>)}
+                  {categories.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
                 </select>
               </div>
               <div className="ui-input-wrap">
-                <label className="ui-label">{t('products.productPrice')} (so'm) *</label>
-                <input className="ui-input" type="number" value={form.price} onChange={e => set('price', e.target.value)} placeholder="89000" />
+                <label className="ui-label">{t('products.price')}</label>
+                <input type="number" className="ui-input" value={form.price} onChange={e => set('price', e.target.value)} />
               </div>
               <div className="ui-input-wrap">
-                <label className="ui-label">Eski narx (so'm)</label>
-                <input className="ui-input" type="number" value={form.oldPrice || ''} onChange={e => set('oldPrice', e.target.value)} placeholder="120000" />
+                <label className="ui-label">Zakupka narxi (Cost Price)</label>
+                <input type="number" className="ui-input" value={form.costPrice} onChange={e => set('costPrice', e.target.value)} />
+              </div>
+              <div className="ui-input-wrap">
+                <label className="ui-label">Eski narxi</label>
+                <input type="number" className="ui-input" value={form.oldPrice} onChange={e => set('oldPrice', e.target.value)} />
+              </div>
+              <div className="ui-input-wrap">
+                <label className="ui-label">Postavshik</label>
+                <select className="ui-select" value={form.supplierId || ''} onChange={e => set('supplierId', e.target.value)}>
+                  <option value="">Tanlanmagan</option>
+                  {suppliers.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                </select>
               </div>
               <div className="ui-input-wrap">
                 <label className="ui-label">Badge</label>
@@ -214,6 +228,8 @@ function ProductModal({ product, onClose, onSave }) {
 export default function Products() {
   const { t } = useTranslation()
   const [products, setProducts] = useState([])
+  const [categories, setCategories] = useState([])
+  const [suppliers, setSuppliers] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [catFilter, setCatFilter] = useState('all')
@@ -221,19 +237,36 @@ export default function Products() {
   const [modal, setModal] = useState(null) // null | 'add' | product
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [page, setPage] = useState(1)
-  const PER = 8
+  const PER = 15
 
   useEffect(() => { load() }, [])
 
   const load = async () => {
     setLoading(true)
     try {
-      const data = await productsAPI.getAll()
-      setProducts(data.products || data || MOCK)
+      const [prodData, catData, supData] = await Promise.all([
+        productsAPI.getAll(),
+        categoriesAPI.getAll(),
+        suppliersAPI.getAll()
+      ])
+      setProducts(prodData.products || prodData || MOCK)
+      setCategories(catData.filter(c => c.status === 'active'))
+      setSuppliers(supData.filter(s => s.status === 'active'))
     } catch {
       setProducts(MOCK)
+      setCategories([])
+      setSuppliers([])
     }
     setLoading(false)
+  }
+
+  const handleStatusToggle = async (product) => {
+    const newStatus = product.status === 'active' ? 'inactive' : 'active'
+    try {
+      await productsAPI.updateStatus(product.id, newStatus).catch(() => {})
+      setProducts(p => p.map(x => x.id === product.id ? { ...x, status: newStatus } : x))
+      toast.success('Holat o\'zgartirildi')
+    } catch { toast.error('Xatolik') }
   }
 
   const handleDelete = async () => {
@@ -274,6 +307,24 @@ export default function Products() {
     return `${API_URL}${firstImg}`
   }
 
+  const exportExcel = () => {
+    const dataToExport = filtered.map(p => ({
+      'ID': p.id,
+      'Nomi': p.name,
+      'Kategoriya': p.category,
+      'Narxi': p.price || 0,
+      'Zakupka Narxi': p.costPrice || 0,
+      'Eski Narxi': p.oldPrice || '',
+      'Holat': p.status === 'active' ? 'Faol' : 'Nofaol',
+      'Ombor': 0,
+    }))
+    
+    const ws = XLSX.utils.json_to_sheet(dataToExport)
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, "Mahsulotlar")
+    XLSX.writeFile(wb, `Mahsulotlar_${new Date().toISOString().slice(0,10)}.xlsx`)
+  }
+
   return (
     <div>
       <div className="page-header">
@@ -281,9 +332,14 @@ export default function Products() {
           <h1 className="page-title">{t('products.title')}</h1>
           <p className="page-subtitle">{total} ta mahsulot</p>
         </div>
-        <button className="btn btn-primary" onClick={() => setModal('add')}>
-          <Plus size={16} /> {t('products.addProduct')}
-        </button>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button className="btn btn-secondary" onClick={exportExcel}>
+            Eksport (Excel)
+          </button>
+          <button className="btn btn-primary" onClick={() => setModal('add')}>
+            <Plus size={16} /> {t('products.addProduct')}
+          </button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -294,7 +350,7 @@ export default function Products() {
         </div>
         <select className="ui-select" style={{ width: 180 }} value={catFilter} onChange={e => { setCatFilter(e.target.value); setPage(1) }}>
           <option value="all">Barcha kategoriyalar</option>
-          {CATS.map(c => <option key={c} value={c}>{c}</option>)}
+          {categories.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
         </select>
         <select className="ui-select" style={{ width: 140 }} value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setPage(1) }}>
           <option value="all">Barcha holat</option>
@@ -348,14 +404,25 @@ export default function Products() {
                       ) : <span style={{ color: 'var(--text-muted)', fontSize: 12 }}>—</span>}
                     </td>
                     <td>
-                      <span className={`badge ${p.status === 'active' ? 'badge-success' : 'badge-default'}`}>
-                        <span className="badge-dot" />{p.status === 'active' ? 'Faol' : 'Nofaol'}
-                      </span>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', margin: 0 }}>
+                        <button 
+                          type="button" 
+                          className={`toggle${p.status === 'active' ? ' on' : ''}`} 
+                          onClick={() => handleStatusToggle(p)} 
+                          title="Holatni o'zgartirish"
+                        />
+                        <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
+                          {p.status === 'active' ? 'Faol' : 'Nofaol'}
+                        </span>
+                      </label>
                     </td>
                     <td>
-                      <span className={`badge ${p.inStock ? 'badge-success' : 'badge-danger'}`}>
-                        {p.inStock ? t('products.inStock') : t('products.outOfStock')}
-                      </span>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <span style={{ fontWeight: 600, fontSize: 13, color: 'var(--text-muted)' }}>0 dona</span>
+                        <span className="badge badge-default" style={{ fontSize: 10, padding: '2px 6px' }}>
+                          {t('products.outOfStock', "Yo'q")}
+                        </span>
+                      </div>
                     </td>
                     <td>
                       <div style={{ display: 'flex', gap: 6 }}>
@@ -376,13 +443,35 @@ export default function Products() {
 
         {/* Pagination */}
         {pages > 1 && (
-          <div className="pagination">
+          <div className="pagination" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
             <span style={{ fontSize: 12, color: 'var(--text-muted)', marginRight: 8 }}>
               {(page-1)*PER+1}–{Math.min(page*PER,total)} / {total}
             </span>
-            {Array.from({ length: pages }, (_, i) => (
-              <button key={i} className={`page-btn${page === i+1 ? ' active' : ''}`} onClick={() => setPage(i+1)}>{i+1}</button>
-            ))}
+            {(() => {
+              let pageBtns = [];
+              const maxVisible = 5;
+              let start = Math.max(1, page - Math.floor(maxVisible / 2));
+              let end = Math.min(pages, start + maxVisible - 1);
+              if (end - start + 1 < maxVisible) {
+                start = Math.max(1, end - maxVisible + 1);
+              }
+              
+              if (start > 1) {
+                pageBtns.push(<button key="1" className="page-btn" onClick={() => setPage(1)}>1</button>);
+                if (start > 2) pageBtns.push(<span key="ellipsis1" style={{ color: 'var(--text-muted)', padding: '0 4px' }}>...</span>);
+              }
+              
+              for (let i = start; i <= end; i++) {
+                pageBtns.push(<button key={i} className={`page-btn${page === i ? ' active' : ''}`} onClick={() => setPage(i)}>{i}</button>);
+              }
+              
+              if (end < pages) {
+                if (end < pages - 1) pageBtns.push(<span key="ellipsis2" style={{ color: 'var(--text-muted)', padding: '0 4px' }}>...</span>);
+                pageBtns.push(<button key={pages} className="page-btn" onClick={() => setPage(pages)}>{pages}</button>);
+              }
+              
+              return pageBtns;
+            })()}
           </div>
         )}
       </div>
@@ -392,6 +481,8 @@ export default function Products() {
         {modal && (
           <ProductModal
             product={modal === 'add' ? null : modal}
+            categories={categories}
+            suppliers={suppliers}
             onClose={() => setModal(null)}
             onSave={handleSave}
           />

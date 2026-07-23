@@ -6,6 +6,7 @@ const path       = require('path');
 const hpp        = require('hpp');
 const session    = require('express-session');
 const passport   = require('passport');
+const cookieParser = require('cookie-parser');
 const { connectDB, prisma } = require('./config/db');
 const logger     = require('./utils/logger');
 const { generalLimiter } = require('./middleware/rateLimiter');
@@ -16,6 +17,9 @@ const paymentRoutes = require('./routes/paymentRoutes');
 const productRoutes = require('./routes/productRoutes');
 const bannerRoutes  = require('./routes/bannerRoutes');
 const messageRoutes = require('./routes/messageRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
+const supplierRoutes = require('./routes/supplierRoutes');
+const inventoryRoutes = require('./routes/inventoryRoutes');
 
 require('./config/passport');
 
@@ -61,6 +65,7 @@ app.options('*', cors());
 // ─── 5. Body parsers ─────────────────────────────────────────────────────────
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(cookieParser());
 
 // ─── 6. Static uploads ───────────────────────────────────────────────────────
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -93,6 +98,9 @@ app.use('/api/payment',  paymentRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/banners',  bannerRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/suppliers', supplierRoutes);
+app.use('/api/inventory', inventoryRoutes);
 
 // ─── 11. Health check ────────────────────────────────────────────────────────
 app.get('/health', (req, res) => res.json({ status: 'ok', env: process.env.NODE_ENV, timestamp: new Date() }));

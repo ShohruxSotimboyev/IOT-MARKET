@@ -109,9 +109,8 @@ export function AppProvider({ children }) {
     localStorage.removeItem('token')
   }
 
-  // Savatga qo'shish — login bo'lmasa false qaytaradi
+  // Savatga qo'shish — barcha uchun ishlaydi (localStorage orqali)
   const addCart = (product, qty = 1) => {
-    if (!isAuthenticated()) return false
     const addQty = product.qty ?? qty
     setCart((prev) => {
       const ex = prev.find((i) => String(i.id) === String(product.id))
