@@ -123,7 +123,10 @@
     "oldPrice": "Old Price",
     "badge": "Badge",
     "uploadImage": "Upload Image (max 10)",
-    "imageFormat": "JPG, PNG, WEBP — max 5MB"
+    "imageFormat": "JPG, PNG, WEBP — max 5MB",
+    "price": "Price",
+    "supplier": "Supplier",
+    "status": "Status"
   },
   "customers": {
     "title": "Customers",

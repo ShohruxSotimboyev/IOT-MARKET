@@ -126,7 +126,10 @@
     "oldPrice": "Старая цена",
     "badge": "Бейдж (Badge)",
     "uploadImage": "Загрузить фото (макс. 10)",
-    "imageFormat": "JPG, PNG, WEBP — макс. 5МБ"
+    "imageFormat": "JPG, PNG, WEBP — макс. 5МБ",
+    "price": "Цена",
+    "supplier": "Поставщик",
+    "status": "Статус"
   },
   "customers": {
     "title": "Клиенты",

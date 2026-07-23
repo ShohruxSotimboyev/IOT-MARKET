@@ -126,7 +126,10 @@
     "oldPrice": "Eski narxi",
     "badge": "Nishon (Badge)",
     "uploadImage": "Rasm yuklash (maks. 10 ta)",
-    "imageFormat": "JPG, PNG, WEBP — max 5MB"
+    "imageFormat": "JPG, PNG, WEBP — max 5MB",
+    "price": "Narxi",
+    "supplier": "Postavshik",
+    "status": "Holat"
   },
   "customers": {
     "title": "Mijozlar",
