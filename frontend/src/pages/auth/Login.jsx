@@ -28,10 +28,10 @@ const Login = () => {
 
     const identifier = email.trim() || phone.trim();
     if (!identifier) {
-      return toast.error("Email yoki telefon raqamini kiriting!");
+      return toast.error(t('auth.err_identifier'));
     }
     if (!password) {
-      return toast.error("Parolni kiriting!");
+      return toast.error(t('auth.err_password'));
     }
 
     setLoading(true);
@@ -40,7 +40,7 @@ const Login = () => {
       toast.success(res.data.message);
       navigate('/verify-otp', { state: { email: res.data.email || email } });
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Kirishda xatolik!');
+      toast.error(err.response?.data?.message || t('auth.err_login'));
     } finally {
       setLoading(false);
     }
@@ -71,7 +71,7 @@ const Login = () => {
             </div>
             <div>
               <div className="font-extrabold text-lg text-[#ffffff]">IoT Market</div>
-              <div className="text-[11px] text-[#94a3b8] uppercase tracking-widest">Aqlli Qurilmalar</div>
+              <div className="text-[11px] text-[#94a3b8] uppercase tracking-widest">{t('auth.smart_devices')}</div>
             </div>
           </div>
 
@@ -84,7 +84,7 @@ const Login = () => {
 
           <form onSubmit={handleLogin} autoComplete="off" className="space-y-4">
             <div className="space-y-1">
-              <label className="text-[13px] font-medium text-[#cbd5e1] ml-1">{t('auth.email')} yoki {t('auth.phone')}</label>
+              <label className="text-[13px] font-medium text-[#cbd5e1] ml-1">{t('auth.email')} {t('auth.or_lowercase')} {t('auth.phone')}</label>
               <Input
                 icon={Mail}
                 type="text"

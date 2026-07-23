@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Edit, Trash2, X, Truck } from 'lucide-react'
@@ -5,6 +6,8 @@ import { suppliersAPI } from '../../api/suppliers'
 import toast from 'react-hot-toast'
 
 function SupplierModal({ supplier, onClose, onSave }) {
+  const { t } = useTranslation()
+
   const [form, setForm] = useState(supplier || { name: '', contact: '', phone: '', address: '', status: 'active' })
 
   const handleSubmit = async () => {
@@ -16,7 +19,7 @@ function SupplierModal({ supplier, onClose, onSave }) {
       } else {
         saved = await suppliersAPI.create(form)
       }
-      toast.success(supplier ? 'Postavshik yangilandi' : 'Postavshik qo\'shildi')
+      toast.success(supplier ? t('suppliers.updated') : t('suppliers.added'))
       onSave(saved)
     } catch (e) {
       toast.error(e.message || 'Xatolik yuz berdi')
@@ -27,26 +30,26 @@ function SupplierModal({ supplier, onClose, onSave }) {
     <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
       <motion.div className="modal-box" style={{ maxWidth: 500 }} initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} onClick={e => e.stopPropagation()}>
         <div className="modal-header">
-          <span className="modal-title">{supplier ? 'Postavshikni tahrirlash' : 'Postavshik qo\'shish'}</span>
+          <span className="modal-title">{supplier ? '{t('suppliers.editTitle')}' : '{t('suppliers.addTitle')}'}</span>
           <button className="modal-close" onClick={onClose}><X size={16} /></button>
         </div>
         <div className="modal-body">
           <div className="form-grid">
             <div className="ui-input-wrap">
-              <label className="ui-label">Kompaniya nomi *</label>
-              <input className="ui-input" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Masalan: Electro Component LLC" />
+              <label className="ui-label">{t('suppliers.nameLabel')}</label>
+              <input className="ui-input" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder={t('suppliers.namePlaceholder')} />
             </div>
             <div className="ui-input-wrap">
               <label className="ui-label">Bog'lanish uchun shaxs</label>
-              <input className="ui-input" value={form.contact} onChange={e => setForm({ ...form, contact: e.target.value })} placeholder="Ism familiya" />
+              <input className="ui-input" value={form.contact} onChange={e => setForm({ ...form, contact: e.target.value })} placeholder={t('suppliers.contactPlaceholder')} />
             </div>
             <div className="ui-input-wrap">
-              <label className="ui-label">Telefon</label>
+              <label className="ui-label">{t('common.phone')}</label>
               <input className="ui-input" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} placeholder="+998 90 123 45 67" />
             </div>
             <div className="ui-input-wrap">
-              <label className="ui-label">Manzil</label>
-              <input className="ui-input" value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} placeholder="Toshkent sh., Yunusobod..." />
+              <label className="ui-label">{t('common.address')}</label>
+              <input className="ui-input" value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} placeholder={t('suppliers.addressPlaceholder')} />
             </div>
             <div className="ui-input-wrap">
               <label className="ui-label">Holat</label>
@@ -67,6 +70,8 @@ function SupplierModal({ supplier, onClose, onSave }) {
 }
 
 export default function Suppliers() {
+  const { t } = useTranslation()
+
   const [suppliers, setSuppliers] = useState([])
   const [loading, setLoading] = useState(true)
   const [modal, setModal] = useState(null)
@@ -80,7 +85,7 @@ export default function Suppliers() {
       const data = await suppliersAPI.getAll()
       setSuppliers(data)
     } catch {
-      toast.error('Postavshiklarni yuklashda xatolik')
+      toast.error(t('suppliers.loadError'))
     }
     setLoading(false)
   }
@@ -90,7 +95,7 @@ export default function Suppliers() {
     try {
       await suppliersAPI.delete(deleteTarget.id)
       setSuppliers(prev => prev.filter(x => x.id !== deleteTarget.id))
-      toast.success('Postavshik o\'chirildi')
+      toast.success(t('suppliers.deleted'))
     } catch (e) {
       toast.error(e.message || 'Xatolik')
     }
@@ -110,8 +115,8 @@ export default function Suppliers() {
     <div>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Postavshiklar</h1>
-          <p className="page-subtitle">{suppliers.length} ta hamkor</p>
+          <h1 className="page-title">{t('suppliers.title')}</h1>
+          <p className="page-subtitle">{suppliers.length} {t('suppliers.partnersCount')}</p>
         </div>
         <button className="btn btn-primary" onClick={() => setModal('add')}>
           <Plus size={16} /> Qo'shish
@@ -122,15 +127,15 @@ export default function Suppliers() {
         {loading ? (
           <div className="empty-state"><Truck size={40} /><p>Yuklanmoqda...</p></div>
         ) : suppliers.length === 0 ? (
-          <div className="empty-state"><Truck size={40} /><p>Postavshiklar topilmadi</p></div>
+          <div className="empty-state"><Truck size={40} /><p>{t('suppliers.title')} topilmadi</p></div>
         ) : (
           <div className="ui-table-wrap">
             <table className="ui-table">
               <thead>
                 <tr>
-                  <th>Kompaniya nomi</th>
-                  <th>Kontakt</th>
-                  <th>Telefon</th>
+                  <th>{t('suppliers.companyName')}</th>
+                  <th>{t('suppliers.contact')}</th>
+                  <th>{t('common.phone')}</th>
                   <th>Holat</th>
                   <th>Amallar</th>
                 </tr>

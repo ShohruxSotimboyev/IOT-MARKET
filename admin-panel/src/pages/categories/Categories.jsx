@@ -6,10 +6,12 @@ import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
 
 function CategoryModal({ category, onClose, onSave }) {
+  const { t } = useTranslation()
+
   const [form, setForm] = useState(category || { name: '', status: 'active' })
 
   const handleSubmit = async () => {
-    if (!form.name.trim()) return toast.error('Nomi kiritilishi shart')
+    if (!form.name.trim()) return toast.error(t('categories.nameRequired'))
     try {
       let saved
       if (category?.id) {
@@ -17,10 +19,10 @@ function CategoryModal({ category, onClose, onSave }) {
       } else {
         saved = await categoriesAPI.create(form)
       }
-      toast.success(category ? 'Kategoriya yangilandi' : 'Kategoriya qo\'shildi')
+      toast.success(category ? t('categories.updated') : t('categories.added'))
       onSave(saved)
     } catch (e) {
-      toast.error(e.message || 'Xatolik yuz berdi')
+      toast.error(e.message || t('common.errorOccurred'))
     }
   }
 
@@ -28,27 +30,27 @@ function CategoryModal({ category, onClose, onSave }) {
     <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
       <motion.div className="modal-box" style={{ maxWidth: 400 }} initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} onClick={e => e.stopPropagation()}>
         <div className="modal-header">
-          <span className="modal-title">{category ? 'Kategoriyani tahrirlash' : 'Kategoriya qo\'shish'}</span>
+          <span className="modal-title">{category ? '{t('categories.editTitle')}' : '{t('categories.addTitle')}'}</span>
           <button className="modal-close" onClick={onClose}><X size={16} /></button>
         </div>
         <div className="modal-body">
           <div className="form-grid">
             <div className="ui-input-wrap">
-              <label className="ui-label">Kategoriya nomi *</label>
-              <input className="ui-input" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Masalan: Sensorlar" />
+              <label className="ui-label">{t('categories.nameLabel')}</label>
+              <input className="ui-input" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder={t('categories.namePlaceholder')} />
             </div>
             <div className="ui-input-wrap">
-              <label className="ui-label">Holat</label>
+              <label className="ui-label">{t('common.status')}</label>
               <select className="ui-select" value={form.status} onChange={e => setForm({ ...form, status: e.target.value })}>
-                <option value="active">Faol</option>
-                <option value="inactive">Nofaol</option>
+                <option value="active">{t('common.active')}</option>
+                <option value="inactive">{t('common.inactive')}</option>
               </select>
             </div>
           </div>
         </div>
         <div className="modal-footer">
-          <button className="btn btn-secondary" onClick={onClose}>Bekor qilish</button>
-          <button className="btn btn-primary" onClick={handleSubmit}>Saqlash</button>
+          <button className="btn btn-secondary" onClick={onClose}>{t('common.cancel')}</button>
+          <button className="btn btn-primary" onClick={handleSubmit}>{t('common.save')}</button>
         </div>
       </motion.div>
     </motion.div>
@@ -56,6 +58,8 @@ function CategoryModal({ category, onClose, onSave }) {
 }
 
 export default function Categories() {
+  const { t } = useTranslation()
+
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [modal, setModal] = useState(null) // null | 'add' | category
@@ -69,7 +73,7 @@ export default function Categories() {
       const data = await categoriesAPI.getAll()
       setCategories(data)
     } catch {
-      toast.error('Kategoriyalarni yuklashda xatolik')
+      toast.error(t('categories.loadError'))
     }
     setLoading(false)
   }
@@ -79,9 +83,9 @@ export default function Categories() {
     try {
       await categoriesAPI.delete(deleteTarget.id)
       setCategories(prev => prev.filter(x => x.id !== deleteTarget.id))
-      toast.success('Kategoriya o\'chirildi')
+      toast.success(t('categories.deleted'))
     } catch (e) {
-      toast.error(e.message || 'Xatolik')
+      toast.error(e.message || t('common.error'))
     }
     setDeleteTarget(null)
   }
@@ -99,8 +103,8 @@ export default function Categories() {
     <div>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Kategoriyalar</h1>
-          <p className="page-subtitle">{categories.length} ta kategoriya</p>
+          <h1 className="page-title">{t('categories.title')}</h1>
+          <p className="page-subtitle">{categories.length} {t('categories.count')}</p>
         </div>
         <button className="btn btn-primary" onClick={() => setModal('add')}>
           <Plus size={16} /> Qo'shish
@@ -109,18 +113,18 @@ export default function Categories() {
 
       <div className="ui-card">
         {loading ? (
-          <div className="empty-state"><Package size={40} /><p>Yuklanmoqda...</p></div>
+          <div className="empty-state"><Package size={40} /><p>{t('common.loading')}</p></div>
         ) : categories.length === 0 ? (
-          <div className="empty-state"><Package size={40} /><p>Kategoriyalar topilmadi</p></div>
+          <div className="empty-state"><Package size={40} /><p>{t('categories.notFound')}</p></div>
         ) : (
           <div className="ui-table-wrap">
             <table className="ui-table">
               <thead>
                 <tr>
-                  <th>Nomi</th>
-                  <th>Holat</th>
+                  <th>{t('common.name')}</th>
+                  <th>{t('common.status')}</th>
                   <th>Qo'shilgan sana</th>
-                  <th>Amallar</th>
+                  <th>{t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -139,7 +143,7 @@ export default function Categories() {
                     </td>
                     <td>
                       <div style={{ display: 'flex', gap: 6 }}>
-                        <button className="btn btn-ghost btn-icon btn-sm" onClick={() => setModal(c)} title="Tahrirlash">
+                        <button className="btn btn-ghost btn-icon btn-sm" onClick={() => setModal(c)} title={t('common.edit')}>
                           <Edit size={14} />
                         </button>
                         <button className="btn btn-danger btn-icon btn-sm" onClick={() => setDeleteTarget(c)} title="O'chirish">
@@ -179,7 +183,7 @@ export default function Categories() {
                 </p>
               </div>
               <div className="modal-footer">
-                <button className="btn btn-secondary" onClick={() => setDeleteTarget(null)}>Bekor qilish</button>
+                <button className="btn btn-secondary" onClick={() => setDeleteTarget(null)}>{t('common.cancel')}</button>
                 <button className="btn btn-danger" onClick={handleDelete}>O'chirish</button>
               </div>
             </motion.div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ShieldCheck, RefreshCw, Clock, AlertCircle, CheckCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import api from '../../api/axios';
 import { useApp } from '../../context/AppContext';
@@ -10,6 +11,7 @@ const OTP_LENGTH = 6;
 const OTP_SECONDS = 90; // Backend bilan bir xil
 
 const OtpVerify = () => {
+  const { t } = useTranslation();
   const [digits, setDigits] = useState(Array(OTP_LENGTH).fill(''));
   const [timeLeft, setTimeLeft] = useState(OTP_SECONDS);
   const [loading, setLoading] = useState(false);
@@ -84,11 +86,11 @@ const OtpVerify = () => {
   const handleVerify = async (otpOverride) => {
     const otp = otpOverride || digits.join('');
     if (otp.length !== OTP_LENGTH) {
-      toast.error('6 ta raqam kiriting');
+      toast.error(t('auth.err_6_digits'));
       return;
     }
     if (timeLeft === 0) {
-      toast.error('Kod muddati tugagan. Yangi kod so\'rang.');
+      toast.error(t('auth.err_expired'));
       return;
     }
     setLoading(true);
@@ -96,7 +98,7 @@ const OtpVerify = () => {
       const res = await api.post('/auth/verify-otp', { email, otp });
       setStatus('success');
       clearInterval(timerRef.current);
-      toast.success('Muvaffaqiyatli kirish!');
+      toast.success(t('auth.success_login'));
       // accessToken + refreshToken ni saqlash
       setAuthUser(res.data.accessToken, res.data.user || { email });
       if (res.data.refreshToken) {
@@ -107,18 +109,18 @@ const OtpVerify = () => {
       setStatus('error');
       const data = err.response?.data || {};
       if (data.expired) {
-        toast.error('Kod muddati tugagan. Yangi kod so\'rang.');
+        toast.error(t('auth.err_expired'));
         setTimeLeft(0);
       } else if (data.tooManyAttempts) {
-        toast.error('Juda ko\'p urinish. Yangi kod so\'rang.');
+        toast.error(t('auth.err_too_many'));
         setDigits(Array(OTP_LENGTH).fill(''));
       } else if (data.attemptsLeft != null) {
         setAttemptsLeft(data.attemptsLeft);
-        toast.error(data.message || 'Kod noto\'g\'ri');
+        toast.error(data.message || t('auth.err_wrong_code'));
         setDigits(Array(OTP_LENGTH).fill(''));
         setTimeout(() => inputRefs.current[0]?.focus(), 100);
       } else {
-        toast.error(data.message || 'Kod xato!');
+        toast.error(data.message || t('auth.err_invalid_code'));
         setDigits(Array(OTP_LENGTH).fill(''));
         setTimeout(() => inputRefs.current[0]?.focus(), 100);
       }
@@ -131,13 +133,13 @@ const OtpVerify = () => {
   // Qayta yuborish
   const handleResend = async () => {
     if (timeLeft > 60) {
-      toast.error(`Iltimos, ${timeLeft - 60} soniya kuting.`);
+      toast.error(t('auth.wait_sec', { sec: timeLeft - 60 }));
       return;
     }
     setResending(true);
     try {
       await api.post('/auth/resend-otp', { email, type });
-      toast.success('Yangi kod yuborildi!');
+      toast.success(t('auth.code_sent'));
       setDigits(Array(OTP_LENGTH).fill(''));
       setAttemptsLeft(5);
       setStatus('idle');
@@ -146,9 +148,9 @@ const OtpVerify = () => {
     } catch (err) {
       const data = err.response?.data || {};
       if (data.retryAfter) {
-        toast.error(`${data.retryAfter} soniyadan keyin qayta urinib ko'ring.`);
+        toast.error(t('auth.retry_after', { sec: data.retryAfter }));
       } else {
-        toast.error(data.message || 'Kod yuborishda xatolik.');
+        toast.error(data.message || t('auth.err_send_code'));
       }
     } finally {
       setResending(false);
@@ -188,11 +190,11 @@ const OtpVerify = () => {
           }
         </motion.div>
 
-        <h2 className="text-2xl font-bold text-white mb-1">Tasdiqlash kodi</h2>
+        <h2 className="text-2xl font-bold text-white mb-1">{t('auth.verify_title')}</h2>
         <p className="text-slate-500 text-sm mb-2">
-          <span className="text-slate-300">{email}</span> ga yuborilgan
+          <span className="text-slate-300">{email}</span> {t('auth.sent_to')}
         </p>
-        <p className="text-slate-600 text-xs mb-8">6 xonali kodni kiriting</p>
+        <p className="text-slate-600 text-xs mb-8">{t('auth.enter_6_digits')}</p>
 
         {/* OTP inputs */}
         <div className="flex justify-center gap-2 mb-6" onPaste={handlePaste}>
@@ -267,7 +269,7 @@ const OtpVerify = () => {
               animate={{ opacity: 1, y: 0 }}
               className="text-red-400 text-sm font-medium mb-6"
             >
-              ⏰ Kod muddati tugadi
+              ⏰ {t('auth.code_expired')}
             </motion.p>
           )}
         </AnimatePresence>
@@ -279,7 +281,7 @@ const OtpVerify = () => {
             animate={{ opacity: 1 }}
             className="text-amber-400 text-xs mb-4"
           >
-            ⚠️ {attemptsLeft} ta urinish qoldi
+            ⚠️ {t('auth.attempts_left', { attempts: attemptsLeft })}
           </motion.p>
         )}
 
@@ -306,7 +308,7 @@ const OtpVerify = () => {
               transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
               className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
             />
-          ) : 'Tasdiqlash'}
+          ) : t('auth.verify_btn')}
         </motion.button>
 
         {/* Qayta yuborish */}
@@ -321,10 +323,10 @@ const OtpVerify = () => {
         >
           <RefreshCw size={14} className={resending ? 'animate-spin' : ''} />
           {resending
-            ? 'Yuborilmoqda...'
+            ? t('auth.sending')
             : canResend
-            ? 'Yangi kod olish'
-            : `${timeLeft - 60} soniyadan keyin qayta yuborish`
+            ? t('auth.get_new_code')
+            : t('auth.resend_after', { sec: timeLeft - 60 })
           }
         </button>
       </motion.div>

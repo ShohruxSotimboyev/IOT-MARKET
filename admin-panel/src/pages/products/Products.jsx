@@ -134,9 +134,9 @@ function ProductModal({ product, categories = [], suppliers = [], onClose, onSav
               >
                 <div style={{ color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
                   <Upload size={28} />
-                  <span style={{ fontSize: 13 }}>Rasm yuklash (maks. 10 ta)</span>
+                  <span style={{ fontSize: 13 }}>{t('products.uploadImage')}</span>
                 </div>
-                <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 8 }}>{uploading ? 'Yuklanmoqda...' : 'JPG, PNG, WEBP — max 5MB'}</p>
+                <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 8 }}>{uploading ? t('common.loading') : t('products.imageFormat')}</p>
                 <input ref={fileRef} type="file" multiple accept="image/*" style={{ display: 'none' }} onChange={e => handleFile(e.target.files)} />
               </div>
               
@@ -174,38 +174,38 @@ function ProductModal({ product, categories = [], suppliers = [], onClose, onSav
                 <input type="number" className="ui-input" value={form.price} onChange={e => set('price', e.target.value)} />
               </div>
               <div className="ui-input-wrap">
-                <label className="ui-label">Zakupka narxi (Cost Price)</label>
+                <label className="ui-label">{t('products.costPrice')}</label>
                 <input type="number" className="ui-input" value={form.costPrice} onChange={e => set('costPrice', e.target.value)} />
               </div>
               <div className="ui-input-wrap">
-                <label className="ui-label">Eski narxi</label>
+                <label className="ui-label">{t('products.oldPrice')}</label>
                 <input type="number" className="ui-input" value={form.oldPrice} onChange={e => set('oldPrice', e.target.value)} />
               </div>
               <div className="ui-input-wrap">
-                <label className="ui-label">Postavshik</label>
+                <label className="ui-label">{t('products.supplier')}</label>
                 <select className="ui-select" value={form.supplierId || ''} onChange={e => set('supplierId', e.target.value)}>
-                  <option value="">Tanlanmagan</option>
+                  <option value="">{t('common.clear')}</option>
                   {suppliers.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                 </select>
               </div>
               <div className="ui-input-wrap">
-                <label className="ui-label">Badge</label>
+                <label className="ui-label">{t('products.badge')}</label>
                 <select className="ui-select" value={form.badge || ''} onChange={e => set('badge', e.target.value)}>
-                  {BADGES.map(b => <option key={b} value={b}>{b || '— Yo\'q —'}</option>)}
+                  {BADGES.map(b => <option key={b} value={b}>{b || t('products.noBadge', '— Yo\'q —')}</option>)}
                 </select>
               </div>
               <div className="ui-input-wrap">
-                <label className="ui-label">Holat</label>
+                <label className="ui-label">{t('products.status')}</label>
                 <select className="ui-select" value={form.status} onChange={e => set('status', e.target.value)}>
-                  <option value="active">Faol</option>
-                  <option value="inactive">Nofaol</option>
+                  <option value="active">{t('common.active')}</option>
+                  <option value="inactive">{t('common.inactive')}</option>
                 </select>
               </div>
             </div>
 
             <div className="ui-input-wrap">
               <label className="ui-label">{t('products.productDescription')}</label>
-              <textarea className="ui-input ui-textarea" value={form.description || ''} onChange={e => set('description', e.target.value)} placeholder="Mahsulot tavsifi..." />
+              <textarea className="ui-input ui-textarea" value={form.description || ''} onChange={e => set('description', e.target.value)} placeholder={`${t('products.productDescription')}...`} />
             </div>
 
             <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
@@ -321,7 +321,7 @@ export default function Products() {
     
     const ws = XLSX.utils.json_to_sheet(dataToExport)
     const wb = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(wb, ws, "Mahsulotlar")
+    XLSX.utils.book_append_sheet(wb, ws, "{t('products.title')}")
     XLSX.writeFile(wb, `Mahsulotlar_${new Date().toISOString().slice(0,10)}.xlsx`)
   }
 
@@ -353,7 +353,7 @@ export default function Products() {
           {categories.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
         </select>
         <select className="ui-select" style={{ width: 140 }} value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setPage(1) }}>
-          <option value="all">Barcha holat</option>
+          <option value="all">{t('products.allStatus')}</option>
           <option value="active">Faol</option>
           <option value="inactive">Nofaol</option>
         </select>
@@ -362,7 +362,7 @@ export default function Products() {
       {/* Table */}
       <div className="ui-card">
         {loading ? (
-          <div className="empty-state"><Package size={40} /><p>Yuklanmoqda...</p></div>
+          <div className="empty-state"><Package size={40} /><p>{t('common.loading')}</p></div>
         ) : slice.length === 0 ? (
           <div className="empty-state"><Package size={40} /><p>{t('products.noProducts')}</p></div>
         ) : (
@@ -370,14 +370,14 @@ export default function Products() {
             <table className="ui-table">
               <thead>
                 <tr>
-                  <th>Rasm</th>
-                  <th>Nomi</th>
-                  <th>Kategoriya</th>
-                  <th>Narxi</th>
-                  <th>Badge</th>
-                  <th>Holat</th>
-                  <th>Ombor</th>
-                  <th>Amallar</th>
+                  <th>{t('common.image')}</th>
+                  <th>{t('common.name')}</th>
+                  <th>{t('common.category')}</th>
+                  <th>{t('common.price')}</th>
+                  <th>{t('products.badge')}</th>
+                  <th>{t('common.status')}</th>
+                  <th>{t('products.productStock', 'Ombor')}</th>
+                  <th>{t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -426,7 +426,7 @@ export default function Products() {
                     </td>
                     <td>
                       <div style={{ display: 'flex', gap: 6 }}>
-                        <button className="btn btn-ghost btn-icon btn-sm" onClick={() => setModal(p)} title="Tahrirlash">
+                        <button className="btn btn-ghost btn-icon btn-sm" onClick={() => setModal(p)} title="{t('common.edit')}">
                           <Edit size={14} />
                         </button>
                         <button className="btn btn-danger btn-icon btn-sm" onClick={() => setDeleteTarget(p)} title="O'chirish">
@@ -504,7 +504,7 @@ export default function Products() {
                 </p>
               </div>
               <div className="modal-footer">
-                <button className="btn btn-secondary" onClick={() => setDeleteTarget(null)}>Bekor qilish</button>
+                <button className="btn btn-secondary" onClick={() => setDeleteTarget(null)}>{t('common.cancel')}</button>
                 <button className="btn btn-danger" onClick={handleDelete}>O'chirish</button>
               </div>
             </motion.div>

@@ -42,7 +42,7 @@ export default function Contact() {
   const submit = async (e) => {
     e.preventDefault()
     if (!form.name || !form.email || !form.message) {
-      toast.error('Ism, email va xabar maydonlarini to\'ldiring!')
+      toast.error(t('contact.err_fill'))
       return
     }
     setLoading(true)
@@ -57,10 +57,10 @@ export default function Contact() {
       })
       setSent(true)
       clearForm()
-      toast.success('Xabaringiz muvaffaqiyatli yuborildi! Tez orada javob beramiz.')
+      toast.success(t('contact.success_msg'))
       setTimeout(() => setSent(false), 5000)
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Xabar yuborishda xatolik!')
+      toast.error(err.response?.data?.message || t('contact.err_msg'))
     } finally {
       setLoading(false)
     }
@@ -127,16 +127,16 @@ export default function Contact() {
             onChange={(e) => setForm({ ...form, email: e.target.value })}
           />
           <FormInput
-            label="Telefon (ixtiyoriy)"
+            label={t('contact.phone_opt')}
             type="text"
             placeholder="+998 90 123 45 67"
             value={form.phone}
             onChange={(e) => setForm({ ...form, phone: e.target.value })}
           />
           <FormInput
-            label="Mavzu"
+            label={t('contact.subject')}
             type="text"
-            placeholder="Xabar mavzusi"
+            placeholder={t('contact.subject_ph')}
             value={form.subject}
             onChange={(e) => setForm({ ...form, subject: e.target.value })}
           />
@@ -161,7 +161,7 @@ export default function Contact() {
             ) : (
               <Send size={18} />
             )}
-            {sent ? t('contact.sent') : loading ? 'Yuborilmoqda...' : t('contact.send')}
+            {sent ? t('contact.sent') : loading ? t('contact.sending') : t('contact.send')}
           </motion.button>
         </motion.form>
       </div>
@@ -187,13 +187,13 @@ export default function Contact() {
 
           <div className="flex flex-wrap gap-2 ml-4 md:ml-0">
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/25 text-cyan-300 text-xs font-medium">
-              <Car size={13} /> Shahar markazi · 10 daqiqa
+              <Car size={13} /> {t('map.center')}
             </span>
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 text-xs font-medium">
-              <Footprints size={13} /> Piyoda · 25 daqiqa
+              <Footprints size={13} /> {t('map.walk')}
             </span>
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-violet-500/10 border border-violet-500/25 text-violet-300 text-xs font-medium">
-              <Navigation size={13} /> GPS yo'l boshlovchi mavjud
+              <Navigation size={13} /> {t('map.gps')}
             </span>
           </div>
         </div>

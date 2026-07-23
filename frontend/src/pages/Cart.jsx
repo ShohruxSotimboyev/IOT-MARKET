@@ -135,11 +135,11 @@ export default function Cart() {
               type="button"
               onClick={() => {
                 if (!isAuthenticated()) {
-                  toast.error("To'lov uchun tizimga kiring!")
+                  toast.error(t('cart.login_err'))
                   navigate('/login')
                   return
                 }
-                navigate('/checkout', { state: { product: { name: `Savat (${totalItems} mahsulot)` }, price: grandTotal } })
+                navigate('/checkout', { state: { product: { name: `${t('cart.title')} (${totalItems} ${t('cart.pcs')})` }, price: grandTotal } })
               }}
               className="w-full py-4 bg-gradient-to-r from-primary to-teal text-white font-bold text-lg rounded-xl shadow-lg shadow-primary/20"
             >

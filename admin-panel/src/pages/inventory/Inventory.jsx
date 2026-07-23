@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Archive, X, ArrowUpRight, ArrowDownRight } from 'lucide-react'
@@ -6,17 +7,19 @@ import { productsAPI } from '../../api/products'
 import toast from 'react-hot-toast'
 
 function InventoryModal({ products, onClose, onSave }) {
+  const { t } = useTranslation()
+
   const [form, setForm] = useState({ productId: '', type: 'in', quantity: '', reason: '' })
   const [submitting, setSubmitting] = useState(false)
 
   const handleSubmit = async () => {
-    if (!form.productId) return toast.error('Mahsulotni tanlang')
-    if (!form.quantity || form.quantity <= 0) return toast.error('Miqdorni kiriting')
+    if (!form.productId) return toast.error(t('inventory.selectProduct'))
+    if (!form.quantity || form.quantity <= 0) return toast.error(t('inventory.enterAmount'))
     
     setSubmitting(true)
     try {
       const saved = await inventoryAPI.addLog(form)
-      toast.success('Ombor yangilandi')
+      toast.success(t('inventory.updated'))
       onSave(saved.data)
     } catch (e) {
       toast.error(e.message || 'Xatolik yuz berdi')
@@ -34,30 +37,30 @@ function InventoryModal({ products, onClose, onSave }) {
         <div className="modal-body">
           <div className="form-grid">
             <div className="ui-input-wrap">
-              <label className="ui-label">Mahsulot *</label>
+              <label className="ui-label">{t('inventory.productLabel')}</label>
               <select className="ui-select" value={form.productId} onChange={e => setForm({ ...form, productId: e.target.value })}>
-                <option value="">-- Tanlang --</option>
+                <option value="">-- {t('common.select')} --</option>
                 {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
               </select>
             </div>
             
             <div className="form-grid form-grid-2">
               <div className="ui-input-wrap">
-                <label className="ui-label">Operatsiya turi</label>
+                <label className="ui-label">{t('inventory.operationType')}</label>
                 <select className="ui-select" value={form.type} onChange={e => setForm({ ...form, type: e.target.value })}>
                   <option value="in">Kirim (Qo'shish)</option>
-                  <option value="out">Chiqim (Ayirish)</option>
+                  <option value="out">{t('inventory.expense')}</option>
                 </select>
               </div>
               <div className="ui-input-wrap">
-                <label className="ui-label">Miqdor *</label>
+                <label className="ui-label">{t('inventory.amountLabel')}</label>
                 <input type="number" className="ui-input" min="1" value={form.quantity} onChange={e => setForm({ ...form, quantity: e.target.value })} placeholder="10" />
               </div>
             </div>
 
             <div className="ui-input-wrap">
-              <label className="ui-label">Sabab / Izoh</label>
-              <input className="ui-input" value={form.reason} onChange={e => setForm({ ...form, reason: e.target.value })} placeholder="Masalan: Yangi partiya keldi" />
+              <label className="ui-label">{t('inventory.reasonLabel')}</label>
+              <input className="ui-input" value={form.reason} onChange={e => setForm({ ...form, reason: e.target.value })} placeholder={t('inventory.reasonPlaceholder')} />
             </div>
           </div>
         </div>
@@ -71,6 +74,8 @@ function InventoryModal({ products, onClose, onSave }) {
 }
 
 export default function Inventory() {
+  const { t } = useTranslation()
+
   const [logs, setLogs] = useState([])
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -91,7 +96,7 @@ export default function Inventory() {
       setLogs(data.data)
       setTotalPages(data.totalPages)
     } catch {
-      toast.error('Ombor tarixini yuklashda xatolik')
+      toast.error(t('inventory.loadError'))
     }
     setLoading(false)
   }
@@ -117,8 +122,8 @@ export default function Inventory() {
     <div>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Ombor (Sclad)</h1>
-          <p className="page-subtitle">Mahsulotlar harakati tarixi</p>
+          <h1 className="page-title">{t('inventory.title')}</h1>
+          <p className="page-subtitle">{t('inventory.history')}</p>
         </div>
         <button className="btn btn-primary" onClick={() => setModalOpen(true)}>
           <Plus size={16} /> Harakat qo'shish
@@ -135,11 +140,11 @@ export default function Inventory() {
             <table className="ui-table">
               <thead>
                 <tr>
-                  <th>Sana</th>
-                  <th>Mahsulot</th>
-                  <th>Tur</th>
-                  <th>Miqdor</th>
-                  <th>Izoh</th>
+                  <th>{t('common.date')}</th>
+                  <th>{t('common.product')}</th>
+                  <th>{t('common.type')}</th>
+                  <th>{t('common.amount')}</th>
+                  <th>{t('common.reason')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -151,17 +156,17 @@ export default function Inventory() {
                       </div>
                     </td>
                     <td>
-                      <div style={{ fontWeight: 600, fontSize: 14 }}>{log.product?.name || 'O\'chirilgan mahsulot'}</div>
+                      <div style={{ fontWeight: 600, fontSize: 14 }}>{log.product?.name || t('inventory.deletedProduct')}</div>
                       <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{log.product?.category}</div>
                     </td>
                     <td>
                       {log.type === 'in' ? (
                         <span className="badge badge-success" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-                          <ArrowDownRight size={12} /> Kirim
+                          <ArrowDownRight size={12} /> {t('inventory.incomeBadge')}
                         </span>
                       ) : (
                         <span className="badge badge-danger" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-                          <ArrowUpRight size={12} /> Chiqim
+                          <ArrowUpRight size={12} /> {t('inventory.expenseBadge')}
                         </span>
                       )}
                     </td>
