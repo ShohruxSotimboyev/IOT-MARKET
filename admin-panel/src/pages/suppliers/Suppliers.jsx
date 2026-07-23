@@ -30,7 +30,7 @@ function SupplierModal({ supplier, onClose, onSave }) {
     <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
       <motion.div className="modal-box" style={{ maxWidth: 500 }} initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} onClick={e => e.stopPropagation()}>
         <div className="modal-header">
-          <span className="modal-title">{supplier ? '{t('suppliers.editTitle')}' : '{t('suppliers.addTitle')}'}</span>
+          <span className="modal-title">{supplier ? t('suppliers.editTitle') : t('suppliers.addTitle')}</span>
           <button className="modal-close" onClick={onClose}><X size={16} /></button>
         </div>
         <div className="modal-body">

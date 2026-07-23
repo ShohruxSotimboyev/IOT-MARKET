@@ -30,7 +30,7 @@ function CategoryModal({ category, onClose, onSave }) {
     <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
       <motion.div className="modal-box" style={{ maxWidth: 400 }} initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} onClick={e => e.stopPropagation()}>
         <div className="modal-header">
-          <span className="modal-title">{category ? '{t('categories.editTitle')}' : '{t('categories.addTitle')}'}</span>
+          <span className="modal-title">{category ? t('categories.editTitle') : t('categories.addTitle')}</span>
           <button className="modal-close" onClick={onClose}><X size={16} /></button>
         </div>
         <div className="modal-body">
@@ -107,7 +107,7 @@ export default function Categories() {
           <p className="page-subtitle">{categories.length} {t('categories.count')}</p>
         </div>
         <button className="btn btn-primary" onClick={() => setModal('add')}>
-          <Plus size={16} /> Qo'shish
+          <Plus size={16} /> {t('common.add')}
         </button>
       </div>
 
@@ -115,7 +115,7 @@ export default function Categories() {
         {loading ? (
           <div className="empty-state"><Package size={40} /><p>{t('common.loading')}</p></div>
         ) : categories.length === 0 ? (
-          <div className="empty-state"><Package size={40} /><p>{t('categories.notFound')}</p></div>
+          <div className="empty-state"><Package size={40} /><p>{t('categories.notFound', 'Kategoriyalar topilmadi')}</p></div>
         ) : (
           <div className="ui-table-wrap">
             <table className="ui-table">
@@ -123,7 +123,7 @@ export default function Categories() {
                 <tr>
                   <th>{t('common.name')}</th>
                   <th>{t('common.status')}</th>
-                  <th>Qo'shilgan sana</th>
+                  <th>{t('common.date', 'Sana')}</th>
                   <th>{t('common.actions')}</th>
                 </tr>
               </thead>
@@ -133,12 +133,12 @@ export default function Categories() {
                     <td><div style={{ fontWeight: 600, fontSize: 14 }}>{c.name}</div></td>
                     <td>
                       <span className={`badge ${c.status === 'active' ? 'badge-success' : 'badge-default'}`}>
-                        <span className="badge-dot" />{c.status === 'active' ? 'Faol' : 'Nofaol'}
+                        <span className="badge-dot" />{c.status === 'active' ? t('common.active') : t('common.inactive')}
                       </span>
                     </td>
                     <td>
                       <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
-                        {new Date(c.createdAt).toLocaleDateString('uz-UZ')}
+                        {new Date(c.createdAt).toLocaleDateString()}
                       </span>
                     </td>
                     <td>
@@ -146,7 +146,7 @@ export default function Categories() {
                         <button className="btn btn-ghost btn-icon btn-sm" onClick={() => setModal(c)} title={t('common.edit')}>
                           <Edit size={14} />
                         </button>
-                        <button className="btn btn-danger btn-icon btn-sm" onClick={() => setDeleteTarget(c)} title="O'chirish">
+                        <button className="btn btn-danger btn-icon btn-sm" onClick={() => setDeleteTarget(c)} title={t('common.delete')}>
                           <Trash2 size={14} />
                         </button>
                       </div>
@@ -174,17 +174,17 @@ export default function Categories() {
           <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setDeleteTarget(null)}>
             <motion.div className="modal-box" style={{ maxWidth: 400 }} initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} onClick={e => e.stopPropagation()}>
               <div className="modal-header">
-                <span className="modal-title" style={{ color: 'var(--clr-danger)' }}>Kategoriyani o'chirish</span>
+                <span className="modal-title" style={{ color: 'var(--clr-danger)' }}>{t('categories.deleteTitle', 'Kategoriyani o\'chirish')}</span>
                 <button className="modal-close" onClick={() => setDeleteTarget(null)}><X size={16} /></button>
               </div>
               <div className="modal-body">
                 <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>
-                  <strong style={{ color: 'var(--text-primary)' }}>"{deleteTarget.name}"</strong> ni o'chirmoqchimisiz? Agar bu kategoriyada mahsulotlar bo'lsa, o'chirish bekor qilinadi.
+                  <strong style={{ color: 'var(--text-primary)' }}>"{deleteTarget.name}"</strong> {t('categories.deleteConfirm')}
                 </p>
               </div>
               <div className="modal-footer">
                 <button className="btn btn-secondary" onClick={() => setDeleteTarget(null)}>{t('common.cancel')}</button>
-                <button className="btn btn-danger" onClick={handleDelete}>O'chirish</button>
+                <button className="btn btn-danger" onClick={handleDelete}>{t('common.delete')}</button>
               </div>
             </motion.div>
           </motion.div>

@@ -321,7 +321,7 @@ export default function Products() {
     
     const ws = XLSX.utils.json_to_sheet(dataToExport)
     const wb = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(wb, ws, "{t('products.title')}")
+    XLSX.utils.book_append_sheet(wb, ws, t('products.title'))
     XLSX.writeFile(wb, `Mahsulotlar_${new Date().toISOString().slice(0,10)}.xlsx`)
   }
 
@@ -426,7 +426,7 @@ export default function Products() {
                     </td>
                     <td>
                       <div style={{ display: 'flex', gap: 6 }}>
-                        <button className="btn btn-ghost btn-icon btn-sm" onClick={() => setModal(p)} title="{t('common.edit')}">
+                        <button className="btn btn-ghost btn-icon btn-sm" onClick={() => setModal(p)} title={t('common.edit')}>
                           <Edit size={14} />
                         </button>
                         <button className="btn btn-danger btn-icon btn-sm" onClick={() => setDeleteTarget(p)} title="O'chirish">
