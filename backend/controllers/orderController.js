@@ -57,6 +57,15 @@ exports.createOrder = async (req, res) => {
                 inStock: newStock > 0
               }
             });
+
+            await tx.inventoryLog.create({
+              data: {
+                productId: item.productId,
+                type: 'out',
+                quantity: item.quantity,
+                reason: `Sotuv (Buyurtma ID: ${txId})`
+              }
+            });
           }
         }
       }
