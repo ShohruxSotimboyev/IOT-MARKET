@@ -505,7 +505,7 @@ export default function Products() {
               </div>
               <div className="modal-footer">
                 <button className="btn btn-secondary" onClick={() => setDeleteTarget(null)}>{t('common.cancel')}</button>
-                <button className="btn btn-danger" onClick={handleDelete}>O'chirish</button>
+                <button className="btn btn-danger" onClick={handleDelete}>{t('common.delete')}</button>
               </div>
             </motion.div>
           </motion.div>

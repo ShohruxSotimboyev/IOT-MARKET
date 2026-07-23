@@ -76,7 +76,7 @@ export default function Messages() {
             </div>
           </div>
           {loading ? (
-            <div className="empty-state"><p>Yuklanmoqda...</p></div>
+            <div className="empty-state"><p>{t('common.loading')}</p></div>
           ) : filtered.length === 0 ? (
             <div className="empty-state"><MessageSquare size={40} /><p>Xabarlar yo'q</p></div>
           ) : (

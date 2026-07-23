@@ -41,7 +41,7 @@
     "apply": "Применить",
     "reset": "Сбросить",
     "errorOccurred": "Xatolik yuz berdi (ru)",
-    "error": "Xatolik (ru)",
+    "error": "Ошибка",
     "dateAdded": "Qo'shilgan sana (ru)",
     "select": "Tanlang (ru)",
     "product": "Mahsulot (ru)",
@@ -182,13 +182,25 @@
     "addBanner": "Добавить баннер",
     "editBanner": "Редактировать баннер",
     "deleteBanner": "Удалить баннер",
-    "deleteConfirm": "Вы уверены, что хотите удалить этот баннер?",
+    "deleteConfirm": "Вы уверены что хотите удалить?",
     "bannerTitle": "Заголовок баннера",
     "bannerDescription": "Описание баннера",
     "bannerImage": "Изображение баннера",
     "bannerOrder": "Порядок баннера",
     "active": "Активный",
-    "noBanners": "Баннеров пока нет"
+    "noBanners": "Баннеров пока нет",
+    "titleRequired": "Заголовок обязателен",
+    "updated": "Баннер обновлён",
+    "added": "Баннер добавлен",
+    "deleted": "Баннер удалён",
+    "uploadImage": "Загрузить изображение",
+    "recommended": "Рекомендуется: 1920x600px",
+    "titleLabel": "Заголовок",
+    "titlePlaceholder": "Заголовок баннера",
+    "descPlaceholder": "Описание баннера",
+    "link": "Ссылка",
+    "order": "Порядок",
+    "count": "баннер(ов)"
   },
   "settings": {
     "title": "Настройки",
@@ -275,10 +287,10 @@
     "deleted": "Postavshik o'chirildi (ru)",
     "title": "Postavshiklar (ru)",
     "partnersCount": "ta hamkor (ru)",
-    "notFound": "Postavshiklar topilmadi (ru)",
+    "notFound": "Поставщики не найдены",
     "companyName": "Kompaniya nomi (ru)",
     "contact": "Kontakt (ru)",
-    "deleteTitle": "Postavshikni o'chirish (ru)",
-    "deleteConfirm": "ni o'chirmoqchimisiz? Agar bu postavshikka tegishli mahsulotlar bo'lsa, o'chirish bekor qilinadi. (ru)"
+    "deleteTitle": "Удалить поставщика",
+    "deleteConfirm": "Вы уверены что хотите удалить?"
   }
 }

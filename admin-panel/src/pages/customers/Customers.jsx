@@ -49,7 +49,7 @@ export default function Customers() {
 
       <div className="ui-card">
         {loading ? (
-          <div className="empty-state"><Users size={40} /><p>Yuklanmoqda...</p></div>
+          <div className="empty-state"><Users size={40} /><p>{t('common.loading')}</p></div>
         ) : (
           <div className="ui-table-wrap">
             <table className="ui-table">

@@ -48,7 +48,7 @@ function InventoryModal({ products, onClose, onSave }) {
               <div className="ui-input-wrap">
                 <label className="ui-label">{t('inventory.operationType')}</label>
                 <select className="ui-select" value={form.type} onChange={e => setForm({ ...form, type: e.target.value })}>
-                  <option value="in">Kirim (Qo'shish)</option>
+                  <option value="in">{t('inventory.income')}</option>
                   <option value="out">{t('inventory.expense')}</option>
                 </select>
               </div>
@@ -65,8 +65,8 @@ function InventoryModal({ products, onClose, onSave }) {
           </div>
         </div>
         <div className="modal-footer">
-          <button className="btn btn-secondary" onClick={onClose} disabled={submitting}>Bekor qilish</button>
-          <button className="btn btn-primary" onClick={handleSubmit} disabled={submitting}>Saqlash</button>
+          <button className="btn btn-secondary" onClick={onClose} disabled={submitting}>{t('common.cancel')}</button>
+          <button className="btn btn-primary" onClick={handleSubmit} disabled={submitting}>{t('common.save')}</button>
         </div>
       </motion.div>
     </motion.div>
@@ -126,15 +126,15 @@ export default function Inventory() {
           <p className="page-subtitle">{t('inventory.history')}</p>
         </div>
         <button className="btn btn-primary" onClick={() => setModalOpen(true)}>
-          <Plus size={16} /> Harakat qo'shish
+          <Plus size={16} /> {t('inventory.addAction')}
         </button>
       </div>
 
       <div className="ui-card">
         {loading ? (
-          <div className="empty-state"><Archive size={40} /><p>Yuklanmoqda...</p></div>
+          <div className="empty-state"><Archive size={40} /><p>{t('common.loading')}</p></div>
         ) : logs.length === 0 ? (
-          <div className="empty-state"><Archive size={40} /><p>Hali hech qanday harakat yo'q</p></div>
+          <div className="empty-state"><Archive size={40} /><p>{t('inventory.noActions')}</p></div>
         ) : (
           <div className="ui-table-wrap">
             <table className="ui-table">

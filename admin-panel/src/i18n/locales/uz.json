@@ -181,14 +181,26 @@
     "subtitle": "Bannerlarni boshqarish",
     "addBanner": "Banner qo'shish",
     "editBanner": "Bannerni tahrirlash",
-    "deleteBanner": "Bannerni o'chirish",
-    "deleteConfirm": "Haqiqatan ham bu bannerni o'chirmoqchimisiz?",
+    "deleteBanner": "Bannerni ochirish",
+    "deleteConfirm": "ni ochirishni tasdiqlaysizmi?",
     "bannerTitle": "Banner sarlavhasi",
     "bannerDescription": "Banner tavsifi",
     "bannerImage": "Banner rasmi",
     "bannerOrder": "Banner tartibi",
     "active": "Faol",
-    "noBanners": "Hozircha bannerlar yo'q"
+    "noBanners": "Hozircha bannerlar yo'q",
+    "titleRequired": "Sarlavha kiritilishi shart",
+    "updated": "Banner yangilandi",
+    "added": "Banner qoshildi",
+    "deleted": "Banner ochirildi",
+    "uploadImage": "Banner rasm yuklash",
+    "recommended": "Tavsiya: 1920x600px",
+    "titleLabel": "Sarlavha",
+    "titlePlaceholder": "Banner sarlavhasi",
+    "descPlaceholder": "Banner tavsifi",
+    "link": "Havola",
+    "order": "Tartib",
+    "count": "ta banner"
   },
   "settings": {
     "title": "Sozlamalar",
@@ -275,10 +287,10 @@
     "deleted": "Postavshik o'chirildi",
     "title": "Postavshiklar",
     "partnersCount": "ta hamkor",
-    "notFound": "Postavshiklar topilmadi",
+    "notFound": "Taminotchilar topilmadi",
     "companyName": "Kompaniya nomi",
     "contact": "Kontakt",
-    "deleteTitle": "Postavshikni o'chirish",
-    "deleteConfirm": "ni o'chirmoqchimisiz? Agar bu postavshikka tegishli mahsulotlar bo'lsa, o'chirish bekor qilinadi."
+    "deleteTitle": "Postavshikni ochirish",
+    "deleteConfirm": "ni ochirishni tasdiqlaysizmi?"
   }
 }

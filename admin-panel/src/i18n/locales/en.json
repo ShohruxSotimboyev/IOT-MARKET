@@ -41,7 +41,7 @@
     "apply": "Apply",
     "reset": "Reset",
     "errorOccurred": "Xatolik yuz berdi (en)",
-    "error": "Xatolik (en)",
+    "error": "Error",
     "dateAdded": "Qo'shilgan sana (en)",
     "select": "Tanlang (en)",
     "product": "Mahsulot (en)",
@@ -178,14 +178,26 @@
     "subtitle": "Manage banners",
     "addBanner": "Add Banner",
     "editBanner": "Edit Banner",
-    "deleteBanner": "Delete Banner",
-    "deleteConfirm": "Are you sure you want to delete this banner?",
+    "deleteBanner": "Delete banner",
+    "deleteConfirm": "Are you sure you want to delete?",
     "bannerTitle": "Banner Title",
     "bannerDescription": "Banner Description",
     "bannerImage": "Banner Image",
     "bannerOrder": "Banner Order",
     "active": "Active",
-    "noBanners": "No banners yet"
+    "noBanners": "No banners yet",
+    "titleRequired": "Title is required",
+    "updated": "Banner updated",
+    "added": "Banner added",
+    "deleted": "Banner deleted",
+    "uploadImage": "Upload banner image",
+    "recommended": "Recommended: 1920x600px",
+    "titleLabel": "Title",
+    "titlePlaceholder": "Banner title",
+    "descPlaceholder": "Banner description",
+    "link": "Link",
+    "order": "Order",
+    "count": "banner(s)"
   },
   "settings": {
     "title": "Settings",
@@ -272,10 +284,10 @@
     "deleted": "Postavshik o'chirildi (en)",
     "title": "Postavshiklar (en)",
     "partnersCount": "ta hamkor (en)",
-    "notFound": "Postavshiklar topilmadi (en)",
+    "notFound": "Suppliers not found",
     "companyName": "Kompaniya nomi (en)",
     "contact": "Kontakt (en)",
-    "deleteTitle": "Postavshikni o'chirish (en)",
-    "deleteConfirm": "ni o'chirmoqchimisiz? Agar bu postavshikka tegishli mahsulotlar bo'lsa, o'chirish bekor qilinadi. (en)"
+    "deleteTitle": "Delete supplier",
+    "deleteConfirm": "Are you sure you want to delete?"
   }
 }

@@ -108,7 +108,7 @@ export default function Orders() {
 
       <div className="ui-card">
         {loading ? (
-          <div className="empty-state"><p>Yuklanmoqda...</p></div>
+          <div className="empty-state"><p>{t('common.loading')}</p></div>
         ) : (
           <div className="ui-table-wrap">
             <table className="ui-table">

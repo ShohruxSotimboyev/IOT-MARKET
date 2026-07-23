@@ -61,8 +61,8 @@ function SupplierModal({ supplier, onClose, onSave }) {
           </div>
         </div>
         <div className="modal-footer">
-          <button className="btn btn-secondary" onClick={onClose}>Bekor qilish</button>
-          <button className="btn btn-primary" onClick={handleSubmit}>Saqlash</button>
+          <button className="btn btn-secondary" onClick={onClose}>{t('common.cancel')}</button>
+          <button className="btn btn-primary" onClick={handleSubmit}>{t('common.save')}</button>
         </div>
       </motion.div>
     </motion.div>
@@ -97,7 +97,7 @@ export default function Suppliers() {
       setSuppliers(prev => prev.filter(x => x.id !== deleteTarget.id))
       toast.success(t('suppliers.deleted'))
     } catch (e) {
-      toast.error(e.message || 'Xatolik')
+      toast.error(e.message || t('common.error'))
     }
     setDeleteTarget(null)
   }
@@ -119,15 +119,15 @@ export default function Suppliers() {
           <p className="page-subtitle">{suppliers.length} {t('suppliers.partnersCount')}</p>
         </div>
         <button className="btn btn-primary" onClick={() => setModal('add')}>
-          <Plus size={16} /> Qo'shish
+          <Plus size={16} /> {t('common.add')}
         </button>
       </div>
 
       <div className="ui-card">
         {loading ? (
-          <div className="empty-state"><Truck size={40} /><p>Yuklanmoqda...</p></div>
+          <div className="empty-state"><Truck size={40} /><p>{t('common.loading')}</p></div>
         ) : suppliers.length === 0 ? (
-          <div className="empty-state"><Truck size={40} /><p>{t('suppliers.title')} topilmadi</p></div>
+          <div className="empty-state"><Truck size={40} /><p>{t('suppliers.notFound')}</p></div>
         ) : (
           <div className="ui-table-wrap">
             <table className="ui-table">
@@ -136,8 +136,8 @@ export default function Suppliers() {
                   <th>{t('suppliers.companyName')}</th>
                   <th>{t('suppliers.contact')}</th>
                   <th>{t('common.phone')}</th>
-                  <th>Holat</th>
-                  <th>Amallar</th>
+                  <th>{t('common.status')}</th>
+                  <th>{t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -148,15 +148,15 @@ export default function Suppliers() {
                     <td><span style={{ fontSize: 13 }}>{s.phone || '-'}</span></td>
                     <td>
                       <span className={`badge ${s.status === 'active' ? 'badge-success' : 'badge-default'}`}>
-                        <span className="badge-dot" />{s.status === 'active' ? 'Faol' : 'Nofaol'}
+                        <span className="badge-dot" />{s.status === 'active' ? t('common.active') : t('common.inactive')}
                       </span>
                     </td>
                     <td>
                       <div style={{ display: 'flex', gap: 6 }}>
-                        <button className="btn btn-ghost btn-icon btn-sm" onClick={() => setModal(s)} title="Tahrirlash">
+                        <button className="btn btn-ghost btn-icon btn-sm" onClick={() => setModal(s)} title={t('common.edit')}>
                           <Edit size={14} />
                         </button>
-                        <button className="btn btn-danger btn-icon btn-sm" onClick={() => setDeleteTarget(s)} title="O'chirish">
+                        <button className="btn btn-danger btn-icon btn-sm" onClick={() => setDeleteTarget(s)} title={t('common.delete')}>
                           <Trash2 size={14} />
                         </button>
                       </div>
@@ -184,17 +184,17 @@ export default function Suppliers() {
           <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setDeleteTarget(null)}>
             <motion.div className="modal-box" style={{ maxWidth: 400 }} initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} onClick={e => e.stopPropagation()}>
               <div className="modal-header">
-                <span className="modal-title" style={{ color: 'var(--clr-danger)' }}>Postavshikni o'chirish</span>
+                <span className="modal-title" style={{ color: 'var(--clr-danger)' }}>{t('suppliers.deleteTitle')}</span>
                 <button className="modal-close" onClick={() => setDeleteTarget(null)}><X size={16} /></button>
               </div>
               <div className="modal-body">
                 <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>
-                  <strong style={{ color: 'var(--text-primary)' }}>"{deleteTarget.name}"</strong> ni o'chirmoqchimisiz? Agar bu postavshikka tegishli mahsulotlar bo'lsa, o'chirish bekor qilinadi.
+                  <strong style={{ color: 'var(--text-primary)' }}>"{deleteTarget.name}"</strong> {t('suppliers.deleteConfirm')}
                 </p>
               </div>
               <div className="modal-footer">
-                <button className="btn btn-secondary" onClick={() => setDeleteTarget(null)}>Bekor qilish</button>
-                <button className="btn btn-danger" onClick={handleDelete}>O'chirish</button>
+                <button className="btn btn-secondary" onClick={() => setDeleteTarget(null)}>{t('common.cancel')}</button>
+                <button className="btn btn-danger" onClick={handleDelete}>{t('common.delete')}</button>
               </div>
             </motion.div>
           </motion.div>

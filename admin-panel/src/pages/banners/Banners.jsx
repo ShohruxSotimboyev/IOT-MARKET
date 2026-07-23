@@ -47,7 +47,7 @@ function BannerModal({ banner, onClose, onSave }) {
   }
 
   const handleSubmit = async () => {
-    if (!form.title) return toast.error('Sarlavha kiritilishi shart')
+    if (!form.title) return toast.error(t('banners.titleRequired'))
     try {
       let saved
       if (banner?.id) {
@@ -55,9 +55,9 @@ function BannerModal({ banner, onClose, onSave }) {
       } else {
         saved = await bannersAPI.create(form).catch(() => ({ ...form, id: Date.now().toString() }))
       }
-      toast.success(banner ? 'Banner yangilandi' : 'Banner qo\'shildi')
+      toast.success(banner ? t('banners.updated') : t('banners.added'))
       onSave(saved || form)
-    } catch { toast.error('Xatolik') }
+    } catch { toast.error(t('common.error')) }
   }
 
   return (
@@ -76,42 +76,42 @@ function BannerModal({ banner, onClose, onSave }) {
               ) : (
                 <div style={{ color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '20px 0' }}>
                   <Upload size={28} />
-                  <span style={{ fontSize: 13 }}>Banner rasm yuklash</span>
+                  <span style={{ fontSize: 13 }}>{t('banners.uploadImage')}</span>
                 </div>
               )}
-              <p style={{ fontSize: 11, color: 'var(--text-muted)' }}>{uploading ? 'Yuklanmoqda...' : 'Tavsiya: 1920×600px'}</p>
+              <p style={{ fontSize: 11, color: 'var(--text-muted)' }}>{uploading ? t('common.loading') : t('banners.recommended')}</p>
               <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={e => handleFile(e.target.files[0])} />
             </div>
             <div className="ui-input-wrap">
-              <label className="ui-label">Sarlavha *</label>
-              <input className="ui-input" value={form.title} onChange={e => set('title', e.target.value)} placeholder="Banner sarlavhasi" />
+              <label className="ui-label">{t('banners.titleLabel')} *</label>
+              <input className="ui-input" value={form.title} onChange={e => set('title', e.target.value)} placeholder={t('banners.titlePlaceholder')} />
             </div>
             <div className="ui-input-wrap">
-              <label className="ui-label">Tavsif</label>
-              <input className="ui-input" value={form.description || ''} onChange={e => set('description', e.target.value)} placeholder="Banner tavsifi" />
+              <label className="ui-label">{t('common.description')}</label>
+              <input className="ui-input" value={form.description || ''} onChange={e => set('description', e.target.value)} placeholder={t('banners.descPlaceholder')} />
             </div>
             <div className="form-grid form-grid-2">
               <div className="ui-input-wrap">
-                <label className="ui-label">Havola</label>
+                <label className="ui-label">{t('banners.link')}</label>
                 <input className="ui-input" value={form.link || ''} onChange={e => set('link', e.target.value)} placeholder="/products" />
               </div>
               <div className="ui-input-wrap">
-                <label className="ui-label">Tartib</label>
+                <label className="ui-label">{t('banners.order')}</label>
                 <input className="ui-input" type="number" value={form.order || 0} onChange={e => set('order', Number(e.target.value))} />
               </div>
             </div>
             <div className="ui-input-wrap">
-              <label className="ui-label">Holat</label>
+              <label className="ui-label">{t('common.status')}</label>
               <select className="ui-select" value={form.status} onChange={e => set('status', e.target.value)}>
-                <option value="active">Faol</option>
-                <option value="inactive">Nofaol</option>
+                <option value="active">{t('common.active')}</option>
+                <option value="inactive">{t('common.inactive')}</option>
               </select>
             </div>
           </div>
         </div>
         <div className="modal-footer">
-          <button className="btn btn-secondary" onClick={onClose}>Bekor qilish</button>
-          <button className="btn btn-primary" onClick={handleSubmit}>{banner ? 'Saqlash' : 'Qo\'shish'}</button>
+          <button className="btn btn-secondary" onClick={onClose}>{t('common.cancel')}</button>
+          <button className="btn btn-primary" onClick={handleSubmit}>{banner ? t('common.save') : t('common.add')}</button>
         </div>
       </motion.div>
     </motion.div>
@@ -133,8 +133,8 @@ export default function Banners() {
     try {
       await bannersAPI.delete(deleteTarget.id).catch(() => {})
       setBanners(b => b.filter(x => x.id !== deleteTarget.id))
-      toast.success('Banner o\'chirildi')
-    } catch { toast.error('Xatolik') }
+      toast.success(t('banners.deleted'))
+    } catch { toast.error(t('common.error')) }
     setDeleteTarget(null)
   }
 
@@ -154,7 +154,7 @@ export default function Banners() {
       <div className="page-header">
         <div>
           <h1 className="page-title">{t('banners.title')}</h1>
-          <p className="page-subtitle">{banners.length} ta banner</p>
+          <p className="page-subtitle">{banners.length} {t('banners.count')}</p>
         </div>
         <button className="btn btn-primary" onClick={() => setModal('add')}>
           <Plus size={16} /> {t('banners.addBanner')}
@@ -162,7 +162,7 @@ export default function Banners() {
       </div>
 
       {loading ? (
-        <div className="empty-state"><p>Yuklanmoqda...</p></div>
+        <div className="empty-state"><p>{t('common.loading')}</p></div>
       ) : (
         <div style={{ display: 'grid', gap: 14 }}>
           {banners.map((b, i) => (
@@ -179,7 +179,7 @@ export default function Banners() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
                     <span style={{ fontWeight: 700, fontSize: 15 }}>{b.title}</span>
                     <span className={`badge ${b.status === 'active' ? 'badge-success' : 'badge-default'}`}>
-                      <span className="badge-dot" />{b.status === 'active' ? 'Faol' : 'Nofaol'}
+                      <span className="badge-dot" />{b.status === 'active' ? t('common.active') : t('common.inactive')}
                     </span>
                   </div>
                   {b.description && <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 6 }}>{b.description}</p>}
@@ -206,15 +206,15 @@ export default function Banners() {
           <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setDeleteTarget(null)}>
             <motion.div className="modal-box" style={{ maxWidth: 380 }} initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} onClick={e => e.stopPropagation()}>
               <div className="modal-header">
-                <span className="modal-title" style={{ color: 'var(--clr-danger)' }}>Bannerni o'chirish</span>
+                <span className="modal-title" style={{ color: 'var(--clr-danger)' }}>{t('banners.deleteBanner')}</span>
                 <button className="modal-close" onClick={() => setDeleteTarget(null)}><X size={16} /></button>
               </div>
               <div className="modal-body">
-                <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>"{deleteTarget.title}" ni o'chirmoqchimisiz?</p>
+                <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>"{deleteTarget.title}" {t('banners.deleteConfirm')}</p>
               </div>
               <div className="modal-footer">
-                <button className="btn btn-secondary" onClick={() => setDeleteTarget(null)}>Bekor qilish</button>
-                <button className="btn btn-danger" onClick={handleDelete}>O'chirish</button>
+                <button className="btn btn-secondary" onClick={() => setDeleteTarget(null)}>{t('common.cancel')}</button>
+                <button className="btn btn-danger" onClick={handleDelete}>{t('common.delete')}</button>
               </div>
             </motion.div>
           </motion.div>
