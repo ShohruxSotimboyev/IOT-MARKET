@@ -5,28 +5,14 @@ import { Plus, Archive, X, ArrowUpRight, ArrowDownRight } from 'lucide-react'
 import { inventoryAPI } from '../../api/inventory'
 import { productsAPI } from '../../api/products'
 import toast from 'react-hot-toast'
+import Select from 'react-select'
 
 function InventoryModal({ products, onClose, onSave }) {
   const { t } = useTranslation()
-
   const [form, setForm] = useState({ productId: '', type: 'in', quantity: '', reason: '' })
   const [submitting, setSubmitting] = useState(false)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [dropdownOpen, setDropdownOpen] = useState(false)
-  const dropdownRef = useRef(null)
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
-
-  const selectedProduct = products.find(p => p.id === form.productId)
-  const filteredProducts = products.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  const productOptions = products.map(p => ({ value: p.id, label: p.name }))
 
   const handleSubmit = async () => {
     if (!form.productId) return toast.error(t('inventory.selectProduct'))
@@ -52,67 +38,51 @@ function InventoryModal({ products, onClose, onSave }) {
         </div>
         <div className="modal-body">
           <div className="form-grid">
-            <div className="ui-input-wrap" ref={dropdownRef} style={{ position: 'relative' }}>
+            <div className="ui-input-wrap">
               <label className="ui-label">{t('inventory.productLabel')}</label>
-              
-              <div 
-                className="ui-input" 
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', background: 'var(--bg-card)' }}
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-              >
-                <span style={{ color: selectedProduct ? 'var(--text-primary)' : 'var(--text-muted)' }}>
-                  {selectedProduct ? selectedProduct.name : `-- ${t('common.select')} --`}
-                </span>
-                <span style={{ fontSize: '10px' }}>▼</span>
-              </div>
-
-              {dropdownOpen && (
-                <div style={{
-                  position: 'absolute', top: '100%', left: 0, right: 0, 
-                  background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', 
-                  borderRadius: '8px', marginTop: '4px', zIndex: 50, 
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)', overflow: 'hidden'
-                }}>
-                  <div style={{ padding: '8px', borderBottom: '1px solid var(--border-subtle)' }}>
-                    <input 
-                      type="text" 
-                      className="ui-input" 
-                      style={{ height: '32px', fontSize: '13px' }}
-                      placeholder="Qidirish..." 
-                      value={searchTerm} 
-                      onChange={e => setSearchTerm(e.target.value)} 
-                      autoFocus
-                    />
-                  </div>
-                  <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                    {filteredProducts.length > 0 ? (
-                      filteredProducts.map(p => (
-                        <div 
-                          key={p.id}
-                          style={{
-                            padding: '8px 12px', cursor: 'pointer', fontSize: '13px',
-                            background: form.productId === p.id ? 'var(--bg-body)' : 'transparent',
-                            color: form.productId === p.id ? 'var(--clr-primary)' : 'var(--text-primary)'
-                          }}
-                          onClick={() => {
-                            setForm({ ...form, productId: p.id })
-                            setDropdownOpen(false)
-                            setSearchTerm('')
-                          }}
-                          onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-body)'}
-                          onMouseLeave={e => e.currentTarget.style.background = form.productId === p.id ? 'var(--bg-body)' : 'transparent'}
-                        >
-                          {p.name}
-                        </div>
-                      ))
-                    ) : (
-                      <div style={{ padding: '12px', fontSize: '13px', color: 'var(--text-muted)', textAlign: 'center' }}>
-                        Topilmadi
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
+              <Select
+                options={productOptions}
+                value={productOptions.find(o => o.value === form.productId) || null}
+                onChange={selected => setForm({ ...form, productId: selected ? selected.value : '' })}
+                placeholder="-- Tanlang yoki qidiring --"
+                isSearchable
+                noOptionsMessage={() => "Topilmadi"}
+                menuPortalTarget={document.body}
+                styles={{
+                  control: (base) => ({
+                    ...base,
+                    minHeight: '42px',
+                    borderRadius: '8px',
+                    borderColor: 'var(--border-subtle)',
+                    background: 'var(--bg-input, transparent)',
+                    boxShadow: 'none',
+                    '&:hover': {
+                      borderColor: 'var(--clr-primary)'
+                    }
+                  }),
+                  menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                  menu: (base) => ({
+                    ...base,
+                    background: '#ffffff',
+                    border: '1px solid var(--border-subtle)',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                  }),
+                  option: (base, state) => ({
+                    ...base,
+                    background: state.isFocused ? '#f3f4f6' : '#ffffff',
+                    color: state.isFocused ? 'var(--clr-primary)' : '#1f2937',
+                    cursor: 'pointer'
+                  }),
+                  singleValue: (base) => ({
+                    ...base,
+                    color: 'var(--text-primary)'
+                  }),
+                  input: (base) => ({
+                    ...base,
+                    color: 'var(--text-primary)'
+                  })
+                }}
+              />
             </div>
             
             <div className="form-grid form-grid-2">
