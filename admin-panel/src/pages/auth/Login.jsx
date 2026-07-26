@@ -16,7 +16,7 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!form.email || !form.password) return toast.error('Email va parol kiritilishi shart')
+    if (!form.email || !form.password) return toast.error(t('auth.emailPasswordRequired', 'Email va parol kiritilishi shart'))
     setLoading(true)
     try {
       await login(form.email, form.password)
@@ -60,7 +60,7 @@ export default function Login() {
           {t('auth.login')}
         </h1>
         <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 28 }}>
-          Boshqaruv paneliga kirish
+          {t('auth.loginSubtitle', 'Boshqaruv paneliga kirish')}
         </p>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

@@ -32,7 +32,7 @@ const protect = async (req, res, next) => {
   }
 };
 
-// Admin panel uchun - faqat adminlar kirishi mumkin
+// Admin panel uchun - faqat superadmin kirishi mumkin
 const adminProtect = async (req, res, next) => {
   let token = req.cookies?.accessToken;
   if (!token) {
@@ -51,8 +51,9 @@ const adminProtect = async (req, res, next) => {
     }
     const user = await prisma.user.findUnique({ where: { id: decoded.id } });
     if (!user) return res.status(401).json({ message: "Admin topilmadi." });
-    if (user.role !== 'admin' && user.role !== 'superadmin') {
-      return res.status(403).json({ message: "Sizda admin huquqi yo'q." });
+    if (!user.isVerified) return res.status(403).json({ message: "Hisob tasdiqlanmagan." });
+    if (user.role !== 'superadmin') {
+      return res.status(403).json({ message: "Sizda admin panel huquqi yo'q." });
     }
     req.user = user;
     next();
@@ -118,8 +119,7 @@ const userProtect = async (req, res, next) => {
     const user = await prisma.user.findUnique({ where: { id: decoded.id } });
     if (!user) return res.status(401).json({ message: "Foydalanuvchi topilmadi." });
     if (!user.isVerified) return res.status(403).json({ message: "Hisob tasdiqlanmagan." });
-    // Adminlar frontend orqali kirish mumkin emas
-    if (user.role === 'admin' || user.role === 'superadmin') {
+    if (user.role === 'superadmin' || user.role === 'manager') {
       return res.status(403).json({ message: "Adminlar frontend orqali kirish mumkin emas." });
     }
     req.user = user;
@@ -133,4 +133,15 @@ const userProtect = async (req, res, next) => {
   }
 };
 
-module.exports = { protect, adminProtect, superadminProtect, userProtect };
+const requirePermission = (permission) => {
+  return (req, res, next) => {
+    if (req.user.role === 'superadmin') return next();
+    if (req.user.role === 'manager') {
+      const permissions = req.user.permissions || [];
+      if (permissions.includes(permission)) return next();
+    }
+    return res.status(403).json({ message: "Sizda ruxsat yo'q." });
+  }
+};
+
+module.exports = { protect, adminProtect, superadminProtect, userProtect, requirePermission };

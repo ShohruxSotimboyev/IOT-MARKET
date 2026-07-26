@@ -43,8 +43,8 @@ export default function Messages() {
       await messagesAPI.reply(selected.id, reply).catch(() => {})
       setMessages(m => m.map(x => x.id === selected.id ? { ...x, reply, status: 'read' } : x))
       setSelected(s => ({ ...s, reply }))
-      toast.success('Javob yuborildi')
-    } catch { toast.error('Xatolik') }
+      toast.success(t('messages.replySent', 'Javob yuborildi'))
+    } catch { toast.error(t('common.error', 'Xatolik')) }
   }
 
   const filtered = messages.filter(m => {
@@ -60,8 +60,8 @@ export default function Messages() {
         <div>
           <h1 className="page-title">{t('messages.title')}</h1>
           <p className="page-subtitle">
-            {unread > 0 && <span style={{ color: 'var(--clr-danger)', marginRight: 8 }}>{unread} o'qilmagan</span>}
-            {filtered.length} ta xabar
+            {unread > 0 && <span style={{ color: 'var(--clr-danger)', marginRight: 8 }}>{unread} {t('messages.unread', 'o\'qilmagan')}</span>}
+            {filtered.length} {t('messages.count', 'ta xabar')}
           </p>
         </div>
       </div>
@@ -72,13 +72,13 @@ export default function Messages() {
           <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--border-subtle)' }}>
             <div className="al-search">
               <Search size={15} className="al-search-icon" />
-              <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Qidirish..." />
+              <input value={search} onChange={e => setSearch(e.target.value)} placeholder={t('common.search', 'Qidirish...')} />
             </div>
           </div>
           {loading ? (
             <div className="empty-state"><p>{t('common.loading')}</p></div>
           ) : filtered.length === 0 ? (
-            <div className="empty-state"><MessageSquare size={40} /><p>Xabarlar yo'q</p></div>
+            <div className="empty-state"><MessageSquare size={40} /><p>{t('messages.noMessages')}</p></div>
           ) : (
             <div>
               {filtered.map(msg => (
@@ -132,14 +132,14 @@ export default function Messages() {
                 </div>
                 {selected.reply && (
                   <div style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)', borderRadius: 12, padding: 14 }}>
-                    <p style={{ fontSize: 11, color: 'var(--clr-brand-light)', marginBottom: 6, fontWeight: 600 }}>SIZNING JAVOBINGIZ</p>
+                    <p style={{ fontSize: 11, color: 'var(--clr-brand-light)', marginBottom: 6, fontWeight: 600 }}>{t('messages.yourReply', 'SIZNING JAVOBINGIZ')}</p>
                     <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{selected.reply}</p>
                   </div>
                 )}
                 <div style={{ marginTop: 'auto' }}>
-                  <textarea className="ui-input ui-textarea" value={reply} onChange={e => setReply(e.target.value)} placeholder="Javob yozing..." style={{ marginBottom: 10 }} />
+                  <textarea className="ui-input ui-textarea" value={reply} onChange={e => setReply(e.target.value)} placeholder={t('messages.writeReply', 'Javob yozing...')} style={{ marginBottom: 10 }} />
                   <button className="btn btn-primary" onClick={sendReply} style={{ width: '100%' }}>
-                    <Send size={14} /> Javob yuborish
+                    <Send size={14} /> {t('messages.sendReply', 'Javob yuborish')}
                   </button>
                 </div>
               </div>

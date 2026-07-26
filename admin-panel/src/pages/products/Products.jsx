@@ -49,7 +49,7 @@ function ProductModal({ product, categories = [], suppliers = [], onClose, onSav
     if (!files || files.length === 0) return
     const fileArray = Array.from(files).slice(0, 10 - imgPreviews.length)
     if (fileArray.length === 0) {
-      toast.error('Maksimal 10 ta rasm yuklash mumkin')
+      toast.error(t('products.maxImages', 'Maksimal 10 ta rasm yuklash mumkin'))
       return
     }
     setUploading(true)
@@ -98,7 +98,7 @@ function ProductModal({ product, categories = [], suppliers = [], onClose, onSav
   }
 
   const handleSubmit = async () => {
-    if (!form.name || !form.price) return toast.error('Nomi va narxi kiritilishi shart')
+    if (!form.name || !form.price) return toast.error(t('products.namePriceRequired', 'Nomi va narxi kiritilishi shart'))
     try {
       const payload = { ...form, price: Number(form.price), costPrice: form.costPrice ? Number(form.costPrice) : null, oldPrice: form.oldPrice ? Number(form.oldPrice) : null, image: (form.images || []).join(',') }
       let saved
@@ -107,10 +107,10 @@ function ProductModal({ product, categories = [], suppliers = [], onClose, onSav
       } else {
         saved = await productsAPI.create(payload).catch(() => ({ ...payload, id: Date.now().toString() }))
       }
-      toast.success(product ? 'Mahsulot yangilandi' : 'Mahsulot qo\'shildi')
+      toast.success(product ? t('products.productUpdated', 'Mahsulot yangilandi') : t('products.productAdded', 'Mahsulot qo\'shildi'))
       onSave(saved || payload)
     } catch {
-      toast.error('Xatolik yuz berdi')
+      toast.error(t('common.error', 'Xatolik yuz berdi'))
     }
   }
 
@@ -255,7 +255,7 @@ function DiscountModal({ product, onClose, onSave }) {
   }
 
   const handleSubmit = async () => {
-    if (!newPrice) return toast.error('Yangi narxni kiriting')
+    if (!newPrice) return toast.error(t('products.enterNewPrice', 'Yangi narxni kiriting'))
     try {
       const oldP = product.oldPrice || product.price
       const payload = {
@@ -269,10 +269,10 @@ function DiscountModal({ product, onClose, onSave }) {
       } catch (err) {
         saved = { ...product, ...payload } // fallback for mock
       }
-      toast.success('Chegirma qo\'shildi')
+      toast.success(t('products.discountAdded', 'Chegirma qo\'shildi'))
       onSave(saved)
     } catch {
-      toast.error('Xatolik yuz berdi')
+      toast.error(t('common.error', 'Xatolik yuz berdi'))
     }
   }
 
@@ -290,10 +290,10 @@ function DiscountModal({ product, onClose, onSave }) {
       } catch (err) {
         saved = { ...product, ...payload } // fallback for mock
       }
-      toast.success('Chegirma olib tashlandi')
+      toast.success(t('products.discountRemoved', 'Chegirma olib tashlandi'))
       onSave(saved)
     } catch {
-      toast.error('Xatolik yuz berdi')
+      toast.error(t('common.error', 'Xatolik yuz berdi'))
     }
   }
 
@@ -301,7 +301,7 @@ function DiscountModal({ product, onClose, onSave }) {
     <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
       <motion.div className="modal-box" style={{ maxWidth: 400 }} initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} onClick={e => e.stopPropagation()}>
         <div className="modal-header">
-          <span className="modal-title">Chegirma (Скидка)</span>
+          <span className="modal-title">{t('products.discount', 'Chegirma')}</span>
           <button className="modal-close" onClick={onClose}><X size={16} /></button>
         </div>
         <div className="modal-body">
@@ -309,14 +309,14 @@ function DiscountModal({ product, onClose, onSave }) {
           
           <div style={{ display: 'flex', gap: 15, marginBottom: 20 }}>
             <div style={{ flex: 1 }}>
-              <p style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 4 }}>Joriy narx</p>
+              <p style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 4 }}>{t('products.currentPrice', 'Joriy narx')}</p>
               <p style={{ fontWeight: 600, color: 'var(--text-secondary)', textDecoration: product.oldPrice ? 'line-through' : 'none' }}>
                 {(product.oldPrice || product.price).toLocaleString()} so'm
               </p>
             </div>
             {product.oldPrice && (
               <div style={{ flex: 1 }}>
-                <p style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 4 }}>Joriy chegirma</p>
+                <p style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 4 }}>{t('products.currentDiscount', 'Joriy chegirma')}</p>
                 <p style={{ fontWeight: 600, color: 'var(--clr-danger)' }}>
                   {product.price.toLocaleString()} so'm ({Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%)
                 </p>
@@ -325,18 +325,18 @@ function DiscountModal({ product, onClose, onSave }) {
           </div>
 
           <div className="ui-input-wrap">
-            <label className="ui-label">Chegirma foizi (%)</label>
+            <label className="ui-label">{t('products.discountPercent', 'Chegirma foizi (%)')}</label>
             <input type="number" className="ui-input" value={discountPercent} onChange={handlePercentChange} placeholder="Masalan: 10" />
           </div>
           
           <div className="ui-input-wrap">
-            <label className="ui-label">Yangi narx (so'm)</label>
+            <label className="ui-label">{t('products.newPrice', 'Yangi narx (so\'m)')}</label>
             <input type="number" className="ui-input" value={newPrice} onChange={handlePriceChange} />
           </div>
         </div>
         <div className="modal-footer" style={{ justifyContent: 'space-between' }}>
           <button className="btn btn-ghost" style={{ color: 'var(--clr-danger)', padding: '0 8px' }} onClick={handleRemoveDiscount}>
-            O'chirish
+            {t('common.delete', 'O\'chirish')}
           </button>
           <div style={{ display: 'flex', gap: 8 }}>
             <button className="btn btn-secondary" onClick={onClose}>{t('common.cancel')}</button>
@@ -389,8 +389,8 @@ export default function Products() {
     try {
       await productsAPI.updateStatus(product.id, newStatus).catch(() => {})
       setProducts(p => p.map(x => x.id === product.id ? { ...x, status: newStatus } : x))
-      toast.success('Holat o\'zgartirildi')
-    } catch { toast.error('Xatolik') }
+      toast.success(t('products.statusChanged', 'Holat o\'zgartirildi'))
+    } catch { toast.error(t('common.error', 'Xatolik')) }
   }
 
   const handleDelete = async () => {
@@ -398,8 +398,8 @@ export default function Products() {
     try {
       await productsAPI.delete(deleteTarget.id).catch(() => {})
       setProducts(p => p.filter(x => x.id !== deleteTarget.id))
-      toast.success('Mahsulot o\'chirildi')
-    } catch { toast.error('Xatolik') }
+      toast.success(t('products.productDeleted', 'Mahsulot o\'chirildi'))
+    } catch { toast.error(t('common.error', 'Xatolik')) }
     setDeleteTarget(null)
   }
 
@@ -435,19 +435,19 @@ export default function Products() {
   const exportExcel = () => {
     const dataToExport = filtered.map(p => ({
       'ID': p.id,
-      'Nomi': p.name,
-      'Kategoriya': p.category,
-      'Narxi': p.price || 0,
-      'Zakupka Narxi': p.costPrice || 0,
-      'Eski Narxi': p.oldPrice || '',
-      'Holat': p.status === 'active' ? 'Faol' : 'Nofaol',
-      'Ombor': 0,
+      [t('products.name', 'Nomi')]: p.name,
+      [t('products.category', 'Kategoriya')]: p.category,
+      [t('products.price', 'Narxi')]: p.price || 0,
+      [t('products.costPrice', 'Zakupka Narxi')]: p.costPrice || 0,
+      [t('products.oldPrice', 'Eski Narxi')]: p.oldPrice || '',
+      [t('common.status', 'Holat')]: p.status === 'active' ? t('common.active', 'Faol') : t('common.inactive', 'Nofaol'),
+      [t('products.stock', 'Ombor')]: 0,
     }))
     
     const ws = XLSX.utils.json_to_sheet(dataToExport)
     const wb = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(wb, ws, t('products.title'))
-    XLSX.writeFile(wb, `Mahsulotlar_${new Date().toISOString().slice(0,10)}.xlsx`)
+    XLSX.writeFile(wb, `${t('products.title', 'Mahsulotlar')}_${new Date().toISOString().slice(0,10)}.xlsx`)
   }
 
   return (
@@ -455,11 +455,11 @@ export default function Products() {
       <div className="page-header">
         <div>
           <h1 className="page-title">{t('products.title')}</h1>
-          <p className="page-subtitle">{total} ta mahsulot</p>
+          <p className="page-subtitle">{total} {t('products.productsCount', 'ta mahsulot')}</p>
         </div>
         <div style={{ display: 'flex', gap: '10px' }}>
           <button className="btn btn-secondary" onClick={exportExcel}>
-            Eksport (Excel)
+            {t('products.exportExcel', 'Eksport (Excel)')}
           </button>
           <button className="btn btn-primary" onClick={() => setModal('add')}>
             <Plus size={16} /> {t('products.addProduct')}
@@ -474,13 +474,13 @@ export default function Products() {
           <input value={search} onChange={e => { setSearch(e.target.value); setPage(1) }} placeholder={t('common.search') + '...'} />
         </div>
         <select className="ui-select" style={{ width: 180 }} value={catFilter} onChange={e => { setCatFilter(e.target.value); setPage(1) }}>
-          <option value="all">Barcha kategoriyalar</option>
+          <option value="all">{t('products.allCategories', 'Barcha kategoriyalar')}</option>
           {categories.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
         </select>
         <select className="ui-select" style={{ width: 140 }} value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setPage(1) }}>
           <option value="all">{t('products.allStatus')}</option>
-          <option value="active">Faol</option>
-          <option value="inactive">Nofaol</option>
+          <option value="active">{t('common.active', 'Faol')}</option>
+          <option value="inactive">{t('common.inactive', 'Nofaol')}</option>
         </select>
       </div>
 
@@ -519,10 +519,10 @@ export default function Products() {
                     </td>
                     <td>
                       <div style={{ fontWeight: 600, fontSize: 13 }}>{p.name}</div>
-                      {p.oldPrice && <div style={{ fontSize: 11, color: 'var(--text-muted)', textDecoration: 'line-through' }}>{p.oldPrice?.toLocaleString()} so'm</div>}
+                      {p.oldPrice && <div style={{ fontSize: 11, color: 'var(--text-muted)', textDecoration: 'line-through' }}>{p.oldPrice?.toLocaleString()} {t('common.currency', 'so\'m')}</div>}
                     </td>
                     <td><span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{p.category}</span></td>
-                    <td><span style={{ fontWeight: 700, color: 'var(--clr-brand-light)' }}>{p.price?.toLocaleString()} so'm</span></td>
+                    <td><span style={{ fontWeight: 700, color: 'var(--clr-brand-light)' }}>{p.price?.toLocaleString()} {t('common.currency', 'so\'m')}</span></td>
                     <td>
                       {p.badge ? (
                         <span className={`badge ${p.badge === 'HOT' ? 'badge-danger' : p.badge === 'NEW' ? 'badge-success' : p.badge === 'SALE' ? 'badge-warning' : 'badge-info'}`}>{p.badge}</span>
@@ -537,29 +537,29 @@ export default function Products() {
                           title="Holatni o'zgartirish"
                         />
                         <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
-                          {p.status === 'active' ? 'Faol' : 'Nofaol'}
+                          {p.status === 'active' ? t('common.active', 'Faol') : t('common.inactive', 'Nofaol')}
                         </span>
                       </label>
                     </td>
                     <td>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                         <span style={{ fontWeight: 600, fontSize: 13, color: p.stockCount > 0 ? 'var(--text-primary)' : 'var(--text-muted)' }}>
-                          {p.stockCount || 0} dona
+                          {p.stockCount || 0} {t('products.pieces', 'dona')}
                         </span>
                         <span className={`badge ${p.inStock ? 'badge-success' : 'badge-default'}`} style={{ fontSize: 10, padding: '2px 6px' }}>
-                          {p.inStock ? 'Omborda bor' : t('products.outOfStock', "Yo'q")}
+                          {p.inStock ? t('products.inStock', 'Omborda bor') : t('products.outOfStock', "Yo'q")}
                         </span>
                       </div>
                     </td>
                     <td>
                       <div style={{ display: 'flex', gap: 6 }}>
-                        <button className="btn btn-ghost btn-icon btn-sm" onClick={() => setDiscountModal(p)} title="Chegirma qo'shish">
+                        <button className="btn btn-ghost btn-icon btn-sm" onClick={() => setDiscountModal(p)} title={t('products.addDiscount', "Chegirma qo'shish")}>
                           <Percent size={14} />
                         </button>
                         <button className="btn btn-ghost btn-icon btn-sm" onClick={() => setModal(p)} title={t('common.edit')}>
                           <Edit size={14} />
                         </button>
-                        <button className="btn btn-danger btn-icon btn-sm" onClick={() => setDeleteTarget(p)} title="O'chirish">
+                        <button className="btn btn-danger btn-icon btn-sm" onClick={() => setDeleteTarget(p)} title={t('common.delete', 'O\'chirish')}>
                           <Trash2 size={14} />
                         </button>
                       </div>
@@ -636,12 +636,12 @@ export default function Products() {
           <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setDeleteTarget(null)}>
             <motion.div className="modal-box" style={{ maxWidth: 400 }} initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} onClick={e => e.stopPropagation()}>
               <div className="modal-header">
-                <span className="modal-title" style={{ color: 'var(--clr-danger)' }}>Mahsulotni o'chirish</span>
+                <span className="modal-title" style={{ color: 'var(--clr-danger)' }}>{t('products.deleteProduct', 'Mahsulotni o\'chirish')}</span>
                 <button className="modal-close" onClick={() => setDeleteTarget(null)}><X size={16} /></button>
               </div>
               <div className="modal-body">
                 <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>
-                  <strong style={{ color: 'var(--text-primary)' }}>"{deleteTarget.name}"</strong> ni o'chirmoqchimisiz? Bu amal qaytarilmaydi.
+                  <strong style={{ color: 'var(--text-primary)' }}>"{deleteTarget.name}"</strong> {t('products.deleteConfirm', 'ni o\'chirmoqchimisiz? Bu amal qaytarilmaydi.')}
                 </p>
               </div>
               <div className="modal-footer">

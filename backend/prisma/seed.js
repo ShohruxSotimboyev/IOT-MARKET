@@ -5,23 +5,23 @@ const prisma = new PrismaClient()
 async function main() {
   console.log('🌱 Seeding started...')
 
-  // ── Admin user ─────────────────────────────────────────────────────────────
-  const existing = await prisma.user.findFirst({ where: { email: 'admin@iotmarket.uz' } })
-  if (!existing) {
-    const hash = await bcrypt.hash('Admin123!', 12)
+  // ── Superadmin user ─────────────────────────────────────────────────────────
+  const existingSuper = await prisma.user.findFirst({ where: { email: 'superadmin@iotmarket.uz' } })
+  if (!existingSuper) {
+    const hash = await bcrypt.hash('SuperAdmin123!', 12)
     await prisma.user.create({
       data: {
-        username: 'Admin',
-        email: 'admin@iotmarket.uz',
+        username: 'SuperAdmin',
+        email: 'superadmin@iotmarket.uz',
         password: hash,
-        role: 'admin',
+        role: 'superadmin',
         isVerified: true,
-        phone: '+998901234567',
+        phone: '+998901234568',
       },
     })
-    console.log('✅ Admin yaratildi: admin@iotmarket.uz / Admin123!')
+    console.log('✅ SuperAdmin yaratildi: superadmin@iotmarket.uz / SuperAdmin123!')
   } else {
-    console.log('ℹ️  Admin allaqachon mavjud')
+    console.log('ℹ️  SuperAdmin allaqachon mavjud')
   }
 
   // ── Sample products ────────────────────────────────────────────────────────
@@ -62,8 +62,8 @@ async function main() {
   }
 
   console.log('\n🎉 Seed muvaffaqiyatli!')
-  console.log('📧 Admin: admin@iotmarket.uz')
-  console.log('🔑 Parol: Admin123!')
+  console.log('📧 SuperAdmin: superadmin@iotmarket.uz')
+  console.log('🔑 Parol: SuperAdmin123!')
 }
 
 main()

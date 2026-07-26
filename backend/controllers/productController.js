@@ -30,7 +30,7 @@ exports.getAllProducts = async (req, res) => {
     if (catFilter) where.category = catFilter
     if (status) where.status = status
     // Agar status berilmagan bo'lsa, frontend uchun faqat active, admin uchun barchasi
-    else if (!req.headers.authorization) where.status = 'active'
+    else if (!req.user) where.status = 'active'
 
     const [products, total] = await Promise.all([
       prisma.product.findMany({
@@ -110,7 +110,7 @@ exports.updateProduct = async (req, res) => {
       data: {
         ...(name && { name }),
         ...(category && { category }),
-        ...(price !== undefined && { price: parseFloat(price) }),
+        ...(price !== undefined && { price: parseFloat(price) || 0 }),
         ...(oldPrice !== undefined && { oldPrice: oldPrice ? parseFloat(oldPrice) : null }),
         ...(badge !== undefined && { badge: badge || null }),
         ...(inStock !== undefined && { inStock: Boolean(inStock) }),
@@ -169,6 +169,9 @@ exports.searchProducts = async (req, res) => {
 // Status yangilash
 exports.updateProductStatus = async (req, res) => {
   try {
+    if (!['active', 'inactive'].includes(req.body.status)) {
+      return res.status(400).json({ success: false, message: "Noto'g'ri status qiymati" })
+    }
     const product = await prisma.product.update({
       where: { id: req.params.id },
       data: { status: req.body.status },

@@ -7,12 +7,28 @@ import toast from 'react-hot-toast'
 
 import * as XLSX from 'xlsx'
 
+const getStatusLabel = (t, status) => {
+  const labels = {
+    pending: t('orders.pending', 'Kutilmoqda'),
+    processing: t('orders.processing', 'Jarayonda'),
+    shipped: t('orders.shipped', 'Yuborilgan'),
+    delivered: t('orders.delivered', 'Yetkazilgan'),
+    completed: t('orders.completed', 'Yakunlangan'),
+    paid: t('orders.paid', "To'langan"),
+    refunded: t('orders.refunded', 'Qaytarilgan'),
+    cancelled: t('orders.cancelled', 'Bekor qilingan'),
+  }
+  return labels[status] || status
+}
+
 const STATUS = {
   pending: { label: 'Kutilmoqda', cls: 'badge-warning' },
   processing: { label: 'Jarayonda', cls: 'badge-info' },
   shipped: { label: 'Yuborilgan', cls: 'badge-info' },
   delivered: { label: 'Yetkazilgan', cls: 'badge-success' },
   completed: { label: 'Yakunlangan', cls: 'badge-success' },
+  paid: { label: "To'langan", cls: 'badge-success' },
+  refunded: { label: 'Qaytarilgan', cls: 'badge-warning' },
   cancelled: { label: 'Bekor qilingan', cls: 'badge-danger' },
 }
 
@@ -52,8 +68,8 @@ export default function Orders() {
       await ordersAPI.updateStatus(orderId, newStatus).catch(() => {})
       setOrders(o => o.map(x => x.id === orderId ? { ...x, status: newStatus } : x))
       if (viewOrder?.id === orderId) setViewOrder(v => ({ ...v, status: newStatus }))
-      toast.success('Status yangilandi')
-    } catch { toast.error('Xatolik') }
+      toast.success(t('orders.statusUpdated', 'Status yangilandi'))
+    } catch { toast.error(t('common.error', 'Xatolik')) }
   }
 
   const filtered = orders.filter(o => {
@@ -68,19 +84,19 @@ export default function Orders() {
 
   const exportExcel = () => {
     const dataToExport = filtered.map(o => ({
-      'Buyurtma ID': o.id,
-      'Mijoz Ismi': o.user?.username || 'Noma\'lum',
-      'Mijoz Email': o.user?.email || '',
-      'Summa': o.total || 0,
-      'Holat': STATUS[o.status]?.label || o.status,
-      'Sana': new Date(o.createdAt).toLocaleString('uz-UZ'),
-      'Manzil': `${o.shippingAddress?.city || ''}, ${o.shippingAddress?.address || ''}`
+      [t('orders.orderId', 'Buyurtma ID')]: o.id,
+      [t('orders.customerName', 'Mijoz Ismi')]: o.user?.username || t('orders.unknown', 'Noma\'lum'),
+      [t('orders.customerEmail', 'Mijoz Email')]: o.user?.email || '',
+      [t('orders.amount', 'Summa')]: o.total || 0,
+      [t('common.status', 'Holat')]: STATUS[o.status]?.label || o.status,
+      [t('common.date', 'Sana')]: new Date(o.createdAt).toLocaleString('uz-UZ'),
+      [t('orders.address', 'Manzil')]: `${o.shippingAddress?.city || ''}, ${o.shippingAddress?.address || ''}`
     }))
     
     const ws = XLSX.utils.json_to_sheet(dataToExport)
     const wb = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(wb, ws, "Buyurtmalar")
-    XLSX.writeFile(wb, `Buyurtmalar_${new Date().toISOString().slice(0,10)}.xlsx`)
+    XLSX.utils.book_append_sheet(wb, ws, t('orders.title', 'Buyurtmalar'))
+    XLSX.writeFile(wb, `${t('orders.title', 'Buyurtmalar')}_${new Date().toISOString().slice(0,10)}.xlsx`)
   }
 
   return (
@@ -88,20 +104,20 @@ export default function Orders() {
       <div className="page-header">
         <div>
           <h1 className="page-title">{t('orders.title')}</h1>
-          <p className="page-subtitle">{total} ta buyurtma</p>
+          <p className="page-subtitle">{total} {t('orders.ordersCount', 'ta buyurtma')}</p>
         </div>
         <button className="btn btn-primary btn-sm" onClick={exportExcel}>
-          Eksport (Excel)
+          {t('orders.exportExcel', 'Eksport (Excel)')}
         </button>
       </div>
 
       <div className="filter-row">
         <div className="al-search" style={{ flex: 1 }}>
           <Search size={15} className="al-search-icon" />
-          <input value={search} onChange={e => { setSearch(e.target.value); setPage(1) }} placeholder="ID yoki mijoz nomi..." />
+          <input value={search} onChange={e => { setSearch(e.target.value); setPage(1) }} placeholder={t('orders.searchPlaceholder', 'ID yoki mijoz nomi...')} />
         </div>
         <select className="ui-select" style={{ width: 180 }} value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setPage(1) }}>
-          <option value="all">Barcha holat</option>
+          <option value="all">{t('orders.allStatus', 'Barcha holat')}</option>
           {Object.entries(STATUS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
         </select>
       </div>
@@ -114,12 +130,12 @@ export default function Orders() {
             <table className="ui-table">
               <thead>
                 <tr>
-                  <th>Buyurtma ID</th>
-                  <th>Mijoz</th>
-                  <th>Summa</th>
-                  <th>Holat</th>
-                  <th>Sana</th>
-                  <th>Amallar</th>
+                  <th>{t('orders.orderId', 'Buyurtma ID')}</th>
+                  <th>{t('orders.customer', 'Mijoz')}</th>
+                  <th>{t('orders.amount', 'Summa')}</th>
+                  <th>{t('common.status', 'Holat')}</th>
+                  <th>{t('common.date', 'Sana')}</th>
+                  <th>{t('common.actions', 'Amallar')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -132,7 +148,7 @@ export default function Orders() {
                         <div style={{ fontWeight: 600 }}>{o.user?.username || '—'}</div>
                         <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{o.user?.email || ''}</div>
                       </td>
-                      <td><span style={{ fontWeight: 700 }}>{(o.total || 0).toLocaleString()} so'm</span></td>
+                      <td><span style={{ fontWeight: 700 }}>{(o.total || 0).toLocaleString()} {t('common.currency', 'so\'m')}</span></td>
                       <td>
                         <select
                           className="ui-select"
@@ -150,7 +166,7 @@ export default function Orders() {
                         </span>
                       </td>
                       <td>
-                        <button className="btn btn-ghost btn-icon btn-sm" onClick={() => setViewOrder(o)} title="Ko'rish">
+                        <button className="btn btn-ghost btn-icon btn-sm" onClick={() => setViewOrder(o)} title={t('common.view', 'Ko\'rish')}>
                           <Eye size={14} />
                         </button>
                       </td>
@@ -176,42 +192,42 @@ export default function Orders() {
           <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setViewOrder(null)}>
             <motion.div className="modal-box" style={{ maxWidth: 560 }} initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} onClick={e => e.stopPropagation()}>
               <div className="modal-header">
-                <span className="modal-title">Buyurtma #{String(viewOrder.id).slice(-6).toUpperCase()}</span>
+                <span className="modal-title">{t('orders.order', 'Buyurtma')} #{String(viewOrder.id).slice(-6).toUpperCase()}</span>
                 <button className="modal-close" onClick={() => setViewOrder(null)}><X size={16} /></button>
               </div>
               <div className="modal-body">
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }}>
                   <div>
-                    <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>MIJOZ</p>
+                    <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>{t('orders.customer', 'MIJOZ')}</p>
                     <p style={{ fontWeight: 600 }}>{viewOrder.user?.username}</p>
                     <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>{viewOrder.user?.email}</p>
                   </div>
                   <div>
-                    <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>HOLAT</p>
+                    <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>{t('common.status', 'HOLAT')}</p>
                     <select className="ui-select" style={{ width: '100%' }} value={viewOrder.status} onChange={e => updateStatus(viewOrder.id, e.target.value)}>
                       {Object.entries(STATUS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
                     </select>
                   </div>
                   <div>
-                    <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>MANZIL</p>
+                    <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>{t('orders.address', 'MANZIL')}</p>
                     <p style={{ fontSize: 13 }}>{viewOrder.shippingAddress?.city}, {viewOrder.shippingAddress?.address}</p>
                   </div>
                   <div>
-                    <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>SANA</p>
+                    <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>{t('common.date', 'SANA')}</p>
                     <p style={{ fontSize: 13 }}>{new Date(viewOrder.createdAt).toLocaleString('uz-UZ')}</p>
                   </div>
                 </div>
                 <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: 16 }}>
-                  <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 10 }}>MAHSULOTLAR</p>
+                  <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 10 }}>{t('orders.products', 'MAHSULOTLAR')}</p>
                   {(viewOrder.items || []).map((item, i) => (
                     <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid var(--border-subtle)' }}>
-                      <span style={{ fontSize: 13 }}>{item.name || item.product?.name || 'Mahsulot'} × {item.quantity}</span>
-                      <span style={{ fontWeight: 600 }}>{((item.price || 0) * (item.quantity || 1)).toLocaleString()} so'm</span>
+                      <span style={{ fontSize: 13 }}>{item.name || item.product?.name || t('orders.product', 'Mahsulot')} × {item.quantity}</span>
+                      <span style={{ fontWeight: 600 }}>{((item.price || 0) * (item.quantity || 1)).toLocaleString()} {t('common.currency', 'so\'m')}</span>
                     </div>
                   ))}
                   <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 12, fontWeight: 800, fontSize: 16 }}>
-                    <span>Jami:</span>
-                    <span style={{ color: 'var(--clr-brand-light)' }}>{(viewOrder.total || 0).toLocaleString()} so'm</span>
+                    <span>{t('orders.total', 'Jami')}:</span>
+                    <span style={{ color: 'var(--clr-brand-light)' }}>{(viewOrder.total || 0).toLocaleString()} {t('common.currency', 'so\'m')}</span>
                   </div>
                 </div>
               </div>

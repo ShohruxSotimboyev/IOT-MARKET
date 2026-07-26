@@ -5,6 +5,7 @@ export const translations = {
         catalog: "Katalog",
         home: "Bosh sahifa",
         products: "Mahsulotlar",
+        readyProducts: "Tayyor mahsulotlar",
         about: "Biz haqimizda",
         contact: "Aloqa",
         search: "Qidirish...",
@@ -201,6 +202,25 @@ export const translations = {
       },
       common: {
         currency: "so'm"
+      },
+      readyProductDetail: {
+        addToCart: "Savatga qo'shish",
+        reviews: "Sharhlar",
+        writeReview: "Sharh yozish",
+        noReviews: "Hali sharhlar yo'q. Birinchi sharhni siz yozing!",
+        features: "Xususiyatlar",
+        description: "Tavsif",
+        related: "O'xshash mahsulotlar",
+        backToList: "Orqaga",
+        rating: "Baho",
+        submitReview: "Sharh yuborish",
+        reviewPlaceholder: "Mahsulot haqida fikringizni yozing...",
+        loginToReview: "Sharh yozish uchun tizimga kiring!",
+        reviewAdded: "Sharh qo'sshildi!",
+        category: "Kategoriya",
+        inStock: "Mavjud",
+        outOfStock: "Mavjud emas",
+        specifications: "Texnik xususiyatlar",
       }
     }
   },
@@ -210,6 +230,7 @@ export const translations = {
         catalog: "Catalog",
         home: "Home",
         products: "Products",
+        readyProducts: "Ready Products",
         about: "About Us",
         contact: "Contact",
         search: "Search...",
@@ -406,6 +427,25 @@ export const translations = {
       },
       common: {
         currency: "UZS"
+      },
+      readyProductDetail: {
+        addToCart: "Add to Cart",
+        reviews: "Reviews",
+        writeReview: "Write a Review",
+        noReviews: "No reviews yet. Be the first to write one!",
+        features: "Features",
+        description: "Description",
+        related: "Related Products",
+        backToList: "Back",
+        rating: "Rating",
+        submitReview: "Submit Review",
+        reviewPlaceholder: "Write your thoughts about this product...",
+        loginToReview: "Please log in to write a review!",
+        reviewAdded: "Review added!",
+        category: "Category",
+        inStock: "In Stock",
+        outOfStock: "Out of Stock",
+        specifications: "Specifications",
       }
     }
   },
@@ -415,6 +455,7 @@ export const translations = {
         catalog: "Каталог",
         home: "Главная",
         products: "Продукты",
+        readyProducts: "Готовые изделия",
         about: "О нас",
         contact: "Контакты",
         search: "Поиск...",
@@ -611,6 +652,25 @@ export const translations = {
       },
       common: {
         currency: "сум"
+      },
+      readyProductDetail: {
+        addToCart: "В корзину",
+        reviews: "Отзывы",
+        writeReview: "Написать отзыв",
+        noReviews: "Отзывов пока нет. Будьте первым!",
+        features: "Особенности",
+        description: "Описание",
+        related: "Похожие товары",
+        backToList: "Назад",
+        rating: "Оценка",
+        submitReview: "Отправить отзыв",
+        reviewPlaceholder: "Напишите ваше мнение о товаре...",
+        loginToReview: "Войдите, чтобы оставить отзыв!",
+        reviewAdded: "Отзыв добавлен!",
+        category: "Категория",
+        inStock: "В наличии",
+        outOfStock: "Нет в наличии",
+        specifications: "Характеристики",
       }
     }
   }

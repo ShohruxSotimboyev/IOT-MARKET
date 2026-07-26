@@ -15,7 +15,7 @@ import { usePersistedState } from '../hooks/usePersistedState'
 import api from '../api/axios'
 
 const MCU_CATEGORIES = ['Arduino', 'ESP Modullar', 'Raspberry Pi']
-const LIMIT = 24 // har sahifada nechta mahsulot ko'rsatiladi
+const LIMIT = 24
 
 export default function Products() {
   const { t } = useTranslation()
@@ -25,12 +25,11 @@ export default function Products() {
   const [search, setSearch] = usePersistedState('iot_products_search', '')
   const [mobileFilter, setMobileFilter] = useState(false)
 
-  // API state
   const [apiProducts, setApiProducts] = useState([])
   const [loading, setLoading] = useState(false)
   const [apiReady, setApiReady] = useState(false)
+  const [dbCategories, setDbCategories] = useState([])
 
-  // Pagination state
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [totalCount, setTotalCount] = useState(0)
@@ -84,6 +83,23 @@ export default function Products() {
     fetchFromAPI(page)
   }, [fetchFromAPI, page])
 
+  useEffect(() => {
+    api.get('/categories')
+      .then(res => {
+        const cats = Array.isArray(res.data) ? res.data : (res.data?.data || [])
+        setDbCategories(cats.filter(c => c.status === 'active'))
+      })
+      .catch(() => {})
+  }, [])
+
+  const allCategories = (() => {
+    const staticNames = CATEGORIES.map(c => c.name)
+    const extraDb = dbCategories
+      .filter(c => !staticNames.includes(c.name))
+      .map(c => ({ id: c.id, name: c.name, icon: 'Package', sub: [] }))
+    return [...CATEGORIES, ...extraDb]
+  })()
+
   // API tayyor bo'lsa API ma'lumotlarini, aks holda local ma'lumotlarni ishlatamiz
   const sourceProducts = apiProducts
 
@@ -125,7 +141,7 @@ export default function Products() {
         <div className="h-px bg-white/8" />
       </div>
 
-      {CATEGORIES.map((c, i) => {
+      {allCategories.map((c, i) => {
         const active = cat === c.name
         return (
           <motion.button
@@ -159,7 +175,7 @@ export default function Products() {
     </div>
   )
 
-  const currentCatObj = CATEGORIES.find((c) => c.name === cat)
+  const currentCatObj = allCategories.find((c) => c.name === cat)
   const pageTitle = cat === 'micro'
     ? t('popular.title')
     : cat !== 'all'

@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const categoryController = require('../controllers/categoryController');
-const { protect, adminProtect: admin } = require('../middleware/authMiddleware');
+const { protect, requirePermission } = require('../middleware/authMiddleware');
 
 router.route('/')
   .get(categoryController.getAllCategories)
-  .post(protect, admin, categoryController.createCategory);
+  .post(protect, requirePermission('products'), categoryController.createCategory);
 
 router.route('/:id')
-  .put(protect, admin, categoryController.updateCategory)
-  .delete(protect, admin, categoryController.deleteCategory);
+  .put(protect, requirePermission('products'), categoryController.updateCategory)
+  .delete(protect, requirePermission('products'), categoryController.deleteCategory);
 
 module.exports = router;

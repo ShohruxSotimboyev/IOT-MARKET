@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard, Package, ShoppingCart, Users,
   Settings, LogOut, Menu, Sun, Moon, Bell,
-  Search, MessageSquare, Image as ImageIcon, Zap, Truck, Archive
+  Search, MessageSquare, Image as ImageIcon, Zap, Truck, Archive, Star, UserCog, Cpu
 } from 'lucide-react'
 import { useState } from 'react'
 import { useTheme } from '../../context/ThemeContext'
@@ -28,16 +28,19 @@ export default function AdminLayout() {
   }
 
   const NAV_ITEMS = [
-    { path: '/dashboard', icon: LayoutDashboard, key: 'dashboard' },
-    { path: '/inventory', icon: Archive, key: 'inventory' },
-    { path: '/categories', icon: Package, key: 'categories' },
-    { path: '/suppliers', icon: Truck, key: 'suppliers' },
-    { path: '/products', icon: Package, key: 'products' },
-    { path: '/orders', icon: ShoppingCart, key: 'orders' },
-    { path: '/customers', icon: Users, key: 'customers' },
-    { path: '/messages', icon: MessageSquare, key: 'messages' },
-    { path: '/banners', icon: ImageIcon, key: 'banners' },
-    { path: '/settings', icon: Settings, key: 'settings' },
+    { path: '/dashboard', icon: LayoutDashboard, key: 'dashboard', perm: 'dashboard' },
+    { path: '/inventory', icon: Archive, key: 'inventory', perm: 'inventory' },
+    { path: '/categories', icon: Package, key: 'categories', perm: 'products' },
+    { path: '/suppliers', icon: Truck, key: 'suppliers', perm: 'products' },
+    { path: '/products', icon: Package, key: 'products', perm: 'products' },
+    { path: '/orders', icon: ShoppingCart, key: 'orders', perm: 'orders' },
+    { path: '/reviews', icon: Star, key: 'reviews', perm: 'reviews' },
+    { path: '/ready-products', icon: Cpu, key: 'readyProducts', perm: 'products' },
+    { path: '/customers', icon: Users, key: 'customers', perm: 'customers' },
+    { path: '/messages', icon: MessageSquare, key: 'messages', perm: 'messages' },
+    { path: '/banners', icon: ImageIcon, key: 'banners', perm: 'banners' },
+    { path: '/managers', icon: UserCog, key: 'managers', perm: 'managers' },
+    { path: '/settings', icon: Settings, key: 'settings', perm: 'settings' },
   ]
 
   return (
@@ -55,8 +58,15 @@ export default function AdminLayout() {
 
           <nav className="al-nav">
             <div className="al-nav-section">
-              {NAV_ITEMS.map(({ path, icon: Icon, key, badge }) => {
+              {NAV_ITEMS.map(({ path, icon: Icon, key, badge, perm }) => {
                 if (key === 'settings' && user?.role !== 'superadmin') return null;
+                if (key === 'managers' && user?.role !== 'superadmin') return null;
+                
+                if (user?.role === 'manager' && perm !== 'dashboard') {
+                  const perms = user?.permissions || [];
+                  if (!perms.includes(perm)) return null;
+                }
+                
                 return (
                   <NavLink
                     key={path}

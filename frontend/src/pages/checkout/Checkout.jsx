@@ -339,12 +339,7 @@ export default function Checkout() {
       setShowConfetti(true);
       setTimeout(() => setShowConfetti(false), 2500);
     } catch (err) {
-      console.error("Buyurtma saqlash xatosi:", err?.response?.data || err.message);
-      // API xatosi bo'lsa ham UI step 3 ko'rsatadi, lekin consoleda ko'rinadi
-      clearCart();
-      setStep(3);
-      setShowConfetti(true);
-      setTimeout(() => setShowConfetti(false), 2500);
+      alert(err?.response?.data?.message || "Xatolik: Buyurtma saqlanmadi!");
     } finally {
       setPaying(false);
     }

@@ -24,6 +24,7 @@
     "catalog": "Каталог",
     "search": "Поиск товаров...",
     "all_products": "Все товары",
+    "readyProducts": "Готовые изделия",
     "language": "Язык"
   },
   "hero": {
@@ -351,5 +352,24 @@
     "product": "Товар",
     "paid": "Оплачено",
     "tx_id": "ID транзакции"
+  },
+  "readyProductDetail": {
+    "addToCart": "В корзину",
+    "reviews": "Отзывы",
+    "writeReview": "Написать отзыв",
+    "noReviews": "Отзывов пока нет. Будьте первым!",
+    "features": "Особенности",
+    "description": "Описание",
+    "related": "Похожие товары",
+    "backToList": "Назад",
+    "rating": "Оценка",
+    "submitReview": "Отправить отзыв",
+    "reviewPlaceholder": "Напишите ваше мнение о товаре...",
+    "loginToReview": "Войдите, чтобы оставить отзыв!",
+    "reviewAdded": "Отзыв добавлен!",
+    "category": "Категория",
+    "inStock": "В наличии",
+    "outOfStock": "Нет в наличии",
+    "specifications": "Характеристики"
   }
 }

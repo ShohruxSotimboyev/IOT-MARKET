@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { User, Mail, Phone, ShoppingBag, Heart, LogOut, Edit2, Check, X, ShieldCheck } from 'lucide-react'
+import { User, Mail, Phone, ShoppingBag, Heart, LogOut, Edit2, Check, X, ShieldCheck, Package, Truck, Clock, CheckCircle, XCircle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useApp } from '../../context/AppContext'
 import api from '../../api/axios'
+import toast from 'react-hot-toast'
 
 export default function Profile() {
   const { t } = useTranslation()
@@ -21,7 +22,7 @@ export default function Profile() {
     setPhone(user?.phone || '')
   }, [user])
 
-  useEffect(() => {
+  const loadOrders = () => {
     const token = localStorage.getItem('token')
     if (token) {
       setOrdersLoading(true)
@@ -30,11 +31,42 @@ export default function Profile() {
         .catch(() => {})
         .finally(() => setOrdersLoading(false))
     }
+  }
+
+  useEffect(() => {
+    loadOrders()
+    
+    // Real-time status updates - polling every 30 seconds
+    const interval = setInterval(() => {
+      loadOrders()
+    }, 30000)
+    
+    return () => clearInterval(interval)
   }, [])
 
   const handleLogout = () => {
     logout()
     navigate('/login')
+  }
+
+  const handleCancelOrder = async (orderId) => {
+    const order = orders.find(o => o.id === orderId)
+    if (!order) return
+    
+    // Check if order can be cancelled (not delivered)
+    if (['delivered', 'completed', 'shipped'].includes(order.status)) {
+      toast.error("Bu buyurtma yetkazib berilgan, bekor qilib bo'lmaydi")
+      return
+    }
+    
+    if (!window.confirm("Buyurtmani bekor qilmoqchimisiz?")) return
+    try {
+      await api.patch(`/orders/${orderId}/cancel`)
+      loadOrders() // Reload orders to get updated status
+      toast.success("Buyurtma bekor qilindi")
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Bekor qilishda xatolik yuz berdi")
+    }
   }
 
   const handleSave = () => {
@@ -157,27 +189,57 @@ export default function Profile() {
         {/* Buyurtmalar */}
         {(orders.length > 0 || ordersLoading) && (
           <div className="px-8 py-6 border-t border-white/8">
-            <h2 className="text-white/40 text-xs uppercase tracking-wider font-semibold mb-4">So'nggi buyurtmalar</h2>
+            <h2 className="text-white/40 text-xs uppercase tracking-wider font-semibold mb-4">Buyurtmalar tarixi</h2>
             {ordersLoading ? (
               <div className="space-y-2">
                 {[1,2].map(i => <div key={i} className="h-14 bg-white/5 rounded-xl animate-pulse" />)}
               </div>
+            ) : orders.length === 0 ? (
+              <p className="text-white/40 text-sm">Hali buyurtmalar yo'q</p>
             ) : (
-              <div className="space-y-2">
-                {orders.slice(0, 5).map(order => (
-                  <div key={order.id} className="flex items-center justify-between p-3 rounded-xl bg-white/[0.04] border border-white/8">
-                    <div>
-                      <p className="text-white text-sm font-semibold">#{order.txId || order.id?.slice(-8)}</p>
-                      <p className="text-white/40 text-xs">{new Date(order.createdAt).toLocaleDateString('uz-UZ')}</p>
+              <div className="space-y-3">
+                {orders.map(order => {
+                  const statusConfig = {
+                    pending: { icon: Clock, color: 'text-amber-400', bg: 'bg-amber-500/20', label: 'Kutilmoqda' },
+                    paid: { icon: CheckCircle, color: 'text-emerald-400', bg: 'bg-emerald-500/20', label: "To'langan" },
+                    processing: { icon: Package, color: 'text-blue-400', bg: 'bg-blue-500/20', label: 'Jarayonda' },
+                    shipped: { icon: Truck, color: 'text-purple-400', bg: 'bg-purple-500/20', label: 'Yo\'lda' },
+                    delivered: { icon: CheckCircle, color: 'text-green-400', bg: 'bg-green-500/20', label: 'Yetkazib berildi' },
+                    completed: { icon: CheckCircle, color: 'text-green-400', bg: 'bg-green-500/20', label: 'Tugatildi' },
+                    cancelled: { icon: XCircle, color: 'text-red-400', bg: 'bg-red-500/20', label: 'Bekor qilindi' },
+                  }
+                  const config = statusConfig[order.status] || statusConfig.pending
+                  const StatusIcon = config.icon
+                  const canCancel = ['pending', 'paid', 'processing'].includes(order.status)
+                  
+                  return (
+                    <div key={order.id} className="flex items-center justify-between p-4 rounded-xl bg-white/[0.04] border border-white/8 hover:bg-white/[0.06] transition-all">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-10 h-10 rounded-lg ${config.bg} flex items-center justify-center`}>
+                          <StatusIcon size={18} className={config.color} />
+                        </div>
+                        <div>
+                          <p className="text-white text-sm font-semibold">#{order.txId || order.id?.slice(-8)}</p>
+                          <p className="text-white/40 text-xs">{new Date(order.createdAt).toLocaleDateString('uz-UZ')}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-teal font-bold text-sm">{(order.total || 0).toLocaleString()} so'm</p>
+                        <span className={`text-xs px-2 py-1 rounded-full ${config.bg} ${config.color} font-medium`}>
+                          {config.label}
+                        </span>
+                        {canCancel && (
+                          <button 
+                            onClick={() => handleCancelOrder(order.id)}
+                            className="block mt-2 text-xs text-red-400 hover:text-red-300 transition-colors"
+                          >
+                            Bekor qilish
+                          </button>
+                        )}
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className="text-teal font-bold text-sm">{(order.total || 0).toLocaleString()} so'm</p>
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${order.status === 'paid' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>
-                       {order.status === 'paid' ? "To'langan" : order.status}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             )}
           </div>

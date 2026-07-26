@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const inventoryController = require('../controllers/inventoryController');
-const { protect, adminProtect } = require('../middleware/authMiddleware');
+const { protect, requirePermission } = require('../middleware/authMiddleware');
 
+router.get('/export', protect, requirePermission('inventory'), inventoryController.exportInventory);
 router.route('/')
-  .get(protect, adminProtect, inventoryController.getInventoryLogs)
-  .post(protect, adminProtect, inventoryController.addInventoryLog);
+  .get(protect, requirePermission('inventory'), inventoryController.getInventoryLogs)
+  .post(protect, requirePermission('inventory'), inventoryController.addInventoryLog);
 
 module.exports = router;

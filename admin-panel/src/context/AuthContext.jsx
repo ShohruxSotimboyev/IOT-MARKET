@@ -22,6 +22,7 @@ export const AuthProvider = ({ children }) => {
         })
         .catch(() => {
           localStorage.removeItem('admin-token')
+          localStorage.removeItem('admin-refresh-token')
           localStorage.removeItem('admin-user')
           setUser(null)
         })
@@ -38,9 +39,11 @@ export const AuthProvider = ({ children }) => {
     const userData = data.user || { email }
     if (!token) throw new Error('Token kelmadi')
     localStorage.setItem('admin-token', token)
+    if (data.refreshToken) {
+      localStorage.setItem('admin-refresh-token', data.refreshToken)
+    }
     localStorage.setItem('admin-user', JSON.stringify(userData))
     setUser(userData)
-    // Frontend tokenlarini tozalash - admin login qilinganda frontendga kirib ketmasligi uchun
     localStorage.removeItem('token')
     localStorage.removeItem('iot_user')
     return userData
@@ -48,6 +51,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('admin-token')
+    localStorage.removeItem('admin-refresh-token')
     localStorage.removeItem('admin-user')
     setUser(null)
   }

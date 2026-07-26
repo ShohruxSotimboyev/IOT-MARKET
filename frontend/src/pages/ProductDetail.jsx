@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { usePersistedState } from '../hooks/usePersistedState'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Heart, ShoppingCart, Zap, Maximize2, ChevronRight, Send } from 'lucide-react'
+import { Heart, ShoppingCart, Zap, Maximize2, ChevronRight, Send, Star } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { PRODUCTS } from '../data'
 import { useApp } from '../context/AppContext'
@@ -25,6 +25,7 @@ export default function ProductDetail() {
 
   const [product, setProduct] = useState(null)
   const [relatedProducts, setRelatedProducts] = useState([])
+  const [dbReviews, setDbReviews] = useState([])
   const [loading, setLoading] = useState(true)
 
   const [qty, setQty] = useState(1)
@@ -70,6 +71,16 @@ export default function ProductDetail() {
         }
       })
       .finally(() => setLoading(false))
+
+    // Sharhlarni yuklash
+    api.get(`/reviews/product/${id}`)
+      .then(res => {
+        setDbReviews(res.data || [])
+      })
+      .catch(() => {
+        setDbReviews([])
+      })
+
   }, [id])
 
   if (loading) {
@@ -106,7 +117,6 @@ export default function ProductDetail() {
   const catName = product.cat || product.category || ''
 
   const fav = isFav(product.id)
-  const productReviews = getProductReviews(product.id)
   const displayRating = hasUserRating(product.id) ? getUserRating(product.id) : Math.round(product.rating || 0)
 
   const specs = [
@@ -133,13 +143,41 @@ export default function ProductDetail() {
     navigate('/checkout', { state: { product: item, price: product.price * qty } })
   }
 
-  const handleReview = (e) => {
+  const handleReview = async (e) => {
     e.preventDefault()
-    if (!reviewText.trim()) return
-    addReview(product.id, reviewText, reviewAuthor || user?.name || t('common.guest'))
-    clearReviewText()
-    clearReviewAuthor()
-    toast.success(t('product.review_added') || 'Sharh qo\'shildi!')
+    e.stopPropagation()
+    
+    if (!isAuthenticated()) {
+      toast.error('Sharh yozish uchun tizimga kiring!')
+      navigate('/login')
+      return
+    }
+    if (!reviewText.trim()) {
+      toast.error('Iltimos, sharh matnini kiriting')
+      return
+    }
+
+    try {
+      const productId = product.id || id
+      
+      const response = await api.post('/reviews', { 
+        productId, 
+        rating: displayRating || 5, 
+        comment: reviewText 
+      })
+      
+      toast.success(t('product.review_added') || 'Sharh qo\'shildi!')
+      clearReviewText()
+      
+      try {
+        const res = await api.get(`/reviews/product/${id}`)
+        setDbReviews(res.data || [])
+      } catch {
+      }
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || err.message || 'Xatolik yuz berdi'
+      toast.error(errorMessage)
+    }
   }
 
   const handleRating = (stars) => {
@@ -269,7 +307,7 @@ export default function ProductDetail() {
           {[
             ['desc', t('product.tab_desc')],
             ['specs', t('product.tab_specs')],
-            ['reviews', `${t('product.tab_reviews')} (${productReviews.length})`],
+            ['reviews', `${t('product.tab_reviews')} (${dbReviews.length})`],
           ].map(([key, label]) => (
             <button
               key={key}
@@ -281,60 +319,69 @@ export default function ProductDetail() {
           ))}
         </div>
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={tab}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2 }}
-          >
-            {tab === 'desc' && (
-              <p className="text-white/60 leading-relaxed text-sm md:text-base">
-                {product.description || t('product.no_desc')}
-              </p>
-            )}
-            {tab === 'specs' && (
-              <div className="rounded-xl border border-white/10 overflow-hidden">
-                {specs.map(([k, v], i) => (
-                  <div key={k} className={`flex justify-between px-5 py-3.5 text-sm ${i % 2 === 0 ? 'bg-white/[0.03]' : ''} ${i < specs.length - 1 ? 'border-b border-white/8' : ''}`}>
-                    <span className="text-white/45">{k}</span>
-                    <span className="text-white font-medium">{v}</span>
-                  </div>
-                ))}
+        <div>
+          {tab === 'desc' && (
+            <p className="text-white/60 leading-relaxed text-sm md:text-base">
+              {product.description || t('product.no_desc')}
+            </p>
+          )}
+          {tab === 'specs' && (
+            <div className="rounded-xl border border-white/10 overflow-hidden">
+              {specs.map(([k, v], i) => (
+                <div key={k} className={`flex justify-between px-5 py-3.5 text-sm ${i % 2 === 0 ? 'bg-white/[0.03]' : ''} ${i < specs.length - 1 ? 'border-b border-white/8' : ''}`}>
+                  <span className="text-white/45">{k}</span>
+                  <span className="text-white font-medium">{v}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          {tab === 'reviews' && (
+            <div className="space-y-6 text-white" style={{ minHeight: '300px', backgroundColor: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '12px' }}>
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">Sharhlar ({dbReviews.length})</h3>
               </div>
-            )}
-            {tab === 'reviews' && (
-              <div className="space-y-6">
-                {productReviews.length > 0 ? (
-                  productReviews.map(r => (
+              
+              {dbReviews.length > 0 ? (
+                <div className="space-y-4">
+                  {dbReviews.map(r => (
                     <div key={r.id} className="p-4 rounded-xl border border-white/10 bg-white/[0.03]">
                       <div className="flex justify-between mb-2">
-                        <span className="text-white font-semibold text-sm">{r.author}</span>
-                        <span className="text-white/35 text-xs">{new Date(r.date).toLocaleDateString('uz-UZ')}</span>
+                        <span className="text-white font-semibold text-sm">{r.user?.username || 'Foydalanuvchi'}</span>
+                        <span className="text-white/35 text-xs">{new Date(r.createdAt).toLocaleDateString('uz-UZ')}</span>
                       </div>
-                      <p className="text-white/60 text-sm">{r.text}</p>
+                      <div className="flex text-teal mb-2">
+                        {Array.from({ length: 5 }).map((_, idx) => (
+                          <Star key={idx} size={12} fill={idx < r.rating ? 'currentColor' : 'none'} opacity={idx < r.rating ? 1 : 0.3} />
+                        ))}
+                      </div>
+                      <p className="text-white/60 text-sm">{r.comment}</p>
                     </div>
-                  ))
-                ) : (
-                  <p className="text-white/40 text-sm">{t('product.no_reviews')}</p>
-                )}
-                <form onSubmit={handleReview} className="pt-4 border-t border-white/10 space-y-3">
-                  <h4 className="text-white font-semibold">{t('product.add_review')}</h4>
-                  <FormInput placeholder={t('product.review_author')} value={reviewAuthor} onChange={e => setReviewAuthor(e.target.value)} />
-                  <FormTextarea placeholder={t('product.review_text')} rows={3} value={reviewText} onChange={e => setReviewText(e.target.value)} required />
-                  <motion.button
-                    type="submit"
-                    whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}
-                    className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-primary to-teal text-white font-semibold rounded-xl text-sm"
-                  >
-                    <Send size={15} /> {t('product.submit_review')}
-                  </motion.button>
-                </form>
-              </div>
-            )}
-          </motion.div>
-        </AnimatePresence>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-white/40 text-sm py-4">Hali sharhlar yo'q. Birinchi sharhni siz yozing!</p>
+              )}
+              
+              <form onSubmit={handleReview} className="pt-4 border-t border-white/10 space-y-3">
+                <h4 className="text-white font-semibold">Sharh yozish</h4>
+                <textarea
+                  placeholder="Mahsulot haqida fikringizni yozing..."
+                  rows={3}
+                  value={reviewText}
+                  onChange={e => setReviewText(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 rounded-xl bg-white/[0.05] border border-white/10 text-white placeholder:text-white/40 focus:outline-none focus:border-teal/50 resize-none"
+                />
+                <button
+                  type="submit"
+                  className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-primary to-teal text-white font-semibold rounded-xl text-sm hover:opacity-90 transition-opacity"
+                >
+                  <Send size={15} /> Sharh yuborish
+                </button>
+              </form>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Related */}

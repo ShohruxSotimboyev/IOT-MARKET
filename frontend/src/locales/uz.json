@@ -24,6 +24,7 @@
     "catalog": "Katalog",
     "search": "Mahsulot qidirish...",
     "all_products": "Barcha mahsulotlar",
+    "readyProducts": "Tayyor mahsulotlar",
     "language": "Til"
   },
   "hero": {
@@ -351,5 +352,24 @@
     "product": "Mahsulot",
     "paid": "To'langan",
     "tx_id": "Tranzaksiya ID"
+  },
+  "readyProductDetail": {
+    "addToCart": "Savatga qo'shish",
+    "reviews": "Sharhlar",
+    "writeReview": "Sharh yozish",
+    "noReviews": "Hali sharhlar yo'q. Birinchi sharhni siz yozing!",
+    "features": "Xususiyatlar",
+    "description": "Tavsif",
+    "related": "O'xshash mahsulotlar",
+    "backToList": "Orqaga",
+    "rating": "Baho",
+    "submitReview": "Sharh yuborish",
+    "reviewPlaceholder": "Mahsulot haqida fikringizni yozing...",
+    "loginToReview": "Sharh yozish uchun tizimga kiring!",
+    "reviewAdded": "Sharh qo'shildi!",
+    "category": "Kategoriya",
+    "inStock": "Mavjud",
+    "outOfStock": "Mavjud emas",
+    "specifications": "Texnik xususiyatlar"
   }
 }

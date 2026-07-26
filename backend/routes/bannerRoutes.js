@@ -5,21 +5,21 @@ const {
   deleteBanner, updateBannerStatus, updateBannerOrder, uploadBannerImage,
 } = require('../controllers/bannerController')
 const upload = require('../middleware/upload')
-const { adminProtect } = require('../middleware/authMiddleware')
+const { protect, requirePermission } = require('../middleware/authMiddleware')
 
 // Public routes
-router.get('/', getAllBanners)                                    // ?status=active ham ishlaydi
-router.get('/active', (req, res) => {                           // /active shortcut
+router.get('/', getAllBanners)
+router.get('/active', (req, res) => {
   req.query.status = 'active'
   return getAllBanners(req, res)
 })
 
 // Admin routes
-router.post('/upload', adminProtect, upload.single('image'), uploadBannerImage)
-router.post('/', adminProtect, createBanner)
-router.put('/:id', adminProtect, updateBanner)
-router.delete('/:id', adminProtect, deleteBanner)
-router.patch('/:id/status', adminProtect, updateBannerStatus)
-router.patch('/:id/order', adminProtect, updateBannerOrder)
+router.post('/upload', protect, requirePermission('banners'), upload.single('image'), uploadBannerImage)
+router.post('/', protect, requirePermission('banners'), createBanner)
+router.put('/:id', protect, requirePermission('banners'), updateBanner)
+router.delete('/:id', protect, requirePermission('banners'), deleteBanner)
+router.patch('/:id/status', protect, requirePermission('banners'), updateBannerStatus)
+router.patch('/:id/order', protect, requirePermission('banners'), updateBannerOrder)
 
 module.exports = router

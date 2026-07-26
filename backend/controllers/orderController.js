@@ -147,8 +147,8 @@ exports.getMyOrders = async (req, res) => {
     res.json({
       orders: orders.map(o => ({
         ...o,
-        payment: o.payment ? JSON.parse(o.payment) : {},
-        shippingAddress: o.shippingAddress ? JSON.parse(o.shippingAddress) : null,
+        payment: o.payment ? (() => { try { return JSON.parse(o.payment) } catch { return {} } })() : {},
+        shippingAddress: o.shippingAddress ? (() => { try { return JSON.parse(o.shippingAddress) } catch { return null } })() : null,
       })),
       pagination: {
         page,
@@ -180,8 +180,8 @@ exports.getOrderById = async (req, res) => {
 
     res.json({
       ...order,
-      payment: order.payment ? JSON.parse(order.payment) : {},
-      shippingAddress: order.shippingAddress ? JSON.parse(order.shippingAddress) : null,
+      payment: order.payment ? (() => { try { return JSON.parse(order.payment) } catch { return {} } })() : {},
+      shippingAddress: order.shippingAddress ? (() => { try { return JSON.parse(order.shippingAddress) } catch { return null } })() : null,
     });
   } catch (err) {
     res.status(500).json({ message: "Xatolik yuz berdi." });

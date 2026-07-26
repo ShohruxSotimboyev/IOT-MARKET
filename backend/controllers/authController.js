@@ -11,7 +11,7 @@ const generateTokens = exports._generateTokens = (userId) => {
   const accessToken = jwt.sign(
     { id: userId },
     process.env.JWT_SECRET,
-    { expiresIn: '15m' }
+    { expiresIn: '24h' }
   );
   const refreshToken = jwt.sign(
     { id: userId, type: 'refresh' },
@@ -242,7 +242,7 @@ exports.verifyOTP = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 15 * 60 * 1000 // 15 mins
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
     });
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -337,7 +337,7 @@ exports.refreshToken = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 15 * 60 * 1000
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
     });
     res.cookie('refreshToken', newRefresh, {
       httpOnly: true,
@@ -346,7 +346,11 @@ exports.refreshToken = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
-    res.json({ message: 'Token yangilandi' });
+    res.json({ 
+      message: 'Token yangilandi',
+      accessToken,
+      refreshToken: newRefresh 
+    });
   } catch (err) {
     res.status(401).json({ message: "Token yaroqsiz." });
   }

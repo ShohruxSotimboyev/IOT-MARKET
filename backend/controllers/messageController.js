@@ -51,14 +51,27 @@ exports.createMessage = async (req, res) => {
   try {
     const { userId, name, email, phone, subject, message } = req.body
 
+    if (!name || !name.trim()) {
+      return res.status(400).json({ success: false, message: "Ism kiritilishi shart" })
+    }
+    if (!email || !email.trim()) {
+      return res.status(400).json({ success: false, message: "Email kiritilishi shart" })
+    }
+    if (!subject || !subject.trim()) {
+      return res.status(400).json({ success: false, message: "Mavzu kiritilishi shart" })
+    }
+    if (!message || !message.trim()) {
+      return res.status(400).json({ success: false, message: "Xabar matni kiritilishi shart" })
+    }
+
     const newMessage = await prisma.message.create({
       data: {
-        userId,
-        name,
-        email,
-        phone,
-        subject,
-        message,
+        userId: req.user?.id || null,
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone || null,
+        subject: subject.trim(),
+        message: message.trim(),
       },
     })
 
@@ -86,10 +99,13 @@ exports.markAsRead = async (req, res) => {
 exports.replyToMessage = async (req, res) => {
   try {
     const { reply } = req.body
+    if (!reply || !reply.trim()) {
+      return res.status(400).json({ success: false, message: "Javob matni kiritilishi shart" })
+    }
 
     const message = await prisma.message.update({
       where: { id: req.params.id },
-      data: { reply, status: 'replied' },
+      data: { reply: reply.trim(), status: 'replied' },
     })
 
     res.json({ success: true, data: message })

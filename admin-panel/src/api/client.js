@@ -11,7 +11,6 @@ const apiClient = axios.create({
   },
 })
 
-// Request interceptor
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('admin-token')
@@ -25,13 +24,65 @@ apiClient.interceptors.request.use(
   }
 )
 
-// Response interceptor - xatoliklarni boshqarish
+let isRefreshing = false
+let failedQueue = []
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach(({ resolve, reject }) => {
+    if (error) reject(error)
+    else resolve(token)
+  })
+  failedQueue = []
+}
+
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
+    const originalRequest = error.config
+    const data = error.response?.data
+
+    if (error.response?.status === 401 && data?.tokenExpired && !originalRequest._retry) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject })
+        }).then(() => apiClient(originalRequest))
+      }
+
+      originalRequest._retry = true
+      isRefreshing = true
+
+      try {
+        const refreshToken = localStorage.getItem('admin-refresh-token')
+        if (!refreshToken) throw new Error('Refresh token yo\'q')
+
+        const refreshRes = await axios.post(
+          `${API_BASE_URL}/auth/refresh`,
+          { refreshToken },
+          { withCredentials: true }
+        )
+        const newToken = refreshRes.data.accessToken || refreshRes.data.token
+        if (newToken) {
+          localStorage.setItem('admin-token', newToken)
+          if (refreshRes.data.refreshToken) {
+            localStorage.setItem('admin-refresh-token', refreshRes.data.refreshToken)
+          }
+        }
+        processQueue(null)
+        return apiClient(originalRequest)
+      } catch {
+        processQueue(new Error('Refresh failed'))
+        localStorage.removeItem('admin-token')
+        localStorage.removeItem('admin-refresh-token')
+        localStorage.removeItem('admin-user')
+        window.location.href = '/login'
+      } finally {
+        isRefreshing = false
+      }
+    }
+
     if (error.response?.status === 401) {
-      // Token muddati tugagan yoki noto'g'ri
       localStorage.removeItem('admin-token')
+      localStorage.removeItem('admin-refresh-token')
       localStorage.removeItem('admin-user')
       window.location.href = '/login'
     }

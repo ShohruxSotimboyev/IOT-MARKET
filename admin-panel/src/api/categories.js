@@ -1,55 +1,23 @@
-const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace(/\/api$/, '');
-
-const getHeaders = () => {
-  const token = localStorage.getItem('admin-token');
-  return {
-    'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+import client from './client'
 
 export const categoriesAPI = {
   getAll: async () => {
-    const res = await fetch(`${API_URL}/api/categories`);
-    if (!res.ok) throw new Error('Kategoriyalarni yuklashda xatolik');
-    return res.json();
+    const res = await client.get('/categories')
+    return res.data
   },
   
   create: async (data) => {
-    const res = await fetch(`${API_URL}/api/categories`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify(data)
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error || 'Xatolik yuz berdi');
-    }
-    return res.json();
+    const res = await client.post('/categories', data)
+    return res.data
   },
   
   update: async (id, data) => {
-    const res = await fetch(`${API_URL}/api/categories/${id}`, {
-      method: 'PUT',
-      headers: getHeaders(),
-      body: JSON.stringify(data)
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error || 'Xatolik yuz berdi');
-    }
-    return res.json();
+    const res = await client.put(`/categories/${id}`, data)
+    return res.data
   },
   
   delete: async (id) => {
-    const res = await fetch(`${API_URL}/api/categories/${id}`, {
-      method: 'DELETE',
-      headers: getHeaders()
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error || 'Xatolik yuz berdi');
-    }
-    return res.json();
+    const res = await client.delete(`/categories/${id}`)
+    return res.data
   }
 };

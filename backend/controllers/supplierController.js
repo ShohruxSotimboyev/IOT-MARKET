@@ -1,5 +1,4 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const { prisma } = require('../config/db');
 
 exports.getAllSuppliers = async (req, res, next) => {
   try {
@@ -37,6 +36,7 @@ exports.updateSupplier = async (req, res, next) => {
     });
     res.json(supplier);
   } catch (error) {
+    if (error.code === 'P2025') return res.status(404).json({ error: 'Postavshik topilmadi' });
     next(error);
   }
 };
@@ -54,6 +54,7 @@ exports.deleteSupplier = async (req, res, next) => {
     await prisma.supplier.delete({ where: { id } });
     res.json({ message: 'Postavshik o\'chirildi' });
   } catch (error) {
+    if (error.code === 'P2025') return res.status(404).json({ error: 'Postavshik topilmadi' });
     next(error);
   }
 };

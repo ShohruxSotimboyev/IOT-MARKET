@@ -37,12 +37,17 @@ exports.createBanner = async (req, res) => {
 
 exports.updateBanner = async (req, res) => {
   try {
+    const { title, description, link, image, status, order } = req.body;
+    const data = {};
+    if (title !== undefined) data.title = title;
+    if (description !== undefined) data.description = description;
+    if (link !== undefined) data.link = link;
+    if (image !== undefined) data.image = image;
+    if (status !== undefined && ['active', 'inactive'].includes(status)) data.status = status;
+    if (order !== undefined) data.order = parseInt(order) || 0;
     const banner = await prisma.banner.update({
       where: { id: req.params.id },
-      data: {
-        ...req.body,
-        ...(req.body.order !== undefined && { order: parseInt(req.body.order) }),
-      },
+      data,
     })
     res.json({ success: true, data: banner })
   } catch (error) {
@@ -63,24 +68,33 @@ exports.deleteBanner = async (req, res) => {
 
 exports.updateBannerStatus = async (req, res) => {
   try {
+    if (!['active', 'inactive'].includes(req.body.status)) {
+      return res.status(400).json({ success: false, message: "Noto'g'ri status qiymati" })
+    }
     const banner = await prisma.banner.update({
       where: { id: req.params.id },
       data: { status: req.body.status },
     })
     res.json({ success: true, data: banner })
   } catch (error) {
+    if (error.code === 'P2025') return res.status(404).json({ success: false, message: 'Banner topilmadi' })
     res.status(500).json({ success: false, message: error.message })
   }
 }
 
 exports.updateBannerOrder = async (req, res) => {
   try {
+    const order = parseInt(req.body.order);
+    if (isNaN(order)) {
+      return res.status(400).json({ success: false, message: "Noto'g'ri tartib raqami" })
+    }
     const banner = await prisma.banner.update({
       where: { id: req.params.id },
-      data: { order: parseInt(req.body.order) },
+      data: { order },
     })
     res.json({ success: true, data: banner })
   } catch (error) {
+    if (error.code === 'P2025') return res.status(404).json({ success: false, message: 'Banner topilmadi' })
     res.status(500).json({ success: false, message: error.message })
   }
 }

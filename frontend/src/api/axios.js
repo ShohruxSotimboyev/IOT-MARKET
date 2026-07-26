@@ -9,6 +9,11 @@ const instance = axios.create({
 // Request interceptor — cookie avtomatik yuboriladi
 instance.interceptors.request.use(
   (config) => {
+    // Token ni localStorage dan olib Authorization headerga qo'shish
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => Promise.reject(error)
@@ -50,10 +55,15 @@ instance.interceptors.response.use(
           {},
           { withCredentials: true }
         );
+        const newToken = res.data.accessToken || res.data.token;
+        if (newToken) {
+          localStorage.setItem('token', newToken);
+        }
         processQueue(null);
         return instance(originalRequest);
       } catch (refreshErr) {
         processQueue(refreshErr);
+        localStorage.removeItem('token');
         localStorage.removeItem('iot_user');
         return Promise.reject(refreshErr);
       } finally {

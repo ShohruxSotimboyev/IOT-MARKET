@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { prisma } = require('../config/db')
 const passport = require('passport')
-const { protect, adminProtect } = require('../middleware/authMiddleware')
+const { protect, requirePermission } = require('../middleware/authMiddleware')
 const { loginLimiter, otpLimiter, registerLimiter } = require('../middleware/rateLimiter')
 const {
   register, login, verifyOTP, resendOTP, refreshToken, logoutUser,
@@ -18,8 +18,8 @@ router.post('/resend-otp', otpLimiter,      resendOTP)
 router.post('/refresh',                     refreshToken)
 router.post('/logout',     protect,         logoutUser)
 
-// ── Admin direct login (OTP siz) ─────────────────────────────────────────────
-router.post('/admin-login', async (req, res) => {
+// ── Admin direct login (OTP siz) — superadmin va manager ──────────────────────
+router.post('/admin-login', loginLimiter, async (req, res) => {
   const { email, password } = req.body
   if (!email || !password) return res.status(400).json({ message: 'Email va parol kiritilishi shart' })
   try {
@@ -27,8 +27,11 @@ router.post('/admin-login', async (req, res) => {
     if (!user || !user.password) return res.status(401).json({ message: "Email yoki parol noto'g'ri" })
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) return res.status(401).json({ message: "Email yoki parol noto'g'ri" })
-    if (user.role !== 'admin' && user.role !== 'superadmin') {
-      return res.status(403).json({ message: "Sizda admin huquqi yo'q" })
+    if (user.role !== 'superadmin' && user.role !== 'manager') {
+      return res.status(403).json({ message: "Sizda admin panel huquqi yo'q" })
+    }
+    if (!user.isVerified) {
+      return res.status(403).json({ message: "Hisob tasdiqlanmagan" })
     }
     const accessToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '24h' })
     const refreshToken = jwt.sign(
@@ -40,9 +43,19 @@ router.post('/admin-login', async (req, res) => {
       where: { id: user.id },
       data: { refreshToken, lastLogin: new Date(), loginCount: { increment: 1 }, isVerified: true },
     })
-    res.json({ accessToken, refreshToken, user: { id: user.id, username: user.username, email: user.email, role: user.role } })
+    res.json({ 
+      accessToken, 
+      refreshToken, 
+      user: { 
+        id: user.id, 
+        username: user.username, 
+        email: user.email, 
+        role: user.role,
+        permissions: user.permissions 
+      } 
+    })
   } catch (err) {
-    res.status(500).json({ message: err.message })
+    res.status(500).json({ success: false, message: "Serverda xatolik yuz berdi" })
   }
 })
 
@@ -52,7 +65,6 @@ router.get('/google/callback',
   passport.authenticate('google', { failureRedirect: `${process.env.FRONTEND_URL}/login?error=google` }),
   (req, res) => {
     if (!req.user) return res.redirect(`${process.env.FRONTEND_URL}/login?error=auth`)
-    const jwt = require('jsonwebtoken')
     const user = req.user
     const accessToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '24h' })
     const userStr = encodeURIComponent(JSON.stringify({ id: user.id, name: user.username, email: user.email }))
@@ -66,8 +78,20 @@ router.get('/verify', protect, (req, res) => {
 })
 
 // ── Admin verify token (Admin panel uchun) ────────────────────────────────────
-router.get('/admin-verify', adminProtect, (req, res) => {
-  res.json({ success: true, user: req.user })
+router.get('/admin-verify', protect, (req, res) => {
+  if (req.user.role !== 'superadmin' && req.user.role !== 'manager') {
+    return res.status(403).json({ success: false, message: "Admin panel huquqi yo'q" })
+  }
+  res.json({ 
+    success: true, 
+    user: { 
+      id: req.user.id, 
+      username: req.user.username, 
+      email: req.user.email, 
+      role: req.user.role,
+      permissions: req.user.permissions 
+    } 
+  })
 })
 
 // ── Superadmin: add new manager ───────────────────────────────────────────────
@@ -88,7 +112,7 @@ router.post('/add-manager', require('../middleware/authMiddleware').superadminPr
         email: email.toLowerCase().trim(),
         phone,
         password: hashedPassword,
-        role: 'admin',
+        role: 'manager',
         isVerified: true
       }
     });
@@ -99,7 +123,7 @@ router.post('/add-manager', require('../middleware/authMiddleware').superadminPr
 })
 
 // ── Admin: get all users ──────────────────────────────────────────────────────
-router.get('/users', adminProtect, async (req, res) => {
+router.get('/users', protect, requirePermission('customers'), async (req, res) => {
   try {
     const { page = 1, limit = 20, search } = req.query
     const where = search ? {
@@ -119,6 +143,55 @@ router.get('/users', adminProtect, async (req, res) => {
       prisma.user.count({ where }),
     ])
     res.json({ success: true, data: users, total })
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message })
+  }
+})
+
+router.delete('/users/:id', protect, requirePermission('customers'), async (req, res) => {
+  try {
+    const { id } = req.params
+    if (req.user.id === id) {
+      return res.status(400).json({ success: false, message: "O'zingizni o'chira olmaysiz" })
+    }
+    const user = await prisma.user.findUnique({ where: { id } })
+    if (!user) return res.status(404).json({ success: false, message: "Foydalanuvchi topilmadi" })
+    
+    if (user.role === 'superadmin' && req.user.role !== 'superadmin') {
+      return res.status(403).json({ success: false, message: "Sizda bu foydalanuvchini o'chirish huquqi yo'q" })
+    }
+    
+    await prisma.user.delete({ where: { id } })
+    res.json({ success: true, message: "Foydalanuvchi o'chirildi" })
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message })
+  }
+})
+
+// ── Change password (admin panel uchun) ──────────────────────────────────────
+router.put('/change-password', protect, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ success: false, message: "Joriy va yangi parol kiritilishi shart" })
+    }
+    if (newPassword.length < 8) {
+      return res.status(400).json({ success: false, message: "Yangi parol kamida 8 ta belgidan iborat bo'lishi kerak" })
+    }
+    const user = await prisma.user.findUnique({ where: { id: req.user.id } })
+    if (!user || !user.password) {
+      return res.status(400).json({ success: false, message: "Hisob topilmadi" })
+    }
+    const isMatch = await bcrypt.compare(currentPassword, user.password)
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: "Joriy parol noto'g'ri" })
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 12)
+    await prisma.user.update({
+      where: { id: req.user.id },
+      data: { password: hashedPassword }
+    })
+    res.json({ success: true, message: "Parol muvaffaqiyatli o'zgartirildi" })
   } catch (err) {
     res.status(500).json({ success: false, message: err.message })
   }

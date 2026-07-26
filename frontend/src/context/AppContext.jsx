@@ -60,8 +60,7 @@ export function AppProvider({ children }) {
   // Token bor-yo'qligini tekshirish (real auth holati)
   const isAuthenticated = () => {
     const token = localStorage.getItem('token')
-    const user = localStorage.getItem('iot_user')
-    return !!(token || user)
+    return !!token
   }
 
   // OTP dan keyin chaqiriladi — token va user saqlash
@@ -89,12 +88,9 @@ export function AppProvider({ children }) {
     }
   }
 
-  // AuthModal uchun sodda login (mock — eski sayt uchun)
+  // Mock login - faqat dev uchun, production'da ishlatmang
   const login = (email, password, name) => {
-    const u = { email, name: name || email.split('@')[0], id: Date.now() }
-    setUser(u)
-    localStorage.setItem('iot_user', JSON.stringify(u))
-    return true
+    return false
   }
 
   const updateUser = (fields) => {
@@ -131,8 +127,7 @@ export function AppProvider({ children }) {
       if (isAuthenticated()) {
         await api.put('/cart/update', { productId: id, quantity: qty })
       }
-    } catch (err) {
-      console.error("Savatni yangilashda xatolik:", err)
+    } catch {
     }
   }
 

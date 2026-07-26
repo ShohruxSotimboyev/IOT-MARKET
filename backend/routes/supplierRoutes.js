@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const supplierController = require('../controllers/supplierController');
-const { protect, adminProtect } = require('../middleware/authMiddleware');
+const { protect, requirePermission } = require('../middleware/authMiddleware');
 
 router.route('/')
-  .get(protect, adminProtect, supplierController.getAllSuppliers)
-  .post(protect, adminProtect, supplierController.createSupplier);
+  .get(supplierController.getAllSuppliers)
+  .post(protect, requirePermission('products'), supplierController.createSupplier);
 
 router.route('/:id')
-  .put(protect, adminProtect, supplierController.updateSupplier)
-  .delete(protect, adminProtect, supplierController.deleteSupplier);
+  .put(protect, requirePermission('products'), supplierController.updateSupplier)
+  .delete(protect, requirePermission('products'), supplierController.deleteSupplier);
 
 module.exports = router;

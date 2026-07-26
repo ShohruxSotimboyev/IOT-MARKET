@@ -8,17 +8,17 @@ const {
   replyToMessage,
   deleteMessage,
 } = require('../controllers/messageController')
-const { adminProtect } = require('../middleware/authMiddleware')
+const { protect, requirePermission } = require('../middleware/authMiddleware')
 
 // Public
 router.post('/', createMessage)
 
 // Admin
-router.get('/', adminProtect, getAllMessages)
-router.get('/:id', adminProtect, getMessageById)
-router.patch('/:id/read', adminProtect, markAsRead)
-router.patch('/:id/reply', adminProtect, replyToMessage)
-router.post('/:id/reply', adminProtect, replyToMessage)   // API dan ham ishlashi uchun
-router.delete('/:id', adminProtect, deleteMessage)
+router.get('/', protect, requirePermission('messages'), getAllMessages)
+router.get('/:id', protect, requirePermission('messages'), getMessageById)
+router.patch('/:id/read', protect, requirePermission('messages'), markAsRead)
+router.patch('/:id/reply', protect, requirePermission('messages'), replyToMessage)
+router.post('/:id/reply', protect, requirePermission('messages'), replyToMessage)
+router.delete('/:id', protect, requirePermission('messages'), deleteMessage)
 
 module.exports = router

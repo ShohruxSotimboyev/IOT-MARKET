@@ -24,6 +24,7 @@
     "catalog": "Catalog",
     "search": "Search products...",
     "all_products": "All products",
+    "readyProducts": "Ready Products",
     "language": "Language"
   },
   "hero": {
@@ -351,5 +352,24 @@
     "product": "Product",
     "paid": "Paid",
     "tx_id": "Transaction ID"
+  },
+  "readyProductDetail": {
+    "addToCart": "Add to Cart",
+    "reviews": "Reviews",
+    "writeReview": "Write a Review",
+    "noReviews": "No reviews yet. Be the first to write one!",
+    "features": "Features",
+    "description": "Description",
+    "related": "Related Products",
+    "backToList": "Back",
+    "rating": "Rating",
+    "submitReview": "Submit Review",
+    "reviewPlaceholder": "Write your thoughts about this product...",
+    "loginToReview": "Please log in to write a review!",
+    "reviewAdded": "Review added!",
+    "category": "Category",
+    "inStock": "In Stock",
+    "outOfStock": "Out of Stock",
+    "specifications": "Specifications"
   }
 }

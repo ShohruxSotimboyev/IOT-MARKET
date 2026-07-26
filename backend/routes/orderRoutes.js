@@ -1,12 +1,12 @@
 const express = require('express')
 const router = express.Router()
 const { createOrder, getMyOrders, getOrderById, getOrderStats } = require('../controllers/orderController')
-const { protect, adminProtect } = require('../middleware/authMiddleware')
+const { protect, requirePermission } = require('../middleware/authMiddleware')
 const { generalLimiter } = require('../middleware/rateLimiter')
 const { prisma } = require('../config/db')
 
 // Admin routes
-router.get('/admin/all', adminProtect, async (req, res) => {
+router.get('/admin/all', protect, requirePermission('orders'), async (req, res) => {
   try {
     const { page = 1, limit = 20 } = req.query
     const skip = (parseInt(page) - 1) * parseInt(limit)
@@ -24,8 +24,8 @@ router.get('/admin/all', adminProtect, async (req, res) => {
     ])
     const mappedOrders = orders.map(o => ({
       ...o,
-      payment: o.payment ? JSON.parse(o.payment) : {},
-      shippingAddress: o.shippingAddress ? JSON.parse(o.shippingAddress) : null,
+      payment: o.payment ? (() => { try { return JSON.parse(o.payment) } catch { return {} } })() : {},
+      shippingAddress: o.shippingAddress ? (() => { try { return JSON.parse(o.shippingAddress) } catch { return null } })() : null,
     }))
     res.json({ success: true, orders: mappedOrders, data: mappedOrders, total })
   } catch (err) {
@@ -33,7 +33,7 @@ router.get('/admin/all', adminProtect, async (req, res) => {
   }
 })
 
-router.get('/admin/stats', adminProtect, async (req, res) => {
+router.get('/admin/stats', protect, requirePermission('orders'), async (req, res) => {
   try {
     const totalOrders = await prisma.order.count()
     const totalRevenue = await prisma.order.aggregate({ _sum: { total: true } }).then(r => r._sum.total || 0)
@@ -73,8 +73,12 @@ router.get('/admin/stats', adminProtect, async (req, res) => {
   }
 })
 
-router.patch('/:id/status', adminProtect, async (req, res) => {
+router.patch('/:id/status', protect, requirePermission('orders'), async (req, res) => {
   try {
+    const validStatuses = ['pending', 'paid', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded']
+    if (!validStatuses.includes(req.body.status)) {
+      return res.status(400).json({ success: false, message: "Noto'g'ri status qiymati" })
+    }
     const order = await prisma.order.update({
       where: { id: req.params.id },
       data: { status: req.body.status },
@@ -92,5 +96,21 @@ router.post('/', createOrder)
 router.get('/', getMyOrders)
 router.get('/stats', getOrderStats)
 router.get('/:id', getOrderById)
+router.patch('/:id/cancel', async (req, res) => {
+  try {
+    const order = await prisma.order.findFirst({ where: { id: req.params.id, userId: req.user.id } })
+    if (!order) return res.status(404).json({ message: "Buyurtma topilmadi" })
+    if (!['pending', 'paid', 'processing'].includes(order.status)) {
+      return res.status(400).json({ message: "Bu buyurtmani bekor qilib bo'lmaydi" })
+    }
+    const updated = await prisma.order.update({
+      where: { id: order.id },
+      data: { status: 'cancelled' }
+    })
+    res.json({ success: true, data: updated })
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
+})
 
 module.exports = router

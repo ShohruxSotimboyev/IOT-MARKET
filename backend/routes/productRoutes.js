@@ -6,7 +6,7 @@ const {
   updateProductStatus, uploadImage,
 } = require('../controllers/productController')
 const upload = require('../middleware/upload')
-const { adminProtect } = require('../middleware/authMiddleware')
+const { protect, requirePermission } = require('../middleware/authMiddleware')
 
 // Public routes
 router.get('/', getAllProducts)
@@ -14,10 +14,10 @@ router.get('/search', searchProducts)
 router.get('/:id', getProductById)
 
 // Admin routes
-router.post('/upload', adminProtect, upload.single('image'), uploadImage)
-router.post('/', adminProtect, createProduct)
-router.put('/:id', adminProtect, updateProduct)
-router.delete('/:id', adminProtect, deleteProduct)
-router.patch('/:id/status', adminProtect, updateProductStatus)
+router.post('/upload', protect, requirePermission('products'), upload.single('image'), uploadImage)
+router.post('/', protect, requirePermission('products'), createProduct)
+router.put('/:id', protect, requirePermission('products'), updateProduct)
+router.delete('/:id', protect, requirePermission('products'), deleteProduct)
+router.patch('/:id/status', protect, requirePermission('products'), updateProductStatus)
 
 module.exports = router

@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ThemeProvider } from './context/ThemeContext'
-import { AuthProvider } from './context/AuthContext'
+import { AuthProvider, useAuth } from './context/AuthContext'
 import { Toaster } from 'react-hot-toast'
 import AdminLayout from './components/layout/AdminLayout'
+import PermissionRoute from './components/layout/PermissionRoute'
 import Login from './pages/auth/Login'
 import Dashboard from './pages/dashboard/Dashboard'
 import Inventory from './pages/inventory/Inventory'
@@ -14,12 +15,16 @@ import Customers from './pages/customers/Customers'
 import Messages from './pages/messages/Messages'
 import Banners from './pages/banners/Banners'
 import Settings from './pages/settings/Settings'
+import Managers from './pages/managers/Managers'
+import Reviews from './pages/reviews/Reviews'
+import ReadyProducts from './pages/readyProducts/ReadyProducts'
 import './i18n'
 import './index.css'
 
 function ProtectedRoute({ children }) {
-  const token = localStorage.getItem('admin-token')
-  if (!token) return <Navigate to="/login" replace />
+  const { isAuthenticated, loading } = useAuth()
+  if (loading) return null
+  if (!isAuthenticated) return <Navigate to="/login" replace />
   return children
 }
 
@@ -45,16 +50,19 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
               <Route index element={<Navigate to="/dashboard" replace />} />
-              <Route path="dashboard" element={<Dashboard />} />
-              <Route path="inventory" element={<Inventory />} />
-              <Route path="categories" element={<Categories />} />
-              <Route path="suppliers" element={<Suppliers />} />
-              <Route path="products" element={<Products />} />
-              <Route path="orders" element={<Orders />} />
-              <Route path="customers" element={<Customers />} />
-              <Route path="messages" element={<Messages />} />
-              <Route path="banners" element={<Banners />} />
-              <Route path="settings" element={<Settings />} />
+              <Route path="dashboard" element={<PermissionRoute path="/dashboard"><Dashboard /></PermissionRoute>} />
+              <Route path="inventory" element={<PermissionRoute path="/inventory"><Inventory /></PermissionRoute>} />
+              <Route path="categories" element={<PermissionRoute path="/categories"><Categories /></PermissionRoute>} />
+              <Route path="suppliers" element={<PermissionRoute path="/suppliers"><Suppliers /></PermissionRoute>} />
+              <Route path="products" element={<PermissionRoute path="/products"><Products /></PermissionRoute>} />
+              <Route path="orders" element={<PermissionRoute path="/orders"><Orders /></PermissionRoute>} />
+              <Route path="customers" element={<PermissionRoute path="/customers"><Customers /></PermissionRoute>} />
+              <Route path="messages" element={<PermissionRoute path="/messages"><Messages /></PermissionRoute>} />
+              <Route path="banners" element={<PermissionRoute path="/banners"><Banners /></PermissionRoute>} />
+              <Route path="managers" element={<PermissionRoute path="/managers"><Managers /></PermissionRoute>} />
+              <Route path="reviews" element={<PermissionRoute path="/reviews"><Reviews /></PermissionRoute>} />
+              <Route path="ready-products" element={<PermissionRoute path="/ready-products"><ReadyProducts /></PermissionRoute>} />
+              <Route path="settings" element={<PermissionRoute path="/settings"><Settings /></PermissionRoute>} />
             </Route>
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>

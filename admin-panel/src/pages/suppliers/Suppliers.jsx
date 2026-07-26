@@ -11,7 +11,7 @@ function SupplierModal({ supplier, onClose, onSave }) {
   const [form, setForm] = useState(supplier || { name: '', contact: '', phone: '', address: '', status: 'active' })
 
   const handleSubmit = async () => {
-    if (!form.name.trim()) return toast.error('Kompaniya nomi kiritilishi shart')
+    if (!form.name.trim()) return toast.error(t('suppliers.nameRequired', 'Kompaniya nomi kiritilishi shart'))
     try {
       let saved
       if (supplier?.id) {
@@ -22,7 +22,7 @@ function SupplierModal({ supplier, onClose, onSave }) {
       toast.success(supplier ? t('suppliers.updated') : t('suppliers.added'))
       onSave(saved)
     } catch (e) {
-      toast.error(e.message || 'Xatolik yuz berdi')
+      toast.error(e.message || t('common.error', 'Xatolik yuz berdi'))
     }
   }
 
@@ -40,7 +40,7 @@ function SupplierModal({ supplier, onClose, onSave }) {
               <input className="ui-input" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder={t('suppliers.namePlaceholder')} />
             </div>
             <div className="ui-input-wrap">
-              <label className="ui-label">Bog'lanish uchun shaxs</label>
+              <label className="ui-label">{t('suppliers.contactLabel', 'Bog\'lanish uchun shaxs')}</label>
               <input className="ui-input" value={form.contact} onChange={e => setForm({ ...form, contact: e.target.value })} placeholder={t('suppliers.contactPlaceholder')} />
             </div>
             <div className="ui-input-wrap">
@@ -52,10 +52,10 @@ function SupplierModal({ supplier, onClose, onSave }) {
               <input className="ui-input" value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} placeholder={t('suppliers.addressPlaceholder')} />
             </div>
             <div className="ui-input-wrap">
-              <label className="ui-label">Holat</label>
+              <label className="ui-label">{t('common.status', 'Holat')}</label>
               <select className="ui-select" value={form.status} onChange={e => setForm({ ...form, status: e.target.value })}>
-                <option value="active">Faol</option>
-                <option value="inactive">Nofaol</option>
+                <option value="active">{t('common.active', 'Faol')}</option>
+                <option value="inactive">{t('common.inactive', 'Nofaol')}</option>
               </select>
             </div>
           </div>

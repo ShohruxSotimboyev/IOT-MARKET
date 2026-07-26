@@ -72,6 +72,7 @@ export default function Navbar({ onAuthClick, transparent = true }) {
   const navLinks = [
     ['/', t('nav.home')],
     ['/products', t('nav.products')],
+    ['/ready-products', t('nav.readyProducts', 'Tayyor mahsulotlar')],
     ['/about', t('nav.about')],
     ['/contact', t('nav.contact')],
   ]

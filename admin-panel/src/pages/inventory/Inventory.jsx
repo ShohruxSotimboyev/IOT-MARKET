@@ -1,11 +1,13 @@
 import { useTranslation } from 'react-i18next'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, Archive, X, ArrowUpRight, ArrowDownRight, Search } from 'lucide-react'
+import { Plus, Archive, X, ArrowUpRight, ArrowDownRight, Search, Download, FileSpreadsheet } from 'lucide-react'
 import { inventoryAPI } from '../../api/inventory'
 import { productsAPI } from '../../api/products'
 import toast from 'react-hot-toast'
 import Select from 'react-select'
+import * as XLSX from 'xlsx'
+import { useAuth } from '../../context/AuthContext'
 
 function InventoryModal({ products, onClose, onSave }) {
   const { t } = useTranslation()
@@ -24,7 +26,7 @@ function InventoryModal({ products, onClose, onSave }) {
       toast.success(t('inventory.updated'))
       onSave(saved.data)
     } catch (e) {
-      toast.error(e.message || 'Xatolik yuz berdi')
+      toast.error(e.message || t('common.errorOccurred'))
     }
     setSubmitting(false)
   }
@@ -33,7 +35,7 @@ function InventoryModal({ products, onClose, onSave }) {
     <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
       <motion.div className="modal-box" style={{ maxWidth: 450 }} initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} onClick={e => e.stopPropagation()}>
         <div className="modal-header">
-          <span className="modal-title">Ombor qoldig'ini o'zgartirish</span>
+          <span className="modal-title">{t('inventory.editBalance')}</span>
           <button className="modal-close" onClick={onClose}><X size={16} /></button>
         </div>
         <div className="modal-body">
@@ -44,43 +46,23 @@ function InventoryModal({ products, onClose, onSave }) {
                 options={productOptions}
                 value={productOptions.find(o => o.value === form.productId) || null}
                 onChange={selected => setForm({ ...form, productId: selected ? selected.value : '' })}
-                placeholder="-- Tanlang yoki qidiring --"
+                placeholder={t('inventory.search')}
                 isSearchable
-                noOptionsMessage={() => "Topilmadi"}
+                noOptionsMessage={() => t('common.noData')}
                 menuPortalTarget={document.body}
                 styles={{
                   control: (base) => ({
-                    ...base,
-                    minHeight: '42px',
-                    borderRadius: '8px',
+                    ...base, minHeight: '42px', borderRadius: '8px',
                     borderColor: 'var(--border-subtle)',
                     background: 'var(--bg-input, transparent)',
                     boxShadow: 'none',
-                    '&:hover': {
-                      borderColor: 'var(--clr-primary)'
-                    }
+                    '&:hover': { borderColor: 'var(--clr-primary)' }
                   }),
                   menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                  menu: (base) => ({
-                    ...base,
-                    background: '#ffffff',
-                    border: '1px solid var(--border-subtle)',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-                  }),
-                  option: (base, state) => ({
-                    ...base,
-                    background: state.isFocused ? '#f3f4f6' : '#ffffff',
-                    color: state.isFocused ? 'var(--clr-primary)' : '#1f2937',
-                    cursor: 'pointer'
-                  }),
-                  singleValue: (base) => ({
-                    ...base,
-                    color: 'var(--text-primary)'
-                  }),
-                  input: (base) => ({
-                    ...base,
-                    color: 'var(--text-primary)'
-                  })
+                  menu: (base) => ({ ...base, background: '#ffffff', border: '1px solid var(--border-subtle)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }),
+                  option: (base, state) => ({ ...base, background: state.isFocused ? '#f3f4f6' : '#ffffff', color: state.isFocused ? 'var(--clr-primary)' : '#1f2937', cursor: 'pointer' }),
+                  singleValue: (base) => ({ ...base, color: 'var(--text-primary)' }),
+                  input: (base) => ({ ...base, color: 'var(--text-primary)' })
                 }}
               />
             </div>
@@ -116,11 +98,13 @@ function InventoryModal({ products, onClose, onSave }) {
 
 export default function Inventory() {
   const { t } = useTranslation()
+  const { user } = useAuth()
 
   const [logs, setLogs] = useState([])
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [modalOpen, setModalOpen] = useState(false)
+  const [exporting, setExporting] = useState(false)
   
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
@@ -153,20 +137,39 @@ export default function Inventory() {
 
   const loadProducts = async () => {
     try {
-      // Load all products for the dropdown (might need pagination or search for huge catalogs)
       const data = await productsAPI.getAll()
       setProducts(data.products || data || [])
-    } catch {
-      // error handled silently
-    }
+    } catch {}
   }
 
   const handleSave = (newLog) => {
-    // Optimistically prepend to list
     setLogs(prev => [newLog, ...prev].slice(0, 20))
     setModalOpen(false)
-    loadLogs() // Reload to get product details (joins) properly formatted
+    loadLogs()
   }
+
+  const handleExport = async () => {
+    setExporting(true)
+    try {
+      const data = await inventoryAPI.exportInventory()
+      const rows = data.data || []
+      if (rows.length === 0) {
+        toast.error(t('inventory.noExportData'))
+        setExporting(false)
+        return
+      }
+      const ws = XLSX.utils.json_to_sheet(rows)
+      const wb = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(wb, ws, 'Ombor Hisobot')
+      XLSX.writeFile(wb, `ombor-hisobot-${new Date().toISOString().slice(0,10)}.xlsx`)
+      toast.success(`${rows.length} ${t('inventory.exportSuccess')}`)
+    } catch (e) {
+      toast.error(`${t('inventory.exportError')}: ${e.message || t('common.errorOccurred')}`)
+    }
+    setExporting(false)
+  }
+
+  const isSuperAdmin = user?.role === 'superadmin'
 
   return (
     <div>
@@ -181,12 +184,17 @@ export default function Inventory() {
             <input 
               type="text" 
               className="ui-input" 
-              placeholder="Qidirish..." 
+              placeholder={t('inventory.search')} 
               value={globalSearch}
               onChange={e => setGlobalSearch(e.target.value)}
               style={{ paddingLeft: '36px', height: '40px' }}
             />
           </div>
+          {isSuperAdmin && (
+            <button className="btn btn-secondary" onClick={handleExport} disabled={exporting} style={{ height: '40px' }}>
+              <FileSpreadsheet size={16} /> {exporting ? t('inventory.exporting') : t('inventory.export')}
+            </button>
+          )}
           <button className="btn btn-primary" onClick={() => setModalOpen(true)} style={{ height: '40px' }}>
             <Plus size={16} /> {t('inventory.addAction')}
           </button>
@@ -208,6 +216,7 @@ export default function Inventory() {
                   <th>{t('common.type')}</th>
                   <th>{t('common.amount')}</th>
                   <th>{t('common.reason')}</th>
+                  <th>{t('inventory.enteredBy')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -241,6 +250,17 @@ export default function Inventory() {
                     <td>
                       <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{log.reason || '-'}</span>
                     </td>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'var(--clr-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 11, fontWeight: 700 }}>
+                          {(log.user?.username?.[0] || '?').toUpperCase()}
+                        </div>
+                        <div>
+                          <div style={{ fontSize: 13, fontWeight: 600 }}>{log.user?.username || 'Noma\'lum'}</div>
+                          <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{log.user?.role || ''}</div>
+                        </div>
+                      </div>
+                    </td>
                   </motion.tr>
                 ))}
               </tbody>
@@ -248,7 +268,6 @@ export default function Inventory() {
           </div>
         )}
         
-        {/* Pagination */}
         {totalPages > 1 && (
           <div className="pagination">
             {Array.from({ length: totalPages }, (_, i) => (
