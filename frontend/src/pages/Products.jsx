@@ -209,7 +209,7 @@ export default function Products() {
       <div className="flex gap-6 lg:gap-8">
         {/* Desktop Sidebar */}
         <aside className="hidden md:block w-52 lg:w-60 flex-shrink-0">
-          <div className="sticky top-36 rounded-2xl border border-white/12 bg-white/[0.05] backdrop-blur-xl p-4 shadow-lg shadow-black/20">
+          <div className="sticky top-36 rounded-2xl border border-white/12 bg-white/[0.05] backdrop-blur-xl p-4 shadow-lg shadow-black/20 max-h-[calc(100vh-180px)] overflow-y-auto scrollbar-thin">
             {/* Sidebar header */}
             <div className="flex items-center gap-2 mb-4 pb-3 border-b border-white/10">
               <SlidersHorizontal size={14} className="text-teal" />

@@ -43,6 +43,10 @@ router.post('/admin-login', loginLimiter, async (req, res) => {
       where: { id: user.id },
       data: { refreshToken, lastLogin: new Date(), loginCount: { increment: 1 }, isVerified: true },
     })
+    // Eski frontend cookielarni tozalash
+    res.clearCookie('accessToken')
+    res.clearCookie('refreshToken')
+
     res.json({ 
       accessToken, 
       refreshToken, 
@@ -82,6 +86,9 @@ router.get('/admin-verify', protect, (req, res) => {
   if (req.user.role !== 'superadmin' && req.user.role !== 'manager') {
     return res.status(403).json({ success: false, message: "Admin panel huquqi yo'q" })
   }
+  // Eski frontend cookielarni tozalash
+  res.clearCookie('accessToken')
+  res.clearCookie('refreshToken')
   res.json({ 
     success: true, 
     user: { 

@@ -3,12 +3,15 @@ const { prisma } = require('../config/db');
 const logger = require('../utils/logger');
 
 const protect = async (req, res, next) => {
-  let token = req.cookies?.accessToken;
+  // Avval Authorization header ni tekshir (admin panel Bearer token ishlatadi)
+  let token;
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.split(' ')[1];
+  }
+  // Agar header bo'lmasa, cookie dan olish (frontend uchun)
   if (!token) {
-    const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      token = authHeader.split(' ')[1];
-    }
+    token = req.cookies?.accessToken;
   }
   if (!token) {
     return res.status(401).json({ message: "Avtorizatsiya talab etiladi." });
@@ -34,12 +37,13 @@ const protect = async (req, res, next) => {
 
 // Admin panel uchun - faqat superadmin kirishi mumkin
 const adminProtect = async (req, res, next) => {
-  let token = req.cookies?.accessToken;
+  let token;
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.split(' ')[1];
+  }
   if (!token) {
-    const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      token = authHeader.split(' ')[1];
-    }
+    token = req.cookies?.accessToken;
   }
   if (!token) {
     return res.status(401).json({ message: "Admin avtorizatsiyasi talab etiladi." });
@@ -68,12 +72,13 @@ const adminProtect = async (req, res, next) => {
 
 // Superadmin panel uchun - faqat superadminlar kirishi mumkin
 const superadminProtect = async (req, res, next) => {
-  let token = req.cookies?.accessToken;
+  let token;
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.split(' ')[1];
+  }
   if (!token) {
-    const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      token = authHeader.split(' ')[1];
-    }
+    token = req.cookies?.accessToken;
   }
   if (!token) {
     return res.status(401).json({ message: "Superadmin avtorizatsiyasi talab etiladi." });
@@ -101,12 +106,13 @@ const superadminProtect = async (req, res, next) => {
 
 // Frontend uchun - adminlar kirishi mumkin emas
 const userProtect = async (req, res, next) => {
-  let token = req.cookies?.accessToken;
+  let token;
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.split(' ')[1];
+  }
   if (!token) {
-    const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      token = authHeader.split(' ')[1];
-    }
+    token = req.cookies?.accessToken;
   }
   if (!token) {
     return res.status(401).json({ message: "Avtorizatsiya talab etiladi." });
