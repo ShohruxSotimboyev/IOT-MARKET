@@ -15,6 +15,7 @@ import { productsAPI } from '../../api/products'
 import { customersAPI } from '../../api/customers'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { getSocket } from '../../../api/socket'
 
 const MONTHS = ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyn', 'Iyl', 'Avg', 'Sen', 'Okt', 'Noy', 'Dek']
 
@@ -74,6 +75,14 @@ export default function Dashboard() {
 
   useEffect(() => {
     loadData()
+
+    const socket = getSocket()
+    if (!socket.connected) socket.connect()
+
+    const handleNewOrder = () => { loadData() }
+    socket.on('new-order', handleNewOrder)
+
+    return () => { socket.off('new-order', handleNewOrder) }
   }, [])
 
   const loadData = async () => {

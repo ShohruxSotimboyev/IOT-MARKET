@@ -57,10 +57,35 @@ export function AppProvider({ children }) {
   useEffect(() => { localStorage.setItem('iot_reviews', JSON.stringify(reviews)) }, [reviews])
   useEffect(() => { localStorage.setItem('iot_ratings', JSON.stringify(userRatings)) }, [userRatings])
 
-  // Token bor-yo'qligini tekshirish (real auth holati)
+  // Token bor-yo'qligini va valid ekanligini tekshirish
   const isAuthenticated = () => {
     const token = localStorage.getItem('token')
-    return !!token
+    if (!token) return false
+
+    try {
+      // JWT token expiration tekshirish
+      const base64Url = token.split('.')[1]
+      if (!base64Url) return true // Token bor lekin format boshqacha bo'lishi mumkin
+
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
+        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+      ).join(''))
+
+      const decoded = JSON.parse(jsonPayload)
+      const now = Date.now() / 1000
+
+      // Token muddati tugagan bo'lsa
+      if (decoded.exp && decoded.exp < now) {
+        return false
+      }
+
+      return true
+    } catch (error) {
+      // Token yaroqsiz formatda bo'lsa ham, token bor deb hisoblaymiz
+      // Chunki Google tokeni boshqa formatda bo'lishi mumkin
+      return true
+    }
   }
 
   // OTP dan keyin chaqiriladi — token va user saqlash
@@ -69,9 +94,6 @@ export function AppProvider({ children }) {
     const u = { id: userData.id || userData._id, name: userData.name || userData.username, email: userData.email, phone: userData.phone }
     setUser(u)
     localStorage.setItem('iot_user', JSON.stringify(u))
-    // Admin panel tokenlarini tozalash - frontend login qilinganda admin panelga kirib ketmasligi uchun
-    localStorage.removeItem('admin-token')
-    localStorage.removeItem('admin-user')
   }
 
   // Login — backendga so'rov, OTP yuboriladi

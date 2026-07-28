@@ -11,7 +11,7 @@ const generateTokens = exports._generateTokens = (userId) => {
   const accessToken = jwt.sign(
     { id: userId },
     process.env.JWT_SECRET,
-    { expiresIn: '24h' }
+    { expiresIn: '7d' }
   );
   const refreshToken = jwt.sign(
     { id: userId, type: 'refresh' },
@@ -242,17 +242,21 @@ exports.verifyOTP = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+      path: '/api/auth',
+      maxAge: 7 * 24 * 60 * 60 * 1000
     });
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      path: '/api/auth',
+      maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
     res.status(200).json({
       message: "Muvaffaqiyatli kirish!",
+      accessToken,
+      refreshToken,
       user: {
         id: user.id,
         name: user.username,
@@ -337,12 +341,14 @@ exports.refreshToken = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+      path: '/api/auth',
+      maxAge: 7 * 24 * 60 * 60 * 1000
     });
     res.cookie('refreshToken', newRefresh, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
+      path: '/api/auth',
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
