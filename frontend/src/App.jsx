@@ -37,6 +37,8 @@ import ReadyProductDetail from './pages/ReadyProductDetail'
 import { useScrollLock } from './hooks/useScrollLock'
 import { useApp } from './context/AppContext'
 
+import AdminRoutes from './admin/AdminRoutes'
+
 // Himoyalangan route — token yo'q bo'lsa /login ga
 function PrivateRoute({ children }) {
   const { isAuthenticated } = useApp()
@@ -85,41 +87,48 @@ function MainLayout() {
   )
 }
 
+import { HelmetProvider } from 'react-helmet-async'
+
 function App() {
   return (
-    <BrowserRouter>
-      <ThemeProvider>
-        <Toaster
-          position="top-center"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: '#161b2a',
-              color: '#fff',
-              padding: '14px 20px',
-              borderRadius: '16px',
-              fontSize: '14px',
-              fontWeight: '500',
-              border: '1px solid rgba(255,255,255,0.1)',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
-            },
-            error: { icon: '⚠️', style: { border: '1px solid rgba(239,68,68,0.3)' } },
-            success: { icon: '✅' },
-          }}
-        />
-        <ScrollToTop />
-        <Routes>
-          {/* Auth sahifalar — minimal UI */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/verify-otp" element={<OtpVerify />} />
-          <Route path="/auth/google/success" element={<GoogleSuccess />} />
+    <HelmetProvider>
+      <BrowserRouter>
+        <ThemeProvider>
+          <Toaster
+            position="top-center"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: '#161b2a',
+                color: '#fff',
+                padding: '14px 20px',
+                borderRadius: '16px',
+                fontSize: '14px',
+                fontWeight: '500',
+                border: '1px solid rgba(255,255,255,0.1)',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+              },
+              error: { icon: '⚠️', style: { border: '1px solid rgba(239,68,68,0.3)' } },
+              success: { icon: '✅' },
+            }}
+          />
+          <ScrollToTop />
+          <Routes>
+            {/* Auth sahifalar — minimal UI */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/verify-otp" element={<OtpVerify />} />
+            <Route path="/auth/google/success" element={<GoogleSuccess />} />
 
-          {/* Asosiy sayt */}
-          <Route path="/*" element={<MainLayout />} />
-        </Routes>
-      </ThemeProvider>
-    </BrowserRouter>
+            {/* Admin sayt */}
+            <Route path="/admin/*" element={<AdminRoutes />} />
+
+            {/* Asosiy sayt */}
+            <Route path="/*" element={<MainLayout />} />
+          </Routes>
+        </ThemeProvider>
+      </BrowserRouter>
+    </HelmetProvider>
   )
 }
 

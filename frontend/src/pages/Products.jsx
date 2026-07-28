@@ -189,7 +189,7 @@ export default function Products() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-6 pt-32 md:pt-36 pb-16">
+    <div className="max-w-[1440px] mx-auto px-4 md:px-6 pt-32 md:pt-36 pb-16">
       <motion.h1
         initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}

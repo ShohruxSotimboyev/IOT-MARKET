@@ -8,7 +8,7 @@ export default function Favorites() {
   const { favs } = useApp()
 
   return (
-    <div className="max-w-7xl mx-auto px-4 pt-28 pb-16">
+    <div className="max-w-[1440px] mx-auto px-4 pt-28 pb-16">
       <h1 className="text-white font-display font-bold text-3xl mb-8">{t('fav.title')}</h1>
       {favs.length === 0 ? (
         <div className="text-center py-20 text-white/40">

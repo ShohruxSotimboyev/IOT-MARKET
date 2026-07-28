@@ -105,6 +105,11 @@ exports.createOrder = async (req, res) => {
 
     logger.info('Order created', { orderId: order.id, userId: req.user.id, total: calcTotal });
 
+    const { sendOrderNotification } = require('../bot');
+    
+    // Asynchronously send telegram message (don't await so it doesn't block the response)
+    sendOrderNotification(order, formattedItems, req.user).catch(console.error);
+
     res.status(201).json({
       success: true,
       order: {

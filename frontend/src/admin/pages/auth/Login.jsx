@@ -21,7 +21,7 @@ export default function Login() {
     try {
       await login(form.email, form.password)
       toast.success(t('auth.loginSuccess'))
-      navigate('/dashboard')
+      navigate('/admin/dashboard')
     } catch (err) {
       toast.error(err?.response?.data?.message || t('auth.loginError'))
     }

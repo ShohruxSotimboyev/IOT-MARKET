@@ -74,7 +74,7 @@ export default function Contact() {
   ]
 
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-6 pt-32 md:pt-36 pb-16">
+    <div className="max-w-[1440px] mx-auto px-4 md:px-6 pt-32 md:pt-36 pb-16">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
         <h1 className="text-white font-display font-bold text-4xl md:text-5xl mb-3">{t('nav.contact')}</h1>
         <p className="text-white/55 text-lg max-w-xl mx-auto">{t('contact.subtitle')}</p>

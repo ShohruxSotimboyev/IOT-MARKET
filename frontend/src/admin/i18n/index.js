@@ -1,4 +1,4 @@
-import i18n from 'i18next';
+import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
@@ -12,7 +12,9 @@ const resources = {
   ru: { translation: ru }
 };
 
-i18n
+const adminI18n = i18next.createInstance();
+
+adminI18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
@@ -28,4 +30,4 @@ i18n
     }
   });
 
-export default i18n;
+export default adminI18n;

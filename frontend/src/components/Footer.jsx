@@ -12,7 +12,7 @@ export default function Footer() {
 
   return (
     <footer className={`mt-16 border-t ${isLight ? 'border-slate-200 bg-slate-900' : 'border-white/10 bg-black/50 backdrop-blur-xl'}`}>
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-12">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-6 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
 
           {/* Brand */}

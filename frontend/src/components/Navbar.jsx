@@ -102,13 +102,9 @@ export default function Navbar({ onAuthClick, transparent = true }) {
         style={{ WebkitBackdropFilter: 'saturate(180%) blur(20px)' }}
       >
         <Link to="/" className="flex items-center gap-2.5 mr-1 flex-shrink-0">
-          <div className="relative w-11 h-11 rounded-2xl overflow-hidden shadow-[0_0_20px_rgba(79,70,229,0.5)] flex-shrink-0">
-              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-violet-600 to-cyan-500" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-white font-display font-black text-[13px] tracking-tight drop-shadow">IoT</span>
-              </div>
-              <div className="absolute top-0.5 left-1 right-1 h-px bg-white/40 rounded-full" />
-            </div>
+          <div className="relative w-11 h-11 rounded-[14px] overflow-hidden shadow-[0_0_20px_rgba(79,70,229,0.2)] flex-shrink-0">
+            <img src="/logo.jpg" alt="XonTech Logo" className="w-full h-full object-cover" />
+          </div>
             <div className="hidden sm:block">
               <div className="text-white font-display font-bold text-[15px] bg-gradient-to-r from-white to-white/80 bg-clip-text">{t('brand.title')}</div>
               <div className="text-white/40 text-[10px] tracking-widest uppercase">{t('brand.tagline')}</div>

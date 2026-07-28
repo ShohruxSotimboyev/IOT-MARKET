@@ -30,7 +30,7 @@ exports.getAllProducts = async (req, res) => {
     if (catFilter) where.category = catFilter
     if (status) where.status = status
     // Agar status berilmagan bo'lsa, frontend uchun faqat active, admin uchun barchasi
-    else if (!req.user) where.status = 'active'
+    else if (!req.headers.authorization) where.status = 'active'
 
     const [products, total] = await Promise.all([
       prisma.product.findMany({

@@ -64,7 +64,7 @@ export default function Home() {
     <div>
       <HeroSlider />
 
-      <div className="max-w-7xl mx-auto px-4 md:px-6 -mt-4 relative z-10">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-6 -mt-4 relative z-10">
         <PopularCategories />
 
         <Section title={t('hot.title')} linkTo="/products" t={t}>

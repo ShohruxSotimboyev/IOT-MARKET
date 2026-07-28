@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
-import { useTheme } from '../../context/ThemeContext'
+import { useTheme } from '../../../context/ThemeContext'
 import { useAuth } from '../../context/AuthContext'
 import { Save, Sun, Moon, Globe, Shield, Bell, Key } from 'lucide-react'
 import toast from 'react-hot-toast'

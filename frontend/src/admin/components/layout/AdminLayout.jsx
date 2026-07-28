@@ -6,7 +6,7 @@ import {
   Search, MessageSquare, Image as ImageIcon, Zap, Truck, Archive, Star, UserCog, Cpu
 } from 'lucide-react'
 import { useState } from 'react'
-import { useTheme } from '../../context/ThemeContext'
+import { useTheme } from '../../../context/ThemeContext'
 import { useAuth } from '../../context/AuthContext'
 import { useTranslation } from 'react-i18next'
 
@@ -21,26 +21,26 @@ export default function AdminLayout() {
   const location = useLocation()
   const { t, i18n } = useTranslation()
 
-  const handleLogout = () => { logout(); navigate('/login') }
+  const handleLogout = () => { logout(); navigate('/admin/login') }
   const cycleLang = () => {
     const idx = LANGS.indexOf(i18n.language)
     i18n.changeLanguage(LANGS[(idx + 1) % LANGS.length])
   }
 
   const NAV_ITEMS = [
-    { path: '/dashboard', icon: LayoutDashboard, key: 'dashboard', perm: 'dashboard' },
-    { path: '/inventory', icon: Archive, key: 'inventory', perm: 'inventory' },
-    { path: '/categories', icon: Package, key: 'categories', perm: 'products' },
-    { path: '/suppliers', icon: Truck, key: 'suppliers', perm: 'products' },
-    { path: '/products', icon: Package, key: 'products', perm: 'products' },
-    { path: '/orders', icon: ShoppingCart, key: 'orders', perm: 'orders' },
-    { path: '/reviews', icon: Star, key: 'reviews', perm: 'reviews' },
-    { path: '/ready-products', icon: Cpu, key: 'readyProducts', perm: 'products' },
-    { path: '/customers', icon: Users, key: 'customers', perm: 'customers' },
-    { path: '/messages', icon: MessageSquare, key: 'messages', perm: 'messages' },
-    { path: '/banners', icon: ImageIcon, key: 'banners', perm: 'banners' },
-    { path: '/managers', icon: UserCog, key: 'managers', perm: 'managers' },
-    { path: '/settings', icon: Settings, key: 'settings', perm: 'settings' },
+    { path: '/admin/dashboard', icon: LayoutDashboard, key: 'dashboard', perm: 'dashboard' },
+    { path: '/admin/inventory', icon: Archive, key: 'inventory', perm: 'inventory' },
+    { path: '/admin/categories', icon: Package, key: 'categories', perm: 'products' },
+    { path: '/admin/suppliers', icon: Truck, key: 'suppliers', perm: 'products' },
+    { path: '/admin/products', icon: Package, key: 'products', perm: 'products' },
+    { path: '/admin/orders', icon: ShoppingCart, key: 'orders', perm: 'orders' },
+    { path: '/admin/reviews', icon: Star, key: 'reviews', perm: 'reviews' },
+    { path: '/admin/ready-products', icon: Cpu, key: 'readyProducts', perm: 'products' },
+    { path: '/admin/customers', icon: Users, key: 'customers', perm: 'customers' },
+    { path: '/admin/messages', icon: MessageSquare, key: 'messages', perm: 'messages' },
+    { path: '/admin/banners', icon: ImageIcon, key: 'banners', perm: 'banners' },
+    { path: '/admin/managers', icon: UserCog, key: 'managers', perm: 'managers' },
+    { path: '/admin/settings', icon: Settings, key: 'settings', perm: 'settings' },
   ]
 
   return (

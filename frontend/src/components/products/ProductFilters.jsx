@@ -22,12 +22,13 @@ export default function ProductFilters({ search, onSearch, sort, onSort, onOpenF
           value={sort}
           onChange={(e) => onSort(e.target.value)}
           className="w-full md:w-56"
-        >
-          <option value="default" className="bg-[#0c1018]">{t('products_page.sort_default')}</option>
-          <option value="price_asc" className="bg-[#0c1018]">{t('products_page.sort_price_asc')}</option>
-          <option value="price_desc" className="bg-[#0c1018]">{t('products_page.sort_price_desc')}</option>
-          <option value="rating" className="bg-[#0c1018]">{t('products_page.sort_rating')}</option>
-        </FormSelect>
+          options={[
+            { value: 'default', label: t('products_page.sort_default') },
+            { value: 'price_asc', label: t('products_page.sort_price_asc') },
+            { value: 'price_desc', label: t('products_page.sort_price_desc') },
+            { value: 'rating', label: t('products_page.sort_rating') }
+          ]}
+        />
         <button
           type="button"
           onClick={onOpenFilter}

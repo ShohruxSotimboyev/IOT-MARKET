@@ -124,10 +124,10 @@ export default function Dashboard() {
           <p className="page-subtitle">{new Date().toLocaleDateString('uz-UZ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
-          <button className="btn btn-secondary btn-sm" onClick={() => navigate('/products')}>
+          <button className="btn btn-secondary btn-sm" onClick={() => navigate('/admin/products')}>
             <Package size={14} /> {t('dashboard.newProduct')}
           </button>
-          <button className="btn btn-primary btn-sm" onClick={() => navigate('/orders')}>
+          <button className="btn btn-primary btn-sm" onClick={() => navigate('/admin/orders')}>
             <ShoppingCart size={14} /> {t('dashboard.viewOrders')}
           </button>
         </div>
@@ -217,7 +217,7 @@ export default function Dashboard() {
       <motion.div className="ui-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
             <div className="ui-card-header">
               <span className="ui-card-title">{t('dashboard.recentOrders')}</span>
-              <button className="btn btn-ghost btn-sm" onClick={() => navigate('/orders')} style={{ gap: 4 }}>
+              <button className="btn btn-ghost btn-sm" onClick={() => navigate('/admin/orders')} style={{ gap: 4 }}>
                 {t('dashboard.viewAll')} <ChevronRight size={14} />
               </button>
             </div>

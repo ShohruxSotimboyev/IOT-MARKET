@@ -3,6 +3,7 @@ import { usePersistedState } from '../hooks/usePersistedState'
 import { motion } from 'framer-motion'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { Helmet } from 'react-helmet-async'
 import { Heart, ShoppingCart, Zap, Maximize2, ChevronRight, Send, Star } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { PRODUCTS } from '../data'
@@ -86,7 +87,7 @@ export default function ProductDetail() {
   if (loading) {
     return (
       <div className="min-h-screen pt-32 px-4">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[1440px] mx-auto">
           <div className="grid md:grid-cols-2 gap-10 animate-pulse">
             <div className="h-96 bg-white/10 rounded-2xl" />
             <div className="space-y-4">
@@ -186,7 +187,15 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-6 pt-28 md:pt-32 pb-20">
+    <div className="max-w-[1440px] mx-auto px-4 md:px-6 pt-28 md:pt-32 pb-20">
+      <Helmet>
+        <title>{product.name} | IOT Market</title>
+        <meta name="description" content={product.description?.substring(0, 160) || 'IOT Market mahsuloti'} />
+        <meta property="og:title" content={product.name} />
+        <meta property="og:description" content={product.description?.substring(0, 160) || 'IOT Market mahsuloti'} />
+        <meta property="og:image" content={images[0]} />
+        <meta property="og:type" content="product" />
+      </Helmet>
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-xs text-white/40 mb-8 flex-wrap">
         <Link to="/" className="hover:text-teal transition-colors">{t('common.home')}</Link>

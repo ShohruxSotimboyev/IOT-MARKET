@@ -74,7 +74,7 @@ apiClient.interceptors.response.use(
         localStorage.removeItem('admin-token')
         localStorage.removeItem('admin-refresh-token')
         localStorage.removeItem('admin-user')
-        window.location.href = '/login'
+        window.location.href = '/admin/login'
       } finally {
         isRefreshing = false
       }
@@ -84,7 +84,7 @@ apiClient.interceptors.response.use(
       localStorage.removeItem('admin-token')
       localStorage.removeItem('admin-refresh-token')
       localStorage.removeItem('admin-user')
-      window.location.href = '/login'
+      window.location.href = '/admin/login'
     }
     return Promise.reject(error)
   }

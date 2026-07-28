@@ -41,9 +41,9 @@ export default function PermissionRoute({ children, path }) {
     }
     
     // Manager doesn't have permission - redirect to dashboard
-    return <Navigate to="/dashboard" replace />
+    return <Navigate to="/admin/dashboard" replace />
   }
   
   // Default redirect
-  return <Navigate to="/dashboard" replace />
+  return <Navigate to="/admin/dashboard" replace />
 }

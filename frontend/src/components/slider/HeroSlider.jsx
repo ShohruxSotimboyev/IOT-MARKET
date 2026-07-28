@@ -66,7 +66,7 @@ export default function HeroSlider() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-r from-gray-950/88 via-gray-950/55 to-gray-950/25" />
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-950/75 via-transparent to-gray-950/25" />
-                  <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-10 pt-32 md:pt-40 pb-24">
+                  <div className="relative z-10 w-full max-w-[1440px] mx-auto px-6 md:px-10 pt-32 md:pt-40 pb-24">
                     <motion.div
                       initial={{ opacity: 0, y: 28 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -107,7 +107,7 @@ export default function HeroSlider() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-r from-gray-950/88 via-gray-950/55 to-gray-950/25" />
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-950/75 via-transparent to-gray-950/25" />
-                  <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-10 pt-32 md:pt-40 pb-24">
+                  <div className="relative z-10 w-full max-w-[1440px] mx-auto px-6 md:px-10 pt-32 md:pt-40 pb-24">
                     <motion.div
                       initial={{ opacity: 0, y: 28 }}
                       animate={{ opacity: 1, y: 0 }}
