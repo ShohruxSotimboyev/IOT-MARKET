@@ -6,6 +6,7 @@ import { ShoppingCart, Heart, Check, Cpu, Star } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { getImageUrl } from '../utils/image'
 import ProductSkeleton from '../components/common/ProductSkeleton'
+import SEO from '../components/common/SEO'
 import { toast } from 'react-hot-toast'
 import api from '../api/axios'
 
@@ -164,7 +165,12 @@ export default function ReadyProducts() {
   }, [])
 
   return (
-    <div className="max-w-[1440px] mx-auto px-4 md:px-6 pt-32 md:pt-36 pb-16">
+    <div className="pt-24 pb-20 min-h-screen">
+      <SEO 
+        title={t('nav.readyProducts')} 
+        description={t('readyProducts.desc') || "Tayyor IoT va Arduino loyihalar, kodlar, sxemalar."}
+      />
+      <div className="max-w-[1440px] mx-auto px-4 md:px-6">
       <motion.div
         initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -199,6 +205,7 @@ export default function ReadyProducts() {
           ))}
         </div>
       )}
+      </div>
     </div>
   )
 }

@@ -98,7 +98,8 @@ app.use('/api/orders',   orderRoutes);
 app.use('/api/payment',  paymentRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/banners',  bannerRoutes);
-app.use('/api/messages', messageRoutes);
+app.use('/api/messages', messageRoutes)
+app.use('/api/sitemap.xml', require('./routes/sitemap'));
 app.use('/api/categories', categoryRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/inventory', inventoryRoutes);

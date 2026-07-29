@@ -10,6 +10,7 @@ import ImageLightbox from '../components/product/ImageLightbox'
 import StarRating from '../components/product/StarRating'
 import api from '../api/axios'
 import { getImageUrl, getAllImageUrls } from '../utils/image'
+import SEO from '../components/common/SEO'
 
 const PLACEHOLDER_IMG = 'https://placehold.co/400x400/1a1a1a/cccccc?text=No+Image'
 
@@ -134,6 +135,32 @@ export default function ReadyProductDetail() {
 
   return (
     <div className="max-w-[1440px] mx-auto px-4 md:px-6 pt-28 md:pt-32 pb-20">
+      <SEO 
+        title={product.name}
+        description={product.description?.substring(0, 160) || 'Tayyor loyiha va sxemalar'}
+        image={images[0]}
+        type="product"
+        schemaData={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": product.name,
+          "image": images,
+          "description": product.description || 'Tayyor loyiha va sxemalar',
+          "sku": product.id,
+          "brand": {
+            "@type": "Brand",
+            "name": product.supplier || "XonTeam"
+          },
+          "offers": {
+            "@type": "Offer",
+            "url": `https://market.xonteam.uz/ready-products/${product.id}`,
+            "priceCurrency": "UZS",
+            "price": product.price,
+            "availability": product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            "itemCondition": "https://schema.org/NewCondition"
+          }
+        }}
+      />
       <nav className="flex items-center gap-2 text-xs text-white/40 mb-8 flex-wrap">
         <Link to="/" className="hover:text-teal transition-colors">{t('nav.home')}</Link>
         <ChevronRight size={12} />

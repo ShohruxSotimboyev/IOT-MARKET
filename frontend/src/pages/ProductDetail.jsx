@@ -3,9 +3,10 @@ import { usePersistedState } from '../hooks/usePersistedState'
 import { motion } from 'framer-motion'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Helmet } from 'react-helmet-async'
 import { Heart, ShoppingCart, Zap, Maximize2, ChevronRight, Send, Star } from 'lucide-react'
 import { toast } from 'react-hot-toast'
+import api from '../api/axios'
+import SEO from '../components/common/SEO'
 import { PRODUCTS } from '../data'
 import { useApp } from '../context/AppContext'
 import ProductCard from '../components/ProductCard'
@@ -188,14 +189,32 @@ export default function ProductDetail() {
 
   return (
     <div className="max-w-[1440px] mx-auto px-4 md:px-6 pt-28 md:pt-32 pb-20">
-      <Helmet>
-        <title>{product.name} | IOT Market</title>
-        <meta name="description" content={product.description?.substring(0, 160) || 'IOT Market mahsuloti'} />
-        <meta property="og:title" content={product.name} />
-        <meta property="og:description" content={product.description?.substring(0, 160) || 'IOT Market mahsuloti'} />
-        <meta property="og:image" content={images[0]} />
-        <meta property="og:type" content="product" />
-      </Helmet>
+      <SEO 
+        title={product.name}
+        description={product.description?.substring(0, 160) || 'XonTeam Market mahsuloti'}
+        image={images[0]}
+        type="product"
+        schemaData={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": product.name,
+          "image": images,
+          "description": product.description || 'XonTeam Market mahsuloti',
+          "sku": product.id,
+          "brand": {
+            "@type": "Brand",
+            "name": product.supplier || "XonTeam"
+          },
+          "offers": {
+            "@type": "Offer",
+            "url": `https://market.xonteam.uz/products/${product.id}`,
+            "priceCurrency": "UZS",
+            "price": product.price,
+            "availability": product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            "itemCondition": "https://schema.org/NewCondition"
+          }
+        }}
+      />
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-xs text-white/40 mb-8 flex-wrap">
         <Link to="/" className="hover:text-teal transition-colors">{t('common.home')}</Link>

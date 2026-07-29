@@ -9,6 +9,7 @@ import PopularSections from '../components/home/PopularSections'
 import { PRODUCTS } from '../data'
 import ProductCard from '../components/ProductCard'
 import api from '../api/axios'
+import SEO from '../components/common/SEO'
 
 function Section({ title, children, linkTo, linkLabel, t }) {
   return (
@@ -62,6 +63,16 @@ export default function Home() {
 
   return (
     <div>
+      <SEO 
+        title={t('nav.home')} 
+        description={t('brand.desc') || "XonTeam Market — IoT, Arduino, ESP32, Raspberry Pi. Professional elektronika do'koni."}
+        schemaData={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "XonTeam Market",
+          "url": "https://market.xonteam.uz"
+        }}
+      />
       <HeroSlider />
 
       <div className="max-w-[1440px] mx-auto px-4 md:px-6 -mt-4 relative z-10">
