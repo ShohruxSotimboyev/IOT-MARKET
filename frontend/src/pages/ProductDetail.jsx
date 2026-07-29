@@ -13,7 +13,6 @@ import ProductCard from '../components/ProductCard'
 import ImageLightbox from '../components/product/ImageLightbox'
 import StarRating from '../components/product/StarRating'
 import { FormInput, FormTextarea } from '../components/ui/FormField'
-import api from '../api/axios'
 import { getImageUrl, getAllImageUrls } from '../utils/image'
 
 export default function ProductDetail() {
